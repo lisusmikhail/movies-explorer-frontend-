@@ -1,12 +1,8 @@
 import React from 'react';
-import './ SavedMovies.css';
+import './SavedMovies.css';
 
 function SavedMovies() {
-  return (
-    <div className='saved-movies'>
-
-    </div>
-  );
+  return <div className="saved-movies"></div>;
 }
 
 export default SavedMovies;

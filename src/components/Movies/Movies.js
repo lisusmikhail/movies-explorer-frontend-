@@ -1,12 +1,8 @@
 import React from 'react';
-import './ Movies.css';
+import './Movies.css';
 
 function Movies() {
-  return (
-    <div className='movies'>
-
-    </div>
-  );
+  return <div className="movies">this is movies</div>;
 }
 
 export default Movies;

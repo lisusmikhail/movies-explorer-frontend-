@@ -1,3 +1,40 @@
-.promo{
+.promo {
+  background-color: #073042;
+}
 
+.promo__title {
+  color: #fff;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 50px;
+  line-height: 58px;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.promo__text {
+  color: #fff;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 16px;
+  mix-blend-mode: normal;
+  opacity: 0.5;
+}
+
+.promo__button {
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-sizing: border-box;
+  border-radius: 3px;
+  background-color: unset;
+  width: 129px;
+  height: 36px;
 }
