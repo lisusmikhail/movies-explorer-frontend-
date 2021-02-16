@@ -1,12 +1,14 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './Header.css';
-import logo from '../../images/logo_1280.svg';
+import Logo from '../../components/Logo/Logo';
 
 function Header() {
   const history = useHistory();
   const location = history.location.pathname;
 
+  // Этот код исполняется в демонстрационных целях и
+  // не будет присутствовать в окончательном варианте приложения
   let isMenuClicked = 0;
   const handleMenuClick = () => {
     const hamburgerMenuElement = document.querySelector('.header__hamburger');
@@ -26,8 +28,7 @@ function Header() {
 
   return (
     <div className={location === '/' ? 'header header_main' : 'header'}>
-      <img className="logo logo_position_header" src={logo} alt="Logo" />
-
+      <Logo />
       <nav className="header__navigation">
         <ul
           className={

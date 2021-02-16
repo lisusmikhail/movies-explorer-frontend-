@@ -1,0 +1,21 @@
+/*Logo*/
+.logo {
+  width: 38px;
+  height: 38px;
+}
+
+.logo_position_header {
+  margin: 0 0 0 70px;
+}
+
+@media screen and (max-width: 768px) {
+  .logo_position_header {
+    margin: 0 0 0 30px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .logo_position_header {
+    margin: 0 0 0 14px;
+  }
+}
