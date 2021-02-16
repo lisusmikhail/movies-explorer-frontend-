@@ -4,7 +4,6 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  border: 1px solid red;
   padding: 75px 0 75px 0;
 }
 
@@ -25,7 +24,6 @@
 }
 
 .promo__content {
-  border: 1px solid red;
   margin: 0 0 0 70px;
   max-width: 640px;
 }
