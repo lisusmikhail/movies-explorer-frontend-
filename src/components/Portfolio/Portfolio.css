@@ -12,6 +12,7 @@
 @media screen and (max-width: 1024px) {
   .portfolio {
     --side-indent: 50px;
+    padding: 14px 0 21px 0;
   }
 }
 
@@ -45,7 +46,7 @@
   padding: 0;
   width: 100%;
   /*--vertical-indent-l: 29px;*/
-  --vertical-indent-m: 30px;
+  /*--vertical-indent-m: 30px;*/
   --vertical-indent-s: 20px;
 }
 
@@ -74,7 +75,7 @@
 @media screen and (max-width: 1024px) {
   .portfolio__name {
     font-size: 28px;
-    line-height: var(--vertical-indent-m);
+    line-height: 31px;
   }
 }
 
@@ -101,7 +102,7 @@
 @media screen and (max-width: 1024px) {
   .portfolio__arrow {
     font-size: 28px;
-    line-height: var(--vertical-indent-m);
+    line-height: 31px;
     padding-bottom: 20px;
   }
 }
