@@ -28,8 +28,8 @@ function AboutProject() {
       <div className='about__gantt-chart'>
         <div className='about__backend-chart'>1 неделя</div>
         <div className='about__frontend-chart'>4 недели</div>
-        <div className='about__chart-label'>back-end</div>
-        <div className='about__chart-label'>front-end</div>
+        <div className='about__chart-label'>Back-end</div>
+        <div className='about__chart-label'>Front-end</div>
       </div>
     </section>
   );

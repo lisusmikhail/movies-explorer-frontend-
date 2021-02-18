@@ -1,3 +1,135 @@
-.footer{
+.footer {
+  background: #202020;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /*min-height: 172px;*/
+  /*margin-top: 0;*/
+  margin: 162px 0 0 0;
+  padding-bottom: 20px;
+}
 
+.footer__title {
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 16px;
+  color: #8b8b8b;
+  margin: 0 0 20px 0;
+  padding: 0 0 0 0;
+}
+
+@media screen and (max-width: 520px) {
+  .footer__title {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
+
+.footer__info {
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 16px;
+  color: #ffffff;
+}
+
+@media screen and (max-width: 767px) {
+  .footer__info {
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .footer__info {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
+
+.footer__copyright {
+  margin: 20px 0 0 70px;
+  padding: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .footer__copyright {
+    margin: 0 0 0 50px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .footer__copyright {
+    margin: 0;
+    color: #8b8b8b;
+  }
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  list-style-type: none;
+  margin: 20px 70px 0 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .footer__links {
+    margin: 0 50px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .footer__links {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+.footer__link-item {
+  margin-right: 20px;
+}
+
+.footer__link-item:last-child {
+  margin-right: 0;
+}
+
+.footer__link {
+  background-color: unset;
+  text-decoration: none;
+  color: #ffffff;
+
+  padding: 0;
+}
+
+.footer__line {
+  display: block;
+  border-bottom: 1px solid #424242;
+  padding: 0 calc(50vw - 70px);
+}
+
+@media screen and (max-width: 1024px) {
+  .footer__line {
+    padding: 0 calc(50vw - 50px);
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .footer__line {
+    padding: 0 calc(50vw - 18px);
+  }
 }
