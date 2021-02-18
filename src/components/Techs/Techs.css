@@ -7,6 +7,7 @@
 
 @media screen and (max-width: 1024px) {
   .techs {
+    padding: 69px 0 100px 0;
     --side-indent: 50px;
   }
 }
@@ -37,6 +38,12 @@
   padding: 0 0 0 0;
 }
 
+@media screen and (max-width: 1024px) {
+  .techs__description-title {
+    margin: 85px 0 0 0;
+  }
+}
+
 @media screen and (max-width: 520px) {
   .techs__description-title {
     font-size: 30px;
@@ -61,6 +68,7 @@
   .techs__description-text {
     font-size: 12px;
     line-height: 18px;
+    margin: 17px auto 0;
   }
 }
 
@@ -79,6 +87,12 @@
   grid-gap: 10px;
   margin: 102px 0 0 0;
   padding: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .techs__stack {
+    margin: 83px 0 0 0;
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -138,7 +152,9 @@
   .techs__stack-item {
     font-size: 12px;
     line-height: 15px;
-    padding: 25px 25px;
+    padding: 21px 25px;
+    box-sizing: border-box;
+    border: 1px solid yellow;
   }
 }
 
