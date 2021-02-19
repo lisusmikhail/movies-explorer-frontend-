@@ -1,15 +1,20 @@
 .header {
   background-color: #202020;
   width: 100%;
-  min-height: 74px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .header_main {
   background-color: #073042;
+}
+
+.header__container {
+  margin: 0 auto;
+  min-height: 74px;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /*Header Auth*/
@@ -52,6 +57,13 @@
 }
 
 @media screen and (max-width: 520px) {
+  .header__auth-item {
+    font-size: 10px;
+    line-height: 16px;
+  }
+}
+
+@media screen and (max-width: 520px) {
   .header__auth-item:first-child {
     margin: 0 14px 0 0;
   }
@@ -71,6 +83,13 @@
 .header__auth-item:active,
 .header__auth-item:focus {
   outline: none;
+}
+
+@media screen and (max-width: 520px) {
+  .header__auth-item_active {
+    width: 54px;
+    height: 26px;
+  }
 }
 
 /*Header Navigation*/

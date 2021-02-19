@@ -1,3 +1,206 @@
-.about-me{
+.about-me {
+  background: #202020;
+  padding: 90px 0 80px 0;
+  width: 100%;
+  --side-indent: 70px;
+}
 
+@media screen and (max-width: 1024px) {
+  .about-me {
+    --side-indent: 50px;
+    padding: 69px 0 80px 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .about-me {
+    --side-indent: 14px;
+    padding: 23px 0 59px 0;
+  }
+}
+
+.about-me__container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.about-me__title {
+  margin: 0 var(--side-indent);
+}
+
+.about-me__full-info {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: 66px var(--side-indent) 0 var(--side-indent);
+}
+
+@media screen and (max-width: 767px) {
+  .about-me__full-info {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 60px var(--side-indent) 0 var(--side-indent);
+  }
+}
+
+.about-me__description {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 327px;
+}
+
+@media screen and (max-width: 1024px) {
+  .about-me__description {
+    min-height: 307px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about-me__description {
+    max-width: 292px;
+    margin: 39px 0 0 0;
+    min-height: 262px;
+  }
+}
+
+.about-me__texts {
+}
+
+.about-me__name {
+  color: #ffffff;
+  font-family: Inter, sans-serif;
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 58px;
+  letter-spacing: 0;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .about-me__name {
+    font-size: 40px;
+    line-height: 40px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .about-me__name {
+    font-size: 30px;
+    line-height: 36px;
+  }
+}
+
+.about-me__job {
+  color: #ffffff;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 20px;
+  margin: 20px 0 0 0;
+  padding: 0 0 0 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .about-me__job {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 16px 0 0 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .about-me__job {
+    font-size: 11px;
+    line-height: 16px;
+    margin: 21px 0 0 0;
+  }
+}
+
+.about-me__text {
+  color: #ffffff;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  width: 600px;
+  margin: 25px 0 0 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .about-me__text {
+    font-size: 12px;
+    line-height: 18px;
+    max-width: 364px;
+    margin: 20px 0 0 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about-me__text {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .about-me__text {
+    font-size: 11px;
+    line-height: 16px;
+  }
+}
+
+.about-me__social {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.about-me__social:first-child {
+  margin-right: 20px;
+}
+
+@media screen and (max-width: 1024px) {
+  .about-me__social {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about-me__social:first-child {
+    margin-right: 26px;
+  }
+}
+
+.about-me__image {
+  width: 270px;
+  height: 327px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .about-me__image {
+    width: 255px;
+    height: 307px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .about-me__image {
+    width: 292px;
+    height: 352px;
+  }
 }

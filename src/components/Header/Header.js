@@ -28,51 +28,55 @@ function Header() {
 
   return (
     <div className={location === '/' ? 'header header_main' : 'header'}>
-      <Logo />
-      <nav className="header__navigation">
-        <ul
-          className={
-            location === '/'
-              ? 'header__content header__content_hidden'
-              : 'header__content'
-          }
-        >
-          <li className="header__content-item">Главная</li>
-          <li className="header__content-item header__content-item_active">
-            Фильмы
-          </li>
-          <li className="header__content-item">Сохранённые фильмы</li>
-        </ul>
+      <div className='header__container'>
+        <Logo />
+        <nav className='header__navigation'>
+          <ul
+            className={
+              location === '/'
+                ? 'header__content header__content_hidden'
+                : 'header__content'
+            }
+          >
+            <li className='header__content-item'>Главная</li>
+            <li className='header__content-item header__content-item_active'>
+              Фильмы
+            </li>
+            <li className='header__content-item'>Сохранённые фильмы</li>
+          </ul>
 
+          <div
+            className={
+              location === '/'
+                ? 'header__profile header__profile_hidden'
+                : 'header__profile'
+            }
+          >
+            <p className='header__account-title'>Аккаунт</p>
+            <button className='header__account-button header__account-icon' />
+          </div>
+        </nav>
         <div
           className={
             location === '/'
-              ? 'header__profile header__profile_hidden'
-              : 'header__profile'
+              ? 'header__auth'
+              : 'header__auth header__auth_hidden'
           }
         >
-          <p className="header__account-title">Аккаунт</p>
-          <button className="header__account-button header__account-icon" />
+          <button className='header__auth-item'>Регистрация</button>
+          <button className='header__auth-item header__auth-item_active'>
+            Войти
+          </button>
         </div>
-      </nav>
-      <div
-        className={
-          location === '/' ? 'header__auth' : 'header__auth header__auth_hidden'
-        }
-      >
-        <button className="header__auth-item">Регистрация</button>
-        <button className="header__auth-item header__auth-item_active">
-          Войти
-        </button>
+        <button
+          className={
+            location === '/'
+              ? 'header__hamburger header__hamburger_hidden'
+              : 'header__hamburger'
+          }
+          onClick={handleMenuClick}
+        />
       </div>
-      <button
-        className={
-          location === '/'
-            ? 'header__hamburger header__hamburger_hidden'
-            : 'header__hamburger'
-        }
-        onClick={handleMenuClick}
-      />
     </div>
   );
 }
