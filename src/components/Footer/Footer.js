@@ -7,7 +7,7 @@ function Footer() {
       <p className='footer__title'>
         Учебный проект Яндекс.Практикум х BeatFilm.
       </p>
-      <div className='footer__line' />
+      {/*<div className='footer__line' />*/}
       <div className='footer__info'>
         <p className='footer__copyright'>&copy; 2021</p>
         <ul className='footer__links'>

@@ -1,6 +1,8 @@
 .about {
-  background: #202020;
+  /*background: #202020;*/
   padding: 89px 0 103px 0;
+  margin: 0 auto;
+  max-width: 1280px;
   --side-indent: 70px;
 }
 
