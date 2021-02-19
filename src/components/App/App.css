@@ -9,7 +9,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 71px;
-  letter-spacing: -1px;
+  letter-spacing: -0.04em;
   border-bottom: 1px solid #dadada;
   text-align: left;
 }
@@ -23,6 +23,6 @@
 @media screen and (max-width: 520px) {
   .section-title {
     font-size: 18px;
-    line-height: 50px;
+    line-height: 77px;
   }
 }

@@ -57,6 +57,13 @@
 }
 
 @media screen and (max-width: 520px) {
+  .header__auth-item {
+    font-size: 10px;
+    line-height: 16px;
+  }
+}
+
+@media screen and (max-width: 520px) {
   .header__auth-item:first-child {
     margin: 0 14px 0 0;
   }
@@ -81,6 +88,7 @@
 @media screen and (max-width: 520px) {
   .header__auth-item_active {
     width: 54px;
+    height: 26px;
   }
 }
 

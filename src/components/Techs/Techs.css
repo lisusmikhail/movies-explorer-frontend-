@@ -16,6 +16,7 @@
 @media screen and (max-width: 520px) {
   .techs {
     --side-indent: 18px;
+    padding: 18px 0 90px 0;
   }
 }
 
@@ -54,6 +55,7 @@
   .techs__description-title {
     font-size: 30px;
     line-height: 36px;
+    margin: 60px 0 0 0;
   }
 }
 
@@ -83,6 +85,7 @@
     font-size: 11px;
     line-height: 16px;
     max-width: 292px;
+    margin: 24px auto 0;
   }
 }
 
@@ -112,6 +115,7 @@
   .techs__stack {
     grid-template-columns: repeat(2, auto);
     grid-template-rows: repeat(4, auto);
+    margin: 50px 0 0 0;
   }
 }
 
@@ -168,6 +172,7 @@
 
 @media screen and (max-width: 520px) {
   .techs__stack-item {
-    padding: 20px 20px;
+    width: 84px;
+    height: 57px;
   }
 }
