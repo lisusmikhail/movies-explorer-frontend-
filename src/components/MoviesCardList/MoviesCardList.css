@@ -1,3 +1,28 @@
-.movies-card-list{
+.movies-card-list {
+  width: calc(100% - 140px);
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 0 0 0;
+  /*border: 1px solid yellow;*/
+}
 
+.movies-card-list__more-button {
+  width: 320px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ffffff;
+  background-color: #2f2f2f;
+  border: unset;
+  padding: 0;
+  margin: 0 0 0 0;
 }
