@@ -4,6 +4,12 @@
   height: 38px;
 }
 
+.logo:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
 .logo_position_header {
   margin: 0 0 0 70px;
 }

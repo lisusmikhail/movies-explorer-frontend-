@@ -5,7 +5,6 @@ import findButton from '../../images/find.svg';
 // Данный JS код сделан в целях демонстрации верстки.
 let isChecked = false;
 const handleInputChange = (e) => {
-  console.log(e.target.checked);
   const labelElement = document.querySelector('.search-form__toggle-label');
   const labelSwitchElement = document.querySelector(
     '.search-form__toggle-label-switch'
@@ -26,7 +25,6 @@ const handleInputChange = (e) => {
 function SearchForm() {
   return (
     <form className='search-form'>
-      {/*<form className=' search-form__container'>*/}
       <div className='search-form__container'>
         <label className='search-form__label'>
           <input
@@ -56,11 +54,8 @@ function SearchForm() {
           <div className='search-form__toggle-label-switch' />
         </label>
       </div>
-      {/*</form>*/}
     </form>
   );
 }
-
-// form__offer-label ->
 
 export default SearchForm;

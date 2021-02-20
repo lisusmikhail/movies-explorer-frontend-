@@ -129,7 +129,7 @@
     z-index: 5;
 
     /*just in case*/
-    border: 1px solid yellow;
+    /*border: 1px solid yellow;*/
   }
 
   .header__navigation_fade-in {
@@ -182,7 +182,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin: 144px 0 0 0;
+    margin: 145px 0 0 0;
   }
 }
 
@@ -195,11 +195,11 @@
   font-size: 13px;
   line-height: 18px;
   color: #ffffff;
-  margin: 0 10px 0 0;
+  margin: 0 17px 0 0;
   padding: 0 0 0 0;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 769px) {
   .header__content-item:first-child {
     display: none;
   }
@@ -223,12 +223,15 @@
     line-height: 22px;
     letter-spacing: 0;
     color: #ffffff;
-    margin: 0 0 21px 0;
+    margin: 0 0 23px 0;
     padding: 0 0 0 0;
   }
 
   .header__content-item_active {
-    line-height: 28px;
+    line-height: 18px;
+    min-height: 31px;
+    display: grid;
+    place-items: center;
     /*display: inline-block;*/
     width: fit-content;
     border-bottom: 2px solid #ffffff;
@@ -236,6 +239,19 @@
 
   .header__content-item:last-child {
     margin: 0 0 0 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .header__content-item {
+    margin: 0 0 17px 0;
+  }
+
+  .header__content-item_active {
+    line-height: 18px;
+    min-height: 35px;
+    display: grid;
+    place-items: center;
   }
 }
 
@@ -249,13 +265,13 @@
 }
 @media screen and (max-width: 768px) {
   .header__profile {
-    margin: 500px 0 0 0;
+    margin: 620px 0 0 0;
   }
 }
 
 @media screen and (max-width: 520px) {
   .header__profile {
-    margin: 444px 0 0 0;
+    margin: 442px 0 0 0;
   }
 }
 
@@ -278,7 +294,7 @@
   font-size: 14px;
   line-height: 16px;
   color: #ffffff;
-  margin: 0 13px 0 0;
+  margin: 0 14px 0 0;
   padding: 0 0 0 0;
 }
 
@@ -346,8 +362,8 @@
 
     /*just in case*/
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 27px;
+    right: 4px;
     /*just in case*/
   }
 
@@ -358,9 +374,14 @@
 
 @media screen and (max-width: 520px) {
   .header__hamburger {
-    margin: 0 14px 0 0;
+    margin: 0 25px 0 0;
+    width: 28px;
+    height: 45px;
   }
+
   .header__hamburger_open {
-    margin: 0 13px 0 0;
+    margin: 0;
+    top: 6px;
+    right: 15px;
   }
 }

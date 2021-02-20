@@ -9,32 +9,30 @@ import Movies from '../Movies/Movies';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import SavedMoviesHeader from '../SavedMoviesHeader/SavedMoviesHeader';
 
 function Promo() {
   let location = useLocation();
   console.log(location.pathname);
   return (
-    <div className="app">
+    <div className='app'>
       <Header />
       <Switch>
-        <Route path="/signup">
+        <Route path='/signup'>
           <Register />
         </Route>
-        <Route path="/signin">
+        <Route path='/signin'>
           <Login />
         </Route>
-        <Route path="/profile">
+        <Route path='/profile'>
           <Profile />
         </Route>
-        <Route path="/movies">
+        <Route path='/movies'>
           <Movies />
         </Route>
-        <Route path="/saved-movies">
-          <SavedMoviesHeader />
+        <Route path='/saved-movies'>
           <SavedMovies />
         </Route>
-        <Route path="/">
+        <Route path='/'>
           <Main />
         </Route>
       </Switch>

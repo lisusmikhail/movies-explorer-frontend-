@@ -9,18 +9,44 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 80px 0;
+  padding: 80px 0 83px 0;
   border-bottom: 1px solid rgba(170, 170, 170, 0.2);
+}
+
+@media screen and (max-width: 1280px) {
+  .search-form {
+    width: calc(100% - 140px);
+  }
 }
 
 @media screen and (max-width: 1024px) {
   .search-form {
-    width: calc(100% - 140px);
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .search-form__container {
+    width: calc(100% - 200px);
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .search-form {
+    width: calc(100% - 61px);
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    padding: 60px 0 56px 0;
   }
 }
+
+@media screen and (max-width: 520px) {
+  .search-form {
+    width: calc(100% - 20px);
+    padding: 60px 0 44px 0;
+  }
+}
+
 .search-form__container {
   /*border: 1px solid yellow;*/
   position: relative;
@@ -45,6 +71,12 @@
   height: 48px;
 }
 
+@media screen and (max-width: 1280px) {
+  .search-form__input {
+    width: 100%;
+  }
+}
+
 .search-form__input::placeholder {
   font-family: Inter, sans-serif;
   font-style: normal;
@@ -57,13 +89,28 @@
 
 @media screen and (max-width: 1139px) {
   .search-form__input {
-    width: calc(932px - 1140px + 100vw);
+    /*width: calc(932px - 1140px + 100vw);*/
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 1024px) {
   .search-form__input {
     width: 100%;
+  }
+
+  .search-form__input::placeholder {
+    padding: 0 0 0 16px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .search-form__input {
+  }
+
+  .search-form__input::placeholder {
+    font-size: 11px;
+    line-height: 18px;
   }
 }
 
@@ -89,7 +136,14 @@
 
 @media screen and (max-width: 1024px) {
   .search-form__toggle {
-    margin: 38px 0 0 0;
+    margin: 37px 0 0 0;
+    line-height: 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .search-form__toggle {
+    margin: 44px 0 0 0;
   }
 }
 
@@ -151,11 +205,17 @@
 
 @media screen and (max-width: 1024px) {
   .search-form__toggle-title {
-    margin: 0 14px 0 0;
+    margin: 0 10px 0 0;
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 520px) {
+  .search-form__toggle-title {
+    margin: 0 13px 0 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
   .search-form__toggle-title {
     font-size: 11px;
     line-height: 18px;
