@@ -36,6 +36,7 @@ function SearchForm() {
             minLength='2'
             maxLength='140'
             required
+            autoComplete='off'
           />
         </label>
         <button type='submit' className='search-form__submit-button' />

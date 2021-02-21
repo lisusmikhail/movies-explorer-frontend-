@@ -25,6 +25,7 @@ function AboutMe() {
                 className='about-me__social'
                 href='https://www.facebook.com/yandex.praktikum/'
                 target='_blank'
+                rel='noopener'
               >
                 Facebook
               </a>
@@ -32,6 +33,7 @@ function AboutMe() {
                 className='about-me__social'
                 href='https://github.com/lisusmikhail'
                 target='_blank'
+                rel='noopener'
               >
                 GitHub
               </a>

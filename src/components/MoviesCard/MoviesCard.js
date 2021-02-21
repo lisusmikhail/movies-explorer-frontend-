@@ -12,16 +12,23 @@ function MoviesCard(props) {
   const location = history.location.pathname;
 
   let favoriteIcon;
+  let isVisible = true;
   if (location === '/movies' && isFavorite) {
     favoriteIcon = activeHeart;
-  } else if (location === '/saved-movies') {
+  } else if (location === '/saved-movies' && isFavorite) {
     favoriteIcon = delFavorite;
+  } else if (location === '/saved-movies' && !isFavorite) {
+    isVisible = false;
   } else {
     favoriteIcon = heart;
   }
 
   return (
-    <div className='movies-card'>
+    <div
+      className={
+        isVisible ? 'movies-card' : 'movies-card movies-card_visibility'
+      }
+    >
       <div className='movies-card__info'>
         <div className='movies-card__description'>
           <h2 className='movies-card__title'>{title}</h2>
@@ -35,5 +42,3 @@ function MoviesCard(props) {
 }
 
 export default MoviesCard;
-
-// src={isFavorite ? activeHeart : heart}

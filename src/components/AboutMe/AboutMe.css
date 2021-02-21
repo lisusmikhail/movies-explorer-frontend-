@@ -167,6 +167,12 @@
   line-height: 17px;
 }
 
+.about-me__social:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
 .about-me__social:first-child {
   margin-right: 20px;
 }

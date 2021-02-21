@@ -12,11 +12,14 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 
 function Promo() {
   let location = useLocation();
-  console.log(location.pathname);
+  // console.log(location.pathname);
   return (
     <div className='app'>
       <Header />
       <Switch>
+        <Route exact path='/'>
+          <Main />
+        </Route>
         <Route path='/signup'>
           <Register />
         </Route>
@@ -32,8 +35,8 @@ function Promo() {
         <Route path='/saved-movies'>
           <SavedMovies />
         </Route>
-        <Route path='/'>
-          <Main />
+        <Route path='*'>
+          <Footer />
         </Route>
       </Switch>
       <Footer />

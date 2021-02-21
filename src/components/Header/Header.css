@@ -155,7 +155,7 @@
 /*Header Content*/
 
 .header__content {
-  list-style-type: none;
+  /*list-style-type: none;*/
   display: flex;
   flex-direction: row;
   margin: 0 0 0 0;
@@ -197,6 +197,13 @@
   color: #ffffff;
   margin: 0 17px 0 0;
   padding: 0 0 0 0;
+  text-decoration: none;
+}
+
+.header__content-item:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 
 @media screen and (min-width: 769px) {
@@ -285,6 +292,12 @@
   flex-direction: row;
 }
 
+.header__profile:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
 /*Header Account Title*/
 
 .header__account-title {
@@ -313,6 +326,12 @@
 .header__account-button:active,
 .header__account-button:focus {
   outline: none;
+}
+
+.header__account-icon:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 
 .header__account-icon {

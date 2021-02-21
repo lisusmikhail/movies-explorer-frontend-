@@ -152,6 +152,17 @@
   padding: 0 0 0 0;
 }
 
+.promo__button:active,
+.promo__button:focus {
+  outline: none;
+}
+
+.promo__button:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1024px) {
   .promo__button {
     margin: 91px 0 0 0;
