@@ -9,31 +9,20 @@ function Header() {
 
   // Этот код исполняется в демонстрационных целях и
   // не будет присутствовать в окончательном варианте приложения
-  let isMenuClicked = 0;
-  let hamburgerMenuElement;
-  let sliderElement;
-
-  const closeHamburger = () => {
-    hamburgerMenuElement.classList.remove('header__hamburger_open');
-    sliderElement.classList.remove('header__navigation_fade-in');
-    sliderElement.classList.add('header__navigation_fade-out');
-    isMenuClicked = 0;
-  };
-
-  const openHamburger = () => {
-    hamburgerMenuElement.classList.add('header__hamburger_open');
-    sliderElement.classList.remove('header__navigation_fade-out');
-    sliderElement.classList.add('header__navigation_fade-in');
-    isMenuClicked = 1;
-  };
-
+  let isMenuClicked = false;
   const handleMenuClick = () => {
-    hamburgerMenuElement = document.querySelector('.header__hamburger');
-    sliderElement = document.querySelector('.header__navigation');
-    if (isMenuClicked === 0) {
-      openHamburger();
+    const hamburgerMenuElement = document.querySelector('.header__hamburger');
+    const sliderElement = document.querySelector('.header__navigation');
+    if (!isMenuClicked) {
+      hamburgerMenuElement.classList.add('header__hamburger_open');
+      sliderElement.classList.remove('header__navigation_fade-out');
+      sliderElement.classList.add('header__navigation_fade-in');
+      isMenuClicked = true;
     } else {
-      closeHamburger();
+      hamburgerMenuElement.classList.remove('header__hamburger_open');
+      sliderElement.classList.remove('header__navigation_fade-in');
+      sliderElement.classList.add('header__navigation_fade-out');
+      isMenuClicked = false;
     }
   };
 
@@ -53,7 +42,10 @@ function Header() {
               className='header__content-item'
               exact
               to='/'
-              onClick={closeHamburger}
+              onClick={() => {
+                isMenuClicked = true;
+                handleMenuClick();
+              }}
             >
               Главная
             </NavLink>
@@ -61,7 +53,10 @@ function Header() {
               to='/movies'
               activeClassName='header__content-item_active'
               className='header__content-item'
-              onClick={closeHamburger}
+              onClick={() => {
+                isMenuClicked = true;
+                handleMenuClick();
+              }}
             >
               Фильмы
             </NavLink>
@@ -69,7 +64,10 @@ function Header() {
               to='/saved-movies'
               activeClassName='header__content-item_active'
               className='header__content-item'
-              onClick={closeHamburger}
+              onClick={() => {
+                isMenuClicked = true;
+                handleMenuClick();
+              }}
             >
               Сохранённые фильмы
             </NavLink>
