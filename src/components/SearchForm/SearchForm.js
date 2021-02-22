@@ -1,6 +1,5 @@
 import React from 'react';
 import './SearchForm.css';
-import findButton from '../../images/find.svg';
 
 // Данный JS код сделан в целях демонстрации верстки.
 let isChecked = false;

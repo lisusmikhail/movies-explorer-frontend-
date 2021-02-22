@@ -50,6 +50,15 @@
   border: unset;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
+  text-decoration: none;
+  display: grid;
+  place-items: center;
+}
+
+.header__auth-item:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
 }
 
 .header__auth-item:first-child {

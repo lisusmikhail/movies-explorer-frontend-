@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import './Logo.css';
 import logo from '../../images/logo_1280.svg';
 
-function Logo() {
+function Logo({ isHeader }) {
   return (
     <Link to='/'>
-      <img className='logo logo_position_header' src={logo} alt='Logo' />
+      <img
+        className={isHeader ? 'logo logo_position_header' : 'logo'}
+        src={logo}
+        alt='Logo'
+      />
     </Link>
   );
 }

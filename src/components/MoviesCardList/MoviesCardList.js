@@ -11,7 +11,7 @@ import seventhImg from '../../images/pic__COLOR_pic_7.png';
 
 function MoviesCardList() {
   return (
-    <div className='movies-card-list'>
+    <section className='movies-card-list'>
       <MoviesCard
         title={'33 слова о дизайне'}
         img={firstImg}
@@ -57,7 +57,7 @@ function MoviesCardList() {
       <button type='button' className='movies-card-list__more-button'>
         Ещё
       </button>
-    </div>
+    </section>
   );
 }
 

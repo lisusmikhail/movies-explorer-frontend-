@@ -27,6 +27,7 @@ function Promo() {
           <Login />
         </Route>
         <Route path='/profile'>
+          <Header />
           <Profile />
         </Route>
         <Route path='/movies'>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, NavLink } from 'react-router-dom';
+import { useHistory, NavLink, Link } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../components/Logo/Logo';
 
@@ -29,7 +29,7 @@ function Header() {
   return (
     <div className={location === '/' ? 'header header_main' : 'header'}>
       <div className='header__container'>
-        <Logo />
+        <Logo isHeader={true} />
         <div className='header__navigation'>
           <nav
             className={
@@ -90,10 +90,15 @@ function Header() {
               : 'header__auth header__auth_hidden'
           }
         >
-          <button className='header__auth-item'>Регистрация</button>
-          <button className='header__auth-item header__auth-item_active'>
+          <Link to='/signup' className='header__auth-item'>
+            Регистрация
+          </Link>
+          <Link
+            to='/signin'
+            className='header__auth-item header__auth-item_active'
+          >
             Войти
-          </button>
+          </Link>
         </div>
         <button
           className={
