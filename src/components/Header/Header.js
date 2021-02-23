@@ -6,6 +6,9 @@ import Logo from '../../components/Logo/Logo';
 function Header() {
   const history = useHistory();
   const location = history.location.pathname;
+  let isRoot = false;
+  isRoot = location === '/';
+  console.log('main', isRoot);
 
   // Этот код исполняется в демонстрационных целях и
   // не будет присутствовать в окончательном варианте приложения
@@ -27,13 +30,13 @@ function Header() {
   };
 
   return (
-    <div className={location === '/' ? 'header header_main' : 'header'}>
+    <div className={isRoot ? 'header header_main' : 'header'}>
       <div className='header__container'>
         <Logo isHeader={true} />
         <div className='header__navigation'>
           <nav
             className={
-              location === '/'
+              isRoot
                 ? 'header__content header__content_hidden'
                 : 'header__content'
             }
@@ -72,22 +75,21 @@ function Header() {
               Сохранённые фильмы
             </NavLink>
           </nav>
-          <div
+          <Link
             className={
-              location === '/'
+              isRoot
                 ? 'header__profile header__profile_hidden'
                 : 'header__profile'
             }
+            to='/profile'
           >
             <p className='header__account-title'>Аккаунт</p>
             <button className='header__account-button header__account-icon' />
-          </div>
+          </Link>
         </div>
         <div
           className={
-            location === '/'
-              ? 'header__auth'
-              : 'header__auth header__auth_hidden'
+            isRoot ? 'header__auth' : 'header__auth header__auth_hidden'
           }
         >
           <Link to='/signup' className='header__auth-item'>
@@ -102,7 +104,7 @@ function Header() {
         </div>
         <button
           className={
-            location === '/'
+            isRoot
               ? 'header__hamburger header__hamburger_hidden'
               : 'header__hamburger'
           }

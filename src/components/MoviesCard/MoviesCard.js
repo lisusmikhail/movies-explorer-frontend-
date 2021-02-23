@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './MoviesCard.css';
-import firstImg from '../../images/pic__COLOR_pic.png';
 import heart from '../../images/icon__heart_empty.png';
 import activeHeart from '../../images/icon__heart_active.png';
 import delFavorite from '../../images/icon__del_favorite.svg';

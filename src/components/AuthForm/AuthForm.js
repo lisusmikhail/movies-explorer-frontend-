@@ -5,6 +5,13 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
   const errorMsg1 = '';
   const errorMsg2 = '';
   const errorMsg3 = 'Что-то пошло не так...';
+  let nameValue = '';
+  let emailValue = '';
+
+  if (formPurpose === 'profile') {
+    nameValue = 'Виталий';
+    emailValue = 'pochta@yandex.ru';
+  }
 
   return (
     <form className={`auth-form auth-form_${formPurpose}`}>
@@ -25,6 +32,7 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
               maxLength='60'
               required
               autoComplete='chrome-off'
+              defaultValue={nameValue}
             />
             <span
               className={`auth-form__legend auth-form__legend_${formPurpose}`}
@@ -44,6 +52,7 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
             maxLength='60'
             required
             autoComplete='off'
+            defaultValue={emailValue}
           />
           <span
             className={`auth-form__legend auth-form__legend_${formPurpose}`}

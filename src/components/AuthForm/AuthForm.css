@@ -7,6 +7,12 @@
   width: 100%;
 }
 
+@media screen and (max-width: 520px) {
+  .auth-form {
+    align-items: center;
+  }
+}
+
 .auth-form_profile {
   align-items: center;
 }
@@ -21,8 +27,20 @@
   margin: 0 0 125px 0;
 }
 
+@media screen and (max-width: 520px) {
+  .auth-form__fields_register {
+    margin: 0 0 214px 0;
+  }
+}
+
 .auth-form__fields_login {
   margin: 0 0 193px 0;
+}
+
+@media screen and (max-width: 520px) {
+  .auth-form__fields_login {
+    margin: 0 0 282px 0;
+  }
 }
 
 /*.auth-form__fields_position-login {*/
@@ -56,6 +74,27 @@
 
 .auth-form__title_profile {
   margin: 4px 0 112px 0;
+}
+
+@media screen and (max-width: 520px) {
+  .auth-form__title {
+    margin: 47px 0 85px 0;
+  }
+  .auth-form__title_profile {
+    margin: 4px 0 112px 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .auth-form__title_profile {
+    margin: 4px 0 86px 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .auth-form__title_profile {
+    margin: 14px 0 68px 0;
+  }
 }
 
 .auth-form__input {
@@ -100,6 +139,18 @@
 .auth-form__input_profile_mail {
   border-bottom: none;
   margin-bottom: 189px;
+}
+
+@media screen and (max-width: 768px) {
+  .auth-form__input_profile_mail {
+    margin-bottom: 179px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .auth-form__input_profile_mail {
+    margin-bottom: 349px;
+  }
 }
 
 .auth-form__input_profile_mail:focus {
@@ -157,11 +208,25 @@
 .auth-form__submit-button_profile {
   font-family: Inter, sans-serif;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 500;
   font-size: 13px;
   line-height: 16px;
   color: #ffffff;
   background: none;
+}
+
+@media screen and (max-width: 520px) {
+  .auth-form__submit-button {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .auth-form__submit-button_profile {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+  }
 }
 
 .auth-form__submit-button:active,

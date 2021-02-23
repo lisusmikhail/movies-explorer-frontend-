@@ -129,6 +129,11 @@
   margin: 0;
   padding-bottom: 25px;
 }
+.portfolio__arrow:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
 
 @media screen and (max-width: 1024px) {
   .portfolio__arrow {
