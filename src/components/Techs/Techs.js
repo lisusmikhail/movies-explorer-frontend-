@@ -2,6 +2,10 @@ import React from 'react';
 import './Techs.css';
 
 function Techs() {
+  setTimeout(() => {
+    console.log(document.querySelector('#tech'));
+  }, 0);
+
   return (
     <section className='techs' id={'tech'}>
       <div className='techs__container'>
