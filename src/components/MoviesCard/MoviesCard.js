@@ -1,24 +1,21 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import './MoviesCard.css';
 import heart from '../../images/icon__heart_empty.png';
 import activeHeart from '../../images/icon__heart_active.png';
 import delFavorite from '../../images/icon__del_favorite.svg';
 
 function MoviesCard(props) {
-  const { title, img, duration, isFavorite } = props;
-  const history = useHistory();
-  const location = history.location.pathname;
+  const { title, img, duration, isFavorite, favoriteOnly } = props;
 
   // Данный JS код используется для демонстрации верстки
   // и не будет присутствовать в окончательном варианте проекта
   let favoriteIcon;
   let isVisible = true;
-  if (location === '/movies' && isFavorite) {
+  if (!favoriteOnly && isFavorite) {
     favoriteIcon = activeHeart;
-  } else if (location === '/saved-movies' && isFavorite) {
+  } else if (favoriteOnly && isFavorite) {
     favoriteIcon = delFavorite;
-  } else if (location === '/saved-movies' && !isFavorite) {
+  } else if (favoriteOnly && !isFavorite) {
     isVisible = false;
   } else {
     favoriteIcon = heart;

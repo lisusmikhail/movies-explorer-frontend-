@@ -9,7 +9,7 @@ import fifthImg from '../../images/pic__COLOR_pic_5.png';
 import sixthImg from '../../images/pic__COLOR_pic_6.png';
 import seventhImg from '../../images/pic__COLOR_pic_7.png';
 
-function MoviesCardList() {
+function MoviesCardList({ favoriteOnly }) {
   return (
     <section className='movies-card-list'>
       <MoviesCard
@@ -17,42 +17,49 @@ function MoviesCardList() {
         img={firstImg}
         duration={'1ч 42м'}
         isFavorite={true}
+        favoriteOnly={favoriteOnly}
       />
       <MoviesCard
         title={'Киноальманах «100 лет дизайна»'}
         img={secondImg}
         duration={'1ч 42м'}
         isFavorite={true}
+        favoriteOnly={favoriteOnly}
       />
       <MoviesCard
         title={'В погоне за Бенкси'}
         img={thirdImg}
         duration={'1ч 42м'}
         isFavorite={false}
+        favoriteOnly={favoriteOnly}
       />
       <MoviesCard
         title={'Баския: Взрыв реальности'}
         img={forthImg}
         duration={'1ч 42м'}
         isFavorite={false}
+        favoriteOnly={favoriteOnly}
       />
       <MoviesCard
         title={'Бег это свобода'}
         img={fifthImg}
         duration={'1ч 42м'}
         isFavorite={true}
+        favoriteOnly={favoriteOnly}
       />
       <MoviesCard
         title={'Книготорговцы'}
         img={sixthImg}
         duration={'1ч 42м'}
         isFavorite={false}
+        favoriteOnly={favoriteOnly}
       />
       <MoviesCard
         title={'Когда я думаю о Германии ночью'}
         img={seventhImg}
         duration={'1ч 42м'}
         isFavorite={false}
+        favoriteOnly={favoriteOnly}
       />
       <button type='button' className='movies-card-list__more-button'>
         Ещё

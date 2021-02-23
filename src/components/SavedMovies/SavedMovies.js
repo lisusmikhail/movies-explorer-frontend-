@@ -7,7 +7,7 @@ function SavedMovies() {
   return (
     <div className='movies'>
       <SearchForm />
-      <MoviesCardList />
+      <MoviesCardList favoriteOnly={true} />
     </div>
   );
 }

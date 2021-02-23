@@ -7,7 +7,7 @@ function Movies() {
   return (
     <div className='movies'>
       <SearchForm />
-      <MoviesCardList />
+      <MoviesCardList favoriteOnly={false} />
     </div>
   );
 }
