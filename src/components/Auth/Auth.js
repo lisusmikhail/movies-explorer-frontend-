@@ -34,13 +34,7 @@ function Auth(props) {
           </p>
         )}
         {formPurpose === 'profile' && (
-          <button
-            type='button'
-            onClick={() => {
-              console.log('Profile');
-            }}
-            className='auth__footer-button'
-          >
+          <button type='button' className='auth__footer-button'>
             {footerAction}
           </button>
         )}
