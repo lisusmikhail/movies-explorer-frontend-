@@ -1,49 +1,26 @@
 .navigation {
-}
-
-.navigation {
-  /*list-style-type: none;*/
   display: flex;
   flex-direction: row;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation_position {
+  margin: 0;
 }
 
 .navigation_hidden {
   display: none;
 }
 
-@media screen and (max-width: 768px) {
-  .navigation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    margin: 159px 0 0 0;
-  }
-}
-
-@media screen and (max-width: 520px) {
-  .navigation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    margin: 145px 0 0 0;
-  }
-}
-
-/*Header Content Item*/
-
 .navigation__item {
-  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
   line-height: 18px;
   color: #ffffff;
   margin: 0 17px 0 0;
-  padding: 0 0 0 0;
+  padding: 0;
   text-decoration: none;
 }
 
@@ -53,14 +30,7 @@
   cursor: pointer;
 }
 
-@media screen and (min-width: 769px) {
-  .navigation__item:first-child {
-    display: none;
-  }
-}
-
 .navigation__item_active {
-  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -68,9 +38,25 @@
   color: #ffffff;
 }
 
+@media screen and (min-width: 769px) {
+  .navigation__item:first-child {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
+  .navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .navigation_position {
+    margin: 159px 0 0 0;
+  }
+
   .navigation__item {
-    font-family: Inter, sans-serif;
     font-style: normal;
     font-size: 18px;
     font-weight: 500;
@@ -78,7 +64,7 @@
     letter-spacing: 0;
     color: #ffffff;
     margin: 0 0 23px 0;
-    padding: 0 0 0 0;
+    padding: 0;
   }
 
   .navigation__item_active {
@@ -86,17 +72,27 @@
     min-height: 31px;
     display: grid;
     place-items: center;
-    /*display: inline-block;*/
     width: fit-content;
     border-bottom: 2px solid #ffffff;
   }
 
   .navigation__item:last-child {
-    margin: 0 0 0 0;
+    margin: 0;
   }
 }
 
 @media screen and (max-width: 520px) {
+  .navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .navigation_position {
+    margin: 145px 0 0 0;
+  }
+
   .navigation__item {
     margin: 0 0 17px 0;
   }

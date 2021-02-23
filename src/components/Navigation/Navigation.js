@@ -4,7 +4,13 @@ import { NavLink } from 'react-router-dom';
 
 function Navigation({ isRoot, handleNavClick }) {
   return (
-    <nav className={isRoot ? 'navigation navigation_hidden' : 'navigation'}>
+    <nav
+      className={
+        isRoot
+          ? 'navigation navigation_hidden'
+          : 'navigation navigation_position'
+      }
+    >
       <NavLink
         className='navigation__item'
         exact
