@@ -10,18 +10,17 @@
   text-align: center;
   justify-items: stretch;
   align-items: stretch;
-  --height-chart: 10px;
 }
 
 .chart_position {
-  margin: 110px var(--side-indent) 0;
+  margin: 110px 70px 0;
 }
 
 .chart__backend {
   background-color: #3ddc84;
   color: #000000;
   align-self: center;
-  padding: var(--height-chart) 0;
+  padding: 10px 0;
 }
 
 .chart__frontend {
@@ -29,7 +28,7 @@
   grid-column-end: 6;
   background-color: #303030;
   align-self: center;
-  padding: var(--height-chart) 0;
+  padding: 10px 0;
   color: #ffffff;
 }
 
@@ -61,7 +60,6 @@
     font-size: 11px;
     line-height: 13px;
     margin-top: 59px;
-    --height-chart: 11px;
   }
 
   .chart__label {

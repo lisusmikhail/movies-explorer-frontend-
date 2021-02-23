@@ -16,7 +16,7 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
   }
 
   return (
-    <form className={`auth-form auth-form_${formPurpose}`}>
+    <form className={`auth-form auth-form_position auth-form_${formPurpose}`}>
       <h2 className={`auth-form__title auth-form__title_${formPurpose}`}>
         {title}
       </h2>

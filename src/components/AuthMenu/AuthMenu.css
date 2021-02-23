@@ -3,6 +3,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+}
+
+.auth-menu_position {
   margin: 0 70px 0 0;
 }
 
@@ -33,7 +36,7 @@
   margin: 0 30px 0 0;
 }
 
-.auth-menu_hidden {
+.auth-menu_visibility {
   display: none;
 }
 

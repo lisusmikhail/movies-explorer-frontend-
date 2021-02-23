@@ -3,8 +3,11 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  margin: 0 auto;
   width: 100%;
+}
+
+.auth-form_position {
+  margin: 0 auto;
 }
 
 .auth-form_profile {
@@ -162,7 +165,7 @@
 
 @media screen and (max-width: 768px) {
   .auth-form__title_profile {
-    margin: 4px 0 86px 0;
+    margin: 4px 0 86px;
   }
 
   .auth-form__input_profile_mail {
@@ -176,18 +179,18 @@
   }
 
   .auth-form__fields_register {
-    margin: 0 0 214px 0;
+    margin: 0 0 214px;
   }
 
   .auth-form__fields_login {
-    margin: 0 0 282px 0;
+    margin: 0 0 282px;
   }
 
   .auth-form__title {
-    margin: 47px 0 85px 0;
+    margin: 47px 0 85px;
   }
   .auth-form__title_profile {
-    margin: 4px 0 112px 0;
+    margin: 4px 0 112px;
   }
 
   .auth-form__input_profile_mail {

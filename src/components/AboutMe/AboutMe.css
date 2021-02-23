@@ -2,7 +2,6 @@
   background: #202020;
   padding: 90px 0 80px;
   width: 100%;
-  --side-indent: 70px;
 }
 
 .about-me__container {
@@ -11,7 +10,7 @@
 }
 
 .about-me__title {
-  margin: 0 var(--side-indent);
+  margin: 0 70px;
 }
 
 .about-me__full-info {
@@ -19,7 +18,7 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  margin: 66px var(--side-indent) 0;
+  margin: 66px 70px 0;
 }
 
 .about-me__description {
@@ -90,7 +89,6 @@
 
 @media screen and (max-width: 1024px) {
   .about-me {
-    --side-indent: 50px;
     padding: 69px 0 80px;
   }
 
@@ -132,7 +130,7 @@
     flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: center;
-    margin: 60px var(--side-indent) 0;
+    margin: 60px 50px 0;
   }
 
   .about-me__description {
@@ -157,7 +155,6 @@
 
 @media screen and (max-width: 520px) {
   .about-me {
-    --side-indent: 14px;
     padding: 23px 0 59px;
   }
 

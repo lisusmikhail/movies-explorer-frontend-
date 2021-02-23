@@ -4,7 +4,13 @@ import './AuthMenu.css';
 
 function AuthMenu({ isRoot }) {
   return (
-    <div className={isRoot ? 'auth-menu' : 'auth-menu auth-menu_hidden'}>
+    <div
+      className={
+        isRoot
+          ? 'auth-menu auth-menu_position'
+          : 'auth-menu auth-menu_visibility'
+      }
+    >
       <Link to='/signup' className='auth-menu-item'>
         Регистрация
       </Link>

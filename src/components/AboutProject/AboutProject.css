@@ -1,18 +1,20 @@
 .about {
   padding: 89px 0 103px;
-  margin: 0 auto;
   max-width: 1280px;
-  --side-indent: 70px;
+}
+
+.about_position {
+  margin: 0 auto;
 }
 
 .about__title {
-  margin: 0 var(--side-indent);
+  margin: 0 70px;
 }
 
 .about__content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin: 70px var(--side-indent) 0;
+  margin: 70px 70px 0;
 }
 
 .about__description {
@@ -59,7 +61,6 @@
 @media screen and (max-width: 1024px) {
   .about {
     padding: 69px 0 83px;
-    --side-indent: 50px;
   }
 
   .about__content {
@@ -94,7 +95,6 @@
 @media screen and (max-width: 520px) {
   .about {
     padding: 43px 0 83px;
-    --side-indent: 18px;
   }
 
   .about__content {

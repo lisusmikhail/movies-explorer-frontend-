@@ -4,7 +4,7 @@ import Chart from '../Chart/Chart';
 
 function AboutProject() {
   return (
-    <section className='about' id='about'>
+    <section className='about about_position' id='about'>
       <h2 className='about__title section-title'>О проекте</h2>
       <div className='about__content'>
         <div className='about__description'>

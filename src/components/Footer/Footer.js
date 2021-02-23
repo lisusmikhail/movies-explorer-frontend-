@@ -7,7 +7,13 @@ function Footer() {
   const location = history.location.pathname;
 
   return (
-    <div className={location === '/' ? 'footer' : 'footer footer_movies'}>
+    <div
+      className={
+        location === '/'
+          ? 'footer footer_position'
+          : 'footer footer_position footer_movies'
+      }
+    >
       <p className='footer__title'>
         Учебный проект Яндекс.Практикум х BeatFilm.
       </p>

@@ -53,21 +53,21 @@
 
 @media screen and (max-width: 768px) {
   .not-found-page__title {
-    margin: 407px 0 0 0;
+    margin: 407px 0 0;
   }
 
   .not-found-page__text {
-    margin: 6px 0 0 0;
+    margin: 6px 0 0;
   }
 
   .not-found-page__link {
-    margin: 184px 0 0 0;
+    margin: 184px 0 0;
   }
 }
 
 @media screen and (max-width: 425px) {
   .not-found-page__title {
-    margin: 329px 0 0 0;
+    margin: 329px 0 0;
     font-size: 80px;
     line-height: 97px;
   }
@@ -75,12 +75,12 @@
   .not-found-page__text {
     font-size: 12px;
     line-height: 15px;
-    margin: 10px 0 0 0;
+    margin: 10px 0 0;
   }
 
   .not-found-page__link {
     font-size: 12px;
     line-height: 15px;
-    margin: 284px 0 0 0;
+    margin: 284px 0 0;
   }
 }

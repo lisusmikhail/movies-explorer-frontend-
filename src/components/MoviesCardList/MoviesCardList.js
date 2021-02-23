@@ -11,7 +11,7 @@ import seventhImg from '../../images/pic__COLOR_pic_7.png';
 
 function MoviesCardList({ favoriteOnly }) {
   return (
-    <section className='movies-card-list'>
+    <section className='movies-card-list movies-card-list_position'>
       <MoviesCard
         title={'33 слова о дизайне'}
         img={firstImg}

@@ -1,7 +1,8 @@
 .checkbox {
   display: flex;
   align-items: center;
-  margin: 0 0 0 0;
+  margin: 0;
+  padding: 0;
 }
 
 .checkbox__input {
@@ -62,7 +63,7 @@
 
 @media screen and (max-width: 1024px) {
   .checkbox {
-    margin: 37px 0 0 0;
+    margin: 37px 0 0;
     line-height: 0;
   }
 
@@ -80,7 +81,7 @@
 
 @media screen and (max-width: 520px) {
   .checkbox {
-    margin: 44px 0 0 0;
+    margin: 44px 0 0;
   }
 
   .checkbox__title {
