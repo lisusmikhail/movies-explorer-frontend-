@@ -10,6 +10,8 @@ function MoviesCard(props) {
   const history = useHistory();
   const location = history.location.pathname;
 
+  // Данный JS код используется для демонстрации верстки
+  // и не будет присутствовать в окончательном варианте проекта
   let favoriteIcon;
   let isVisible = true;
   if (location === '/movies' && isFavorite) {

@@ -1,0 +1,76 @@
+.profile-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+  .profile-menu {
+    margin: 620px 0 0 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .profile-menu {
+    margin: 442px 0 0 0;
+  }
+}
+
+.profile-menu_hidden {
+  display: none;
+}
+
+.header__account {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-menu:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+/*Header Account Title*/
+
+.profile-menu__title {
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+  margin: 0 14px 0 0;
+  padding: 0 0 0 0;
+}
+
+/*Header Account Button*/
+
+.profile-menu__button {
+  width: 30px;
+  height: 30px;
+  background: #313131;
+  border-radius: 6px;
+  border: unset;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.profile-menu__button:active,
+.profile-menu__button:focus {
+  outline: none;
+}
+
+.profile-menu__icon:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.profile-menu__icon {
+  background-image: url('../../images/account-icon_1280.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+}

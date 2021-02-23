@@ -25,7 +25,6 @@ function Auth(props) {
           submitButtonTitle={submitButtonTitle}
           formPurpose={formPurpose}
         />
-
         {formPurpose !== 'profile' && (
           <p className='auth__footer'>
             {footerTitle}
@@ -34,7 +33,6 @@ function Auth(props) {
             </Link>
           </p>
         )}
-
         {formPurpose === 'profile' && (
           <button
             type='button'

@@ -1,18 +1,16 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import './Footer.css';
 
 function Footer() {
   const history = useHistory();
   const location = history.location.pathname;
-  // console.log(location);
 
   return (
     <div className={location === '/' ? 'footer' : 'footer footer_movies'}>
       <p className='footer__title'>
         Учебный проект Яндекс.Практикум х BeatFilm.
       </p>
-      {/*<div className='footer__line' />*/}
       <div className='footer__info'>
         <p
           className={
@@ -31,34 +29,34 @@ function Footer() {
           }
         >
           <li className='footer__link-item'>
-            <a
+            <Link
               className='footer__link'
               target='_blank'
               rel='noopener'
               href='https://praktikum.yandex.ru/'
             >
               Яндекс.Практикум
-            </a>
+            </Link>
           </li>
           <li className='footer__link-item'>
-            <a
+            <Link
               className='footer__link'
               target='_blank'
               rel='noopener'
               href='https://github.com/lisusmikhail'
             >
               Github
-            </a>
+            </Link>
           </li>
           <li className='footer__link-item'>
-            <a
+            <Link
               className='footer__link'
               target='_blank'
               rel='noopener'
               href='https://ru-ru.facebook.com/yandex.praktikum'
             >
               Facebook
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

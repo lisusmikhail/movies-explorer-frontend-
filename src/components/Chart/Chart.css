@@ -1,0 +1,70 @@
+.chart {
+  display: grid;
+  margin: 110px var(--side-indent) 0 var(--side-indent);
+  grid-template-columns: minmax(228px, 1fr) 4fr;
+  grid-template-rows: 1fr 1fr;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: 0;
+  text-align: center;
+  justify-items: stretch;
+  align-items: stretch;
+  --height-chart: 10px;
+}
+
+@media screen and (max-width: 1280px) {
+  .chart {
+    grid-template-columns: minmax(140px, 1fr) 4fr;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .chart {
+    margin-top: 93px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .chart {
+    grid-template-columns: minmax(100px, 1fr) 4fr;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .chart {
+    font-size: 11px;
+    line-height: 13px;
+    margin-top: 59px;
+    --height-chart: 11px;
+  }
+}
+
+.chart__backend {
+  background-color: #3ddc84;
+  color: #000000;
+  align-self: center;
+  padding: var(--height-chart) 0;
+}
+
+.chart__frontend {
+  grid-column-start: 2;
+  grid-column-end: 6;
+  background-color: #303030;
+  align-self: center;
+  padding: var(--height-chart) 0;
+  color: #ffffff;
+}
+
+.chart__label {
+  color: #a0a0a0;
+  line-height: 37px;
+}
+
+@media screen and (max-width: 520px) {
+  .chart__label {
+    line-height: 35px;
+  }
+}

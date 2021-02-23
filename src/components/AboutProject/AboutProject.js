@@ -1,9 +1,10 @@
 import React from 'react';
 import './AboutProject.css';
+import Chart from '../Chart/Chart';
 
 function AboutProject() {
   return (
-    <section className='about'>
+    <section className='about' id='about'>
       <h2 className='about__title section-title'>О проекте</h2>
       <div className='about__content'>
         <div className='about__description'>
@@ -25,12 +26,7 @@ function AboutProject() {
           </p>
         </div>
       </div>
-      <div className='about__gantt-chart'>
-        <div className='about__backend-chart'>1 неделя</div>
-        <div className='about__frontend-chart'>4 недели</div>
-        <div className='about__chart-label'>Back-end</div>
-        <div className='about__chart-label'>Front-end</div>
-      </div>
+      <Chart />
     </section>
   );
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import './AuthForm.css';
 
 function AuthForm({ title, submitButtonTitle, formPurpose }) {
+  // Данный JS код используется для демонстрации верстки
+  // и не будет присутствовать в окончательном варианте проекта
   const errorMsg1 = '';
   const errorMsg2 = '';
   const errorMsg3 = 'Что-то пошло не так...';

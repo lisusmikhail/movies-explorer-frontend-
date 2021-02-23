@@ -135,46 +135,6 @@
   }
 }
 
-.promo__button {
-  font-family: Inter, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  color: #ffffff;
-  line-height: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-sizing: border-box;
-  border-radius: 3px;
-  background-color: unset;
-  width: 129px;
-  height: 36px;
-  margin: 146px 0 0 0;
-  padding: 0 0 0 0;
-}
-
-.promo__button:active,
-.promo__button:focus {
-  outline: none;
-}
-
-.promo__button:hover {
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-  cursor: pointer;
-}
-
-@media screen and (max-width: 1024px) {
-  .promo__button {
-    margin: 91px 0 0 0;
-  }
-}
-
-@media screen and (max-width: 520px) {
-  .promo__button {
-    margin: 80px 0 0 0;
-  }
-}
-
 .promo__image {
   margin: 0 70px 0 0;
   width: 310px;
