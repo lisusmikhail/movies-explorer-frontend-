@@ -5,7 +5,11 @@ import './ProfileMenu.css';
 function ProfileMenu({ isRoot, handleNavClick }) {
   return (
     <Link
-      className={isRoot ? 'profile-menu profile-menu_hidden' : 'profile-menu'}
+      className={
+        isRoot
+          ? 'profile-menu profile-menu_visibility'
+          : 'profile-menu profile-menu_position'
+      }
       to='/profile'
       onClick={handleNavClick}
     >

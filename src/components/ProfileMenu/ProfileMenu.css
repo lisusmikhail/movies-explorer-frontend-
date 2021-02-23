@@ -5,19 +5,7 @@
   justify-content: space-between;
 }
 
-@media screen and (max-width: 768px) {
-  .profile-menu {
-    margin: 620px 0 0 0;
-  }
-}
-
-@media screen and (max-width: 520px) {
-  .profile-menu {
-    margin: 442px 0 0 0;
-  }
-}
-
-.profile-menu_hidden {
+.profile-menu_visibility {
   display: none;
 }
 
@@ -33,20 +21,15 @@
   cursor: pointer;
 }
 
-/*Header Account Title*/
-
 .profile-menu__title {
-  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
   color: #ffffff;
   margin: 0 14px 0 0;
-  padding: 0 0 0 0;
+  padding: 0;
 }
-
-/*Header Account Button*/
 
 .profile-menu__button {
   width: 30px;
@@ -54,8 +37,8 @@
   background: #313131;
   border-radius: 6px;
   border: unset;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  margin: 0;
+  padding: 0;
 }
 
 .profile-menu__button:active,
@@ -73,4 +56,16 @@
   background-image: url('../../images/account-icon_1280.svg');
   background-position: center;
   background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 768px) {
+  .profile-menu_position {
+    margin: 620px 0 0;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .profile-menu_position {
+    margin: 442px 0 0;
+  }
 }
