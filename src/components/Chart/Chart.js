@@ -3,7 +3,7 @@ import './Chart.css';
 
 function Chart() {
   return (
-    <div className='chart'>
+    <div className='chart chart_position'>
       <div className='chart__backend'>1 неделя</div>
       <div className='chart__frontend'>4 недели</div>
       <div className='chart__label'>Back-end</div>
