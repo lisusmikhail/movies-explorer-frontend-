@@ -27,7 +27,9 @@ function MoviesCard(props) {
   return (
     <div
       className={
-        isVisible ? 'movies-card' : 'movies-card movies-card_visibility'
+        isVisible
+          ? 'movies-card movies-card_position'
+          : 'movies-card movies-card_visibility'
       }
     >
       <div className='movies-card__info'>
