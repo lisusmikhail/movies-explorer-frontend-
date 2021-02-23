@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './Footer.css';
 
 function Footer() {
@@ -29,34 +29,34 @@ function Footer() {
           }
         >
           <li className='footer__link-item'>
-            <Link
+            <a
               className='footer__link'
               target='_blank'
               rel='noopener'
               href='https://praktikum.yandex.ru/'
             >
               Яндекс.Практикум
-            </Link>
+            </a>
           </li>
           <li className='footer__link-item'>
-            <Link
+            <a
               className='footer__link'
               target='_blank'
               rel='noopener'
               href='https://github.com/lisusmikhail'
             >
               Github
-            </Link>
+            </a>
           </li>
           <li className='footer__link-item'>
-            <Link
+            <a
               className='footer__link'
               target='_blank'
               rel='noopener'
               href='https://ru-ru.facebook.com/yandex.praktikum'
             >
               Facebook
-            </Link>
+            </a>
           </li>
         </ul>
       </div>
