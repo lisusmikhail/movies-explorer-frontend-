@@ -64,7 +64,11 @@
   }
 
   .about__content {
-    margin-top: 70px;
+    margin: 70px 50px 0;
+  }
+
+  .about__title {
+    margin: 0 50px;
   }
 
   .about__description:last-child {
@@ -94,11 +98,15 @@
 
 @media screen and (max-width: 520px) {
   .about {
-    padding: 43px 0 83px;
+    padding: 44px 0 83px;
   }
 
   .about__content {
-    margin-top: 61px;
+    margin: 61px 18px 0;
+  }
+
+  .about__title {
+    margin: 0 18px;
   }
 
   .about__description:last-child {

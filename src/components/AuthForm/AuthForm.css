@@ -72,12 +72,12 @@
 
 .auth-form__input_profile {
   text-align: right;
-  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: 11px;
   line-height: 13px;
   margin: 0 0 7px 0;
+  padding: 0;
 }
 
 .auth-form__input:focus {
@@ -106,6 +106,8 @@
   font-size: 10px;
   line-height: 12px;
   color: #8b8b8b;
+  margin: 0;
+  padding: 0;
 }
 
 .auth-form__legend_profile {
@@ -115,6 +117,8 @@
   line-height: 13px;
   color: #ffffff;
   top: 4px;
+  margin: 0;
+  padding: 0;
 }
 
 .auth-form__tips {
@@ -126,6 +130,8 @@
   position: absolute;
   top: 37px;
   left: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .auth-form__submit-button {
@@ -140,16 +146,18 @@
   line-height: 17px;
   color: #ffffff;
   padding: 0;
+  margin: 0;
 }
 
 .auth-form__submit-button_profile {
-  font-family: Inter, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
   line-height: 16px;
   color: #ffffff;
   background: none;
+  margin: 0;
+  padding: 0;
 }
 
 .auth-form__submit-button:active,

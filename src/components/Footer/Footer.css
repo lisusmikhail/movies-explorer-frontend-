@@ -24,6 +24,7 @@
   min-height: 36px;
   width: calc(100% - 140px);
   border-bottom: 1px solid #424242;
+  border-bottom: 1px solid white;
 }
 
 .footer__info {
@@ -37,6 +38,8 @@
   font-size: 13px;
   line-height: 16px;
   color: #ffffff;
+  margin: 0;
+  padding: 0;
 }
 
 .footer__copyright {
@@ -86,7 +89,13 @@
 
   .footer__title {
     min-height: 34px;
-    width: calc(100% - 70px);
+    width: calc(100% - 60px);
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    padding: 0 0 0 14px;
+    color: white;
   }
 
   .footer__copyright {
@@ -98,7 +107,7 @@
   }
 
   .footer__links {
-    margin: 0 25px 0 0;
+    margin: 0 24px 0 0;
   }
 
   .footer__links_movies {
@@ -144,7 +153,7 @@
 
 @media screen and (max-width: 520px) {
   .footer {
-    padding: 159px 0 10px;
+    padding: 104px 0 10px;
   }
 
   .footer__title {
@@ -152,6 +161,7 @@
     line-height: 15px;
     width: calc(100% - 20px);
     min-height: 36px;
+    padding: 0;
   }
 
   .footer__info {

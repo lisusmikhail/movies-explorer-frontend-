@@ -37,6 +37,8 @@
   font-size: 14px;
   line-height: 18px;
   color: #8b8b8b;
+  margin: 0;
+  padding: 0;
 }
 
 .search-form__submit-button {

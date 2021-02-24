@@ -11,6 +11,8 @@
   letter-spacing: -0.04em;
   border-bottom: 1px solid #dadada;
   text-align: left;
+  margin: 0;
+  padding: 0;
 }
 
 @media screen and (max-width: 1024px) {

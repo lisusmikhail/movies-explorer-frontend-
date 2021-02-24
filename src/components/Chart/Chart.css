@@ -10,6 +10,8 @@
   text-align: center;
   justify-items: stretch;
   align-items: stretch;
+  margin: 0;
+  padding: 0;
 }
 
 .chart_position {
@@ -44,8 +46,16 @@
 }
 
 @media screen and (max-width: 1024px) {
-  .chart {
-    margin-top: 93px;
+  .chart_position {
+    margin: 93px 50px 0;
+  }
+
+  .chart__backend {
+    padding: 9px 0;
+  }
+
+  .chart__frontend {
+    padding: 9px 0;
   }
 }
 
@@ -59,10 +69,21 @@
   .chart {
     font-size: 11px;
     line-height: 13px;
-    margin-top: 59px;
   }
 
   .chart__label {
     line-height: 35px;
+  }
+
+  .chart_position {
+    margin: 59px 18px 0;
+  }
+
+  .chart__backend {
+    padding: 11px 0;
+  }
+
+  .chart__frontend {
+    padding: 11px 0;
   }
 }

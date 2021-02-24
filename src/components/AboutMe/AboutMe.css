@@ -92,6 +92,14 @@
     padding: 69px 0 80px;
   }
 
+  .about-me__title {
+    margin: 0 50px;
+  }
+
+  .about-me__full-info {
+    margin: 66px 50px 0;
+  }
+
   .about-me__description {
     min-height: 307px;
   }
@@ -156,6 +164,14 @@
 @media screen and (max-width: 520px) {
   .about-me {
     padding: 23px 0 59px;
+  }
+
+  .about-me__title {
+    margin: 0 14px;
+  }
+
+  .about-me__full-info {
+    margin: 60px 14px 0;
   }
 
   .about-me__name {

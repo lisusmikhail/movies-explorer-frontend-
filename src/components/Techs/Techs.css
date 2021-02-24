@@ -25,7 +25,7 @@
   font-weight: 400;
   line-height: 58px;
   letter-spacing: -0.04em;
-  margin: 90px 0 0;
+  margin: 90px 0 0 -2px;
   padding: 0;
 }
 
@@ -58,29 +58,38 @@
   line-height: 17px;
   letter-spacing: -0.04em;
   background-color: #303030;
-  margin: 0;
   border-radius: 10px;
   width: 90px;
   height: 60px;
   display: grid;
   place-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 @media screen and (max-width: 1024px) {
   .techs {
     padding: 69px 0 90px;
   }
-  .techs__description-title {
-    margin: 85px 0 0;
+
+  .techs__title {
+    margin: 0 50px;
   }
+
+  .techs__description-title {
+    margin: 85px 0 0 -2px;
+  }
+
   .techs__description-text {
     font-size: 12px;
     line-height: 18px;
     margin: 17px auto 0;
   }
+
   .techs__stack {
     margin: 83px 0 0;
   }
+
   .techs__stack-item {
     font-size: 12px;
     line-height: 15px;
@@ -101,10 +110,14 @@
     padding: 18px 0 90px;
   }
 
+  .techs__title {
+    margin: 0 18px;
+  }
+
   .techs__description-title {
     font-size: 30px;
     line-height: 36px;
-    margin: 60px 0 0;
+    margin: 60px 0 0 -1px;
   }
 
   .techs__description-text {

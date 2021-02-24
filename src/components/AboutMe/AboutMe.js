@@ -22,22 +22,22 @@ function AboutMe() {
               </p>
             </div>
             <div className='about-me__links'>
-              <Link
+              <a
                 className='about-me__social'
                 href='https://www.facebook.com/yandex.praktikum/'
                 target='_blank'
                 rel='noopener'
               >
                 Facebook
-              </Link>
-              <Link
+              </a>
+              <a
                 className='about-me__social'
                 href='https://github.com/lisusmikhail'
                 target='_blank'
                 rel='noopener'
               >
                 GitHub
-              </Link>
+              </a>
             </div>
           </div>
           <img className='about-me__image' src={picture} alt='About Me' />
