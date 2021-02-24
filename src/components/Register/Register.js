@@ -2,7 +2,7 @@ import React from 'react';
 import './Register.css';
 import Auth from '../Auth/Auth';
 
-function Register() {
+function Register({ onSignUp }) {
   return (
     <Auth
       title={'Добро пожаловать!'}
@@ -11,6 +11,7 @@ function Register() {
       footerTitle='Уже зарегистрированы?'
       footerAction='Войти'
       footerLink='/signin'
+      onSignUp={onSignUp}
     />
   );
 }

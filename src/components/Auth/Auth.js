@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Auth.css';
 import AuthForm from '../AuthForm/AuthForm';
@@ -13,6 +13,7 @@ function Auth(props) {
     footerTitle,
     footerAction,
     footerLink,
+    onSignUp,
   } = props;
 
   return (
@@ -24,6 +25,7 @@ function Auth(props) {
           title={title}
           submitButtonTitle={submitButtonTitle}
           formPurpose={formPurpose}
+          onSignUp={onSignUp}
         />
         {formPurpose !== 'profile' && (
           <p className='auth__footer'>

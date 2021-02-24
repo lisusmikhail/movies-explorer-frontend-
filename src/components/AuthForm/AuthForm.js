@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './AuthForm.css';
 
-function AuthForm({ title, submitButtonTitle, formPurpose }) {
-  // Данный JS код используется для демонстрации верстки
-  // и не будет присутствовать в окончательном варианте проекта
-  const errorMsg1 = '';
-  const errorMsg2 = '';
-  const errorMsg3 = 'Что-то пошло не так...';
-  let nameValue = '';
-  let emailValue = '';
+function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
+  const [values, setValues] = useState({ email: '', password: '', name: '' });
 
-  if (formPurpose === 'profile') {
-    nameValue = 'Виталий';
-    emailValue = 'pochta@yandex.ru';
-  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    // console.log(e);
+    e.preventDefault();
+    const { email, password, name } = values;
+    console.log({ email, password, name });
+    onSignUp(email, password, name);
+  };
 
   return (
-    <form className={`auth-form auth-form_position auth-form_${formPurpose}`}>
+    <form
+      className={`auth-form auth-form_position auth-form_${formPurpose}`}
+      onSubmit={handleSubmit}
+    >
       <h2 className={`auth-form__title auth-form__title_${formPurpose}`}>
         {title}
       </h2>
@@ -34,34 +39,38 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
               maxLength='60'
               required
               autoComplete='chrome-off'
-              defaultValue={nameValue}
+              // defaultValue={'1111111111'}
+              value={values.name}
+              onChange={handleChange}
             />
             <span
               className={`auth-form__legend auth-form__legend_${formPurpose}`}
             >
               Имя
             </span>
-            <span className='auth-form__tips'>{errorMsg1}</span>
+            <span className='auth-form__tips'>{}</span>
           </label>
         )}
         <label className='auth-form__field-input'>
           <input
             className={`auth-form__input auth-form__input_${formPurpose} auth-form__input_${formPurpose}_mail`}
-            type='email'
+            type='text'
             id='second-auth-field'
             name='email'
             minLength='5'
             maxLength='60'
             required
             autoComplete='off'
-            defaultValue={emailValue}
+            // defaultValue={'1111111111@jhhjjhjhj.kk'}
+            value={values.email}
+            onChange={handleChange}
           />
           <span
             className={`auth-form__legend auth-form__legend_${formPurpose}`}
           >
             {formPurpose === 'profile' ? 'Почта' : 'E-mail'}
           </span>
-          <span className='auth-form__tips'>{errorMsg2}</span>
+          <span className='auth-form__tips'>{}</span>
         </label>
         {formPurpose !== 'profile' && (
           <label className={`auth-form__field-input`}>
@@ -74,15 +83,19 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
               maxLength='20'
               required
               autoComplete='off'
+              // defaultValue={'1111111111'}
+              value={values.password}
+              onChange={handleChange}
             />
             <span className='auth-form__legend'>Пароль</span>
-            <span className='auth-form__tips'>{errorMsg3}</span>
+            <span className='auth-form__tips'>{}</span>
           </label>
         )}
       </fieldset>
       <button
         type='submit'
         className={`auth-form__submit-button auth-form__submit-button_${formPurpose}`}
+        onSubmit={handleSubmit}
       >
         {submitButtonTitle}
       </button>
