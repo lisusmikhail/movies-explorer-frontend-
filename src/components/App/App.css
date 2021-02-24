@@ -4,7 +4,6 @@
 
 .section-title {
   color: #ffffff;
-  font-family: Inter, sans-serif;
   font-size: 22px;
   font-style: normal;
   font-weight: 400;
@@ -12,6 +11,8 @@
   letter-spacing: -0.04em;
   border-bottom: 1px solid #dadada;
   text-align: left;
+  margin: 0;
+  padding: 0;
 }
 
 @media screen and (max-width: 1024px) {
