@@ -20,6 +20,7 @@ function App() {
       .register(email, password, name)
       .then((res) => {
         if (res) {
+          resetStates();
           console.log('signup', 'will be appropriate action here...');
         } else {
           console.log('Произошла ошибка');
@@ -42,16 +43,11 @@ function App() {
     }
   };
 
-  // const handleSignUp = (password, email) => {
-  //   auth.register(password, email).then((res) => {
-  //     if (res) {
-  //       onInfoTooltipRegistration(res)
-  //     } else {
-  //       console.log('Произошла ошибка.');
-  //     }
-  //   }).catch((err) => console.log(err));
-  // }
+  const resetStates = () => {
+    setErrorMsg('');
+  };
 
+  console.log(errorMsg);
   return (
     <div className='app'>
       <Switch>
@@ -61,7 +57,7 @@ function App() {
           <Footer />
         </Route>
         <Route path='/signup'>
-          <Register onSignUp={onSignUp} />
+          <Register onSignUp={onSignUp} errorMsg={errorMsg} />
         </Route>
         <Route path='/signin'>
           <Login />

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import './AuthForm.css';
 
-function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
+function AuthForm({
+  title,
+  submitButtonTitle,
+  formPurpose,
+  onSignUp,
+  errorMsg,
+}) {
   const [values, setValues] = useState({ email: '', password: '', name: '' });
 
   const handleChange = (e) => {
@@ -10,7 +16,6 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
   };
 
   const handleSubmit = (e) => {
-    // console.log(e);
     e.preventDefault();
     const { email, password, name } = values;
     console.log({ email, password, name });
@@ -92,6 +97,7 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
           </label>
         )}
       </fieldset>
+      <p className='auth-form__error-message'>{errorMsg}</p>
       <button
         type='submit'
         className={`auth-form__submit-button auth-form__submit-button_${formPurpose}`}

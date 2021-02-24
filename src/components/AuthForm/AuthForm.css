@@ -171,6 +171,18 @@
   cursor: pointer;
 }
 
+.auth-form__error-message {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 15px;
+  color: #ee3465;
+  position: absolute;
+  left: 50%;
+  top: 510px;
+  transform: translate(-50%, 0);
+}
+
 @media screen and (max-width: 768px) {
   .auth-form__title_profile {
     margin: 4px 0 86px;
