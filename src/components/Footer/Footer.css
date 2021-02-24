@@ -24,7 +24,6 @@
   min-height: 36px;
   width: calc(100% - 140px);
   border-bottom: 1px solid #424242;
-  border-bottom: 1px solid white;
 }
 
 .footer__info {
@@ -94,8 +93,7 @@
     font-weight: normal;
     font-size: 13px;
     line-height: 16px;
-    padding: 0 0 0 14px;
-    color: white;
+    padding: 0;
   }
 
   .footer__copyright {
@@ -153,7 +151,7 @@
 
 @media screen and (max-width: 520px) {
   .footer {
-    padding: 104px 0 10px;
+    padding: 160px 0 10px;
   }
 
   .footer__title {
