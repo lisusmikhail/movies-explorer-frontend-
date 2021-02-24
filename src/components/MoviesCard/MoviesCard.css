@@ -1,0 +1,131 @@
+.movies-card {
+  width: 100%;
+  background-color: #2f2f2f;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 0;
+}
+
+.movies-card_position {
+  margin: 0 0 40px 0;
+}
+
+.movies-card_position:last-of-type {
+  margin: 0 0 60px 0;
+}
+
+.movies-card_visibility {
+  display: none;
+}
+
+.movies-card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 134px;
+}
+
+.movies-card__description {
+  margin: 26px 0 0 22px;
+}
+
+.movies-card__title {
+  margin: 0;
+  padding: 0;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #ffffff;
+}
+
+.movies-card__duration {
+  margin: 13px 0 0;
+  padding: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 13px;
+  display: flex;
+  align-items: center;
+  color: #8b8b8b;
+}
+
+.movies-card__favorite {
+  width: 14px;
+  height: 12px;
+  margin: 0 0 22px 22px;
+}
+
+.movies-card__favorite:hover {
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.movies-card__poster {
+  width: 220px;
+  height: 122px;
+  margin: 0 6px 0 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .movies-card_position:last-of-type {
+    margin: 0 0 80px;
+  }
+
+  .movies-card__description {
+    margin: 23px 0 0 22px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .movies-card {
+    width: 300px;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .movies-card_position {
+    margin: 0 0 20px;
+  }
+
+  .movies-card_position:last-of-type {
+    margin: 0 0 70px;
+  }
+
+  .movies-card__info {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 300px;
+    min-height: 64px;
+  }
+
+  .movies-card__description {
+    margin: 14px 0 0 12px;
+  }
+
+  .movies-card__title {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .movies-card__duration {
+    margin: 9px 0 0;
+  }
+
+  .movies-card__favorite {
+    margin: 16px 16px 0 0;
+  }
+
+  .movies-card__poster {
+    width: 300px;
+    height: 168px;
+    margin: 0;
+  }
+}
