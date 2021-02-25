@@ -8,7 +8,7 @@ const handleError = (errStatus, setErrorMsg) => {
   } else if (errStatus === 429) {
     setErrorMsg('Данная операция временно недоступна');
   } else if (errStatus === 401) {
-    setErrorMsg('Неверный e-mail или пароль');
+    setErrorMsg('Ошибка авторизации');
   } else if (errStatus === 404) {
     setErrorMsg('Данных, за которыми вы обратились, не существует');
   } else {

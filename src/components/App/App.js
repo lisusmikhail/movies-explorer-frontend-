@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import * as auth from '../../utils/auth';
 import handleError from '../../utils/error-handler';
 import Footer from '../Footer/Footer';
@@ -16,9 +17,11 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
+  const [myMovies, setMyMovies] = useState({});
   const [token, setToken] = useState('');
   const history = useHistory();
-
+  console.log(user, myMovies);
   const onSignUp = (email, password, name) => {
     auth
       .register(email, password, name)
@@ -71,51 +74,66 @@ function App() {
     handleTokenCheck();
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    const getUserAndMyMovies = (token) => {
+      auth
+        .getUserAndMyMovies(token)
+        .then(([user, myMovies]) => {
+          setUser(user);
+          setMyMovies(myMovies);
+        })
+        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+    };
+    token && getUserAndMyMovies(token);
+  }, [token]);
+
   const resetStates = () => {
     setErrorMsg('');
   };
 
   return (
-    <div className='app'>
-      <Switch>
-        <Route exact path='/'>
-          <Header />
-          <Main />
-          <Footer />
-        </Route>
-        <Route path='/signup'>
-          <Register
-            onAuth={onSignUp}
-            errorMsg={errorMsg}
-            resetStates={resetStates}
-          />
-        </Route>
-        <Route path='/signin'>
-          <Login
-            onAuth={onSignIn}
-            errorMsg={errorMsg}
-            resetStates={resetStates}
-          />
-        </Route>
-        <Route path='/profile'>
-          <Header />
-          <Profile />
-        </Route>
-        <Route path='/movies'>
-          <Header />
-          <Movies />
-          <Footer />
-        </Route>
-        <Route path='/saved-movies'>
-          <Header />
-          <SavedMovies />
-          <Footer />
-        </Route>
-        <Route path='*'>
-          <NotFoundPage />
-        </Route>
-      </Switch>
-    </div>
+    <CurrentUserContext.Provider value={user}>
+      <div className='app'>
+        <Switch>
+          <Route exact path='/'>
+            <Header />
+            <Main />
+            <Footer />
+          </Route>
+          <Route path='/signup'>
+            <Register
+              onAuth={onSignUp}
+              errorMsg={errorMsg}
+              resetStates={resetStates}
+            />
+          </Route>
+          <Route path='/signin'>
+            <Login
+              onAuth={onSignIn}
+              errorMsg={errorMsg}
+              resetStates={resetStates}
+            />
+          </Route>
+          <Route path='/profile'>
+            <Header />
+            <Profile />
+          </Route>
+          <Route path='/movies'>
+            <Header />
+            <Movies />
+            <Footer />
+          </Route>
+          <Route path='/saved-movies'>
+            <Header />
+            <SavedMovies />
+            <Footer />
+          </Route>
+          <Route path='*'>
+            <NotFoundPage />
+          </Route>
+        </Switch>
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

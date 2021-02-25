@@ -40,3 +40,25 @@ export const checkToken = (token) => {
     },
   }).then((res) => handleResponse(res));
 };
+
+const getUser = (token) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => handleResponse(res));
+};
+
+const getMyMovies = (token) => {
+  return fetch(`${BASE_URL}/movies`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => handleResponse(res));
+};
+
+export const getUserAndMyMovies = (token) => {
+  return Promise.all([getUser(token), getMyMovies(token)]);
+};
