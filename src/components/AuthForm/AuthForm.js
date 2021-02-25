@@ -16,19 +16,12 @@ function AuthForm(props) {
 
   const [values, setValues] = useState({ email: '', password: '', name: '' });
 
-  // console.log('00000', user);
-  // console.log('11111', values);
-
   useMemo(() => {
-    // console.log('2222222222222');
     if (user._id) {
-      // console.log('3333333');
       setValues({ email: user.email, name: user.name });
+    } else {
+      setValues({ email: '', password: '', name: '' });
     }
-    // if (user.data) {
-    //   // console.log('4444444');
-    //   setValues({ email: user.data.email, name: user.data.name });
-    // }
   }, [user]);
 
   const handleChange = (e) => {
@@ -65,7 +58,6 @@ function AuthForm(props) {
               maxLength='60'
               required
               autoComplete='chrome-off'
-              // defaultValue={'1111111111'}
               value={values.name}
               onChange={handleChange}
             />
@@ -87,7 +79,6 @@ function AuthForm(props) {
             maxLength='60'
             required
             autoComplete='off'
-            // defaultValue={'1111111111@jhhjjhjhj.kk'}
             value={values.email}
             onChange={handleChange}
           />
@@ -109,7 +100,6 @@ function AuthForm(props) {
               maxLength='20'
               required
               autoComplete='off'
-              // defaultValue={'1111111111'}
               value={values.password}
               onChange={handleChange}
             />

@@ -5,8 +5,7 @@ import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 
-function Movies(props) {
-  // console.log(props);
+function Movies() {
   return (
     <>
       <Header />

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './AuthMenu.css';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function AuthMenu({ isRoot }) {
+function AuthMenu() {
+  const user = useContext(CurrentUserContext);
   return (
     <div
       className={
-        isRoot
-          ? 'auth-menu auth-menu_position'
-          : 'auth-menu auth-menu_visibility'
+        user._id
+          ? 'auth-menu auth-menu_visibility'
+          : 'auth-menu auth-menu_position'
       }
     >
       <Link to='/signup' className='auth-menu-item'>

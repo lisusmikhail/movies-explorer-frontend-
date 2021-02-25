@@ -2,7 +2,7 @@ import React from 'react';
 import './Register.css';
 import Auth from '../Auth/Auth';
 
-function Register({ resetStates, errorMsg, onAuth }) {
+function Register({ resetStates, errorMsg, onAuth, isLoggedIn }) {
   return (
     <Auth
       title={'Добро пожаловать!'}
@@ -14,6 +14,7 @@ function Register({ resetStates, errorMsg, onAuth }) {
       errorMsg={errorMsg}
       onAuth={onAuth}
       resetStates={resetStates}
+      isLoggedIn={isLoggedIn}
     />
   );
 }

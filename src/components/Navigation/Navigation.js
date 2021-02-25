@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useMemo, useContext } from 'react';
 import './Navigation.css';
 import { NavLink } from 'react-router-dom';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function Navigation({ isRoot, handleNavClick }) {
+function Navigation({ handleNavClick }) {
+  const user = useContext(CurrentUserContext);
+
+  useMemo(() => {}, [user]);
+
   return (
     <nav
       className={
-        isRoot
-          ? 'navigation navigation_hidden'
-          : 'navigation navigation_position'
+        user._id
+          ? 'navigation navigation_position'
+          : 'navigation navigation_hidden'
       }
     >
       <NavLink

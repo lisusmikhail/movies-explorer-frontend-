@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './ProfileMenu.css';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function ProfileMenu({ isRoot, handleNavClick }) {
+function ProfileMenu({ handleNavClick }) {
+  const user = useContext(CurrentUserContext);
   return (
     <Link
       className={
-        isRoot
-          ? 'profile-menu profile-menu_visibility'
-          : 'profile-menu profile-menu_position'
+        user._id
+          ? 'profile-menu profile-menu_position'
+          : 'profile-menu profile-menu_visibility'
       }
       to='/profile'
       onClick={handleNavClick}

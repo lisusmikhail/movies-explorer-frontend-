@@ -24,9 +24,9 @@ function App() {
   const [token, setToken] = useState('');
   const history = useHistory();
 
-  if (history.location === '/movies') {
-    setIsLoggedIn(true);
-  }
+  // if (history.location === '/movies') {
+  //   setIsLoggedIn(true);
+  // }
 
   const onSignUp = (email, password, name) => {
     auth
@@ -61,7 +61,6 @@ function App() {
   };
 
   const onEditProfile = (email, _, name) => {
-    console.log(email, name);
     auth
       .editProfile(email, name, token)
       .then((profile) => {
@@ -74,6 +73,7 @@ function App() {
   const onSignOut = () => {
     localStorage.removeItem('jwt');
     history.push('/');
+    setIsLoggedIn(false);
   };
 
   useEffect(() => {
@@ -140,22 +140,24 @@ function App() {
             isTokenChecked={isTokenChecked}
             component={SavedMovies}
           />
-          <Route path='/signup' isLoggedIn={isLoggedIn}>
+          <Route path='/signup'>
             <Register
               onAuth={onSignUp}
               errorMsg={errorMsg}
               resetStates={resetStates}
+              isLoggedIn={isLoggedIn}
             />
           </Route>
-          <Route path='/signin' isLoggedIn={isLoggedIn}>
+          <Route path='/signin'>
             <Login
               onAuth={onSignIn}
               errorMsg={errorMsg}
               resetStates={resetStates}
+              isLoggedIn={isLoggedIn}
             />
           </Route>
-          <Route exact path='/' isLoggedIn={isLoggedIn}>
-            <Header />
+          <Route exact path='/'>
+            <Header isLoggedIn={isLoggedIn} />
             <Main />
             <Footer />
           </Route>
