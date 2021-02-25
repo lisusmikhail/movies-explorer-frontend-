@@ -16,6 +16,7 @@ function Auth(props) {
     errorMsg,
     onAuth,
     resetStates,
+    onSignOut,
   } = props;
 
   return (
@@ -40,7 +41,11 @@ function Auth(props) {
           </p>
         )}
         {formPurpose === 'profile' && (
-          <button type='button' className='auth__footer-button'>
+          <button
+            type='button'
+            className='auth__footer-button'
+            onClick={onSignOut}
+          >
             {footerAction}
           </button>
         )}

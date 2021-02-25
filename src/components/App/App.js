@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as auth from '../../utils/auth';
 import handleError from '../../utils/error-handler';
 import Footer from '../Footer/Footer';
@@ -17,11 +18,16 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [user, setUser] = useState({});
   const [myMovies, setMyMovies] = useState({});
   const [token, setToken] = useState('');
   const history = useHistory();
-  console.log(user, myMovies);
+
+  if (history.location === '/movies') {
+    setIsLoggedIn(true);
+  }
+
   const onSignUp = (email, password, name) => {
     auth
       .register(email, password, name)
@@ -50,7 +56,6 @@ function App() {
       .then((data) => {
         setIsLoggedIn(true);
         history.push('/movies');
-        console.log(data);
       })
       .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
@@ -60,13 +65,18 @@ function App() {
     auth
       .editProfile(email, name, token)
       .then((profile) => {
-        setUser(profile);
+        setUser(profile.data);
+        history.push('/movies');
       })
       .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
 
+  const onSignOut = () => {
+    localStorage.removeItem('jwt');
+    history.push('/');
+  };
+
   useEffect(() => {
-    // console.log('useEffect check TOKEN');
     const handleTokenCheck = () => {
       if (localStorage.getItem('jwt')) {
         const jwt = localStorage.getItem('jwt');
@@ -76,13 +86,16 @@ function App() {
           .then((res) => {
             if (res) {
               setIsLoggedIn(true);
+              setIsTokenChecked(true);
             }
           })
           .catch((errStatus) => handleError(errStatus, setErrorMsg));
+      } else {
+        setIsTokenChecked(true);
       }
     };
     handleTokenCheck();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, user]);
 
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
@@ -105,37 +118,45 @@ function App() {
     <CurrentUserContext.Provider value={user}>
       <div className='app'>
         <Switch>
-          <Route exact path='/'>
-            <Header />
-            <Main />
-            <Footer />
-          </Route>
-          <Route path='/signup'>
+          <ProtectedRoute
+            path='/profile'
+            isLoggedIn={isLoggedIn}
+            isTokenChecked={isTokenChecked}
+            onAuth={onEditProfile}
+            resetStates={resetStates}
+            errorMsg={errorMsg}
+            onSignOut={onSignOut}
+            component={Profile}
+          />
+          <ProtectedRoute
+            path='/movies'
+            isLoggedIn={isLoggedIn}
+            isTokenChecked={isTokenChecked}
+            component={Movies}
+          />
+          <ProtectedRoute
+            path='/saved-movies'
+            isLoggedIn={isLoggedIn}
+            isTokenChecked={isTokenChecked}
+            component={SavedMovies}
+          />
+          <Route path='/signup' isLoggedIn={isLoggedIn}>
             <Register
               onAuth={onSignUp}
               errorMsg={errorMsg}
               resetStates={resetStates}
             />
           </Route>
-          <Route path='/signin'>
+          <Route path='/signin' isLoggedIn={isLoggedIn}>
             <Login
               onAuth={onSignIn}
               errorMsg={errorMsg}
               resetStates={resetStates}
             />
           </Route>
-          <Route path='/profile'>
+          <Route exact path='/' isLoggedIn={isLoggedIn}>
             <Header />
-            <Profile onAuth={onEditProfile} resetStates={resetStates} />
-          </Route>
-          <Route path='/movies'>
-            <Header />
-            <Movies />
-            <Footer />
-          </Route>
-          <Route path='/saved-movies'>
-            <Header />
-            <SavedMovies />
+            <Main />
             <Footer />
           </Route>
           <Route path='*'>

@@ -2,7 +2,7 @@
 export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
-  console.log(res);
+  // console.log(res);
   if (res.ok) {
     return res.json();
   }
