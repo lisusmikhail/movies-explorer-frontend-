@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import * as auth from '../../utils/auth';
+import handleError from '../../utils/error-handler';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
@@ -14,6 +15,9 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
   const [errorMsg, setErrorMsg] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState('');
+  const history = useHistory();
 
   const onSignUp = (email, password, name) => {
     auth
@@ -21,33 +25,56 @@ function App() {
       .then((res) => {
         if (res) {
           resetStates();
+          onSignIn(email, password);
+
           console.log('signup', 'will be appropriate action here...');
         } else {
           console.log('Произошла ошибка');
         }
       })
-      .catch((err) => handleError(err));
+      .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
 
-  const handleError = (err) => {
-    if (err === 400) {
-      setErrorMsg('Неправильный формат данных');
-    } else if (err === 403) {
-      setErrorMsg('Нет прав на эту операцию');
-    } else if (err === 409) {
-      setErrorMsg('Зритель с таким e-mail уже зарегистрирован');
-    } else if (err === 429) {
-      setErrorMsg('Данная операция временно недоступна');
-    } else {
-      setErrorMsg('Произошла ошибка');
-    }
+  const onSignIn = (email, password) => {
+    auth
+      .authorize(email, password)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('jwt', data.token);
+          return data;
+        }
+      })
+      .then((data) => {
+        setIsLoggedIn(true);
+        history.push('/movies');
+        console.log(data);
+      })
+      .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
+
+  useEffect(() => {
+    console.log('useEffect check TOKEN');
+    const handleTokenCheck = () => {
+      if (localStorage.getItem('jwt')) {
+        const jwt = localStorage.getItem('jwt');
+        setToken(jwt);
+        auth
+          .checkToken(jwt)
+          .then((res) => {
+            if (res) {
+              setIsLoggedIn(true);
+            }
+          })
+          .catch((errStatus) => handleError(errStatus, setErrorMsg));
+      }
+    };
+    handleTokenCheck();
+  }, [isLoggedIn]);
 
   const resetStates = () => {
     setErrorMsg('');
   };
 
-  console.log(errorMsg);
   return (
     <div className='app'>
       <Switch>
@@ -57,10 +84,18 @@ function App() {
           <Footer />
         </Route>
         <Route path='/signup'>
-          <Register onSignUp={onSignUp} errorMsg={errorMsg} />
+          <Register
+            onAuth={onSignUp}
+            errorMsg={errorMsg}
+            resetStates={resetStates}
+          />
         </Route>
         <Route path='/signin'>
-          <Login />
+          <Login
+            onAuth={onSignIn}
+            errorMsg={errorMsg}
+            resetStates={resetStates}
+          />
         </Route>
         <Route path='/profile'>
           <Header />

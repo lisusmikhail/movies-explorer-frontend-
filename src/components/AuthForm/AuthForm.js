@@ -5,8 +5,9 @@ function AuthForm({
   title,
   submitButtonTitle,
   formPurpose,
-  onSignUp,
   errorMsg,
+  onAuth,
+  resetStates,
 }) {
   const [values, setValues] = useState({ email: '', password: '', name: '' });
 
@@ -17,9 +18,9 @@ function AuthForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    resetStates();
     const { email, password, name } = values;
-    console.log({ email, password, name });
-    onSignUp(email, password, name);
+    onAuth(email, password, name);
   };
 
   return (

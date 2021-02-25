@@ -13,8 +13,9 @@ function Auth(props) {
     footerTitle,
     footerAction,
     footerLink,
-    onSignUp,
     errorMsg,
+    onAuth,
+    resetStates,
   } = props;
 
   return (
@@ -26,8 +27,9 @@ function Auth(props) {
           title={title}
           submitButtonTitle={submitButtonTitle}
           formPurpose={formPurpose}
-          onSignUp={onSignUp}
           errorMsg={errorMsg}
+          onAuth={onAuth}
+          resetStates={resetStates}
         />
         {formPurpose !== 'profile' && (
           <p className='auth__footer'>
