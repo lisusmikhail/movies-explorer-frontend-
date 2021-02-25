@@ -55,8 +55,18 @@ function App() {
       .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
 
+  const onEditProfile = (email, _, name) => {
+    console.log(email, name);
+    auth
+      .editProfile(email, name, token)
+      .then((profile) => {
+        setUser(profile);
+      })
+      .catch((errStatus) => handleError(errStatus, setErrorMsg));
+  };
+
   useEffect(() => {
-    console.log('useEffect check TOKEN');
+    // console.log('useEffect check TOKEN');
     const handleTokenCheck = () => {
       if (localStorage.getItem('jwt')) {
         const jwt = localStorage.getItem('jwt');
@@ -116,7 +126,7 @@ function App() {
           </Route>
           <Route path='/profile'>
             <Header />
-            <Profile />
+            <Profile onAuth={onEditProfile} resetStates={resetStates} />
           </Route>
           <Route path='/movies'>
             <Header />

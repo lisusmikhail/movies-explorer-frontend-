@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './AuthForm.css';
 
 function AuthForm({
@@ -9,6 +10,8 @@ function AuthForm({
   onAuth,
   resetStates,
 }) {
+  const user = useContext(CurrentUserContext);
+
   const [values, setValues] = useState({ email: '', password: '', name: '' });
 
   const handleChange = (e) => {
@@ -22,6 +25,12 @@ function AuthForm({
     const { email, password, name } = values;
     onAuth(email, password, name);
   };
+
+  useEffect(() => {
+    if (user._id) {
+      setValues({ email: user.email, name: user.name });
+    }
+  }, [user]);
 
   return (
     <form

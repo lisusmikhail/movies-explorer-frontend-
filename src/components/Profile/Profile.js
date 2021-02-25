@@ -2,7 +2,7 @@ import React from 'react';
 import './Profile.css';
 import Auth from '../Auth/Auth';
 
-function Profile() {
+function Profile({ resetStates, errorMsg, onAuth }) {
   return (
     <Auth
       title={'Привет, Виталий!'}
@@ -10,6 +10,9 @@ function Profile() {
       formPurpose='profile'
       footerTitle='Ещё не зарегистрированы?'
       footerAction='Выйти из аккаунта'
+      resetStates={resetStates}
+      errorMsg={errorMsg}
+      onAuth={onAuth}
     />
   );
 }

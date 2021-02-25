@@ -2,6 +2,7 @@
 export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
+  console.log(res);
   if (res.ok) {
     return res.json();
   }
@@ -38,6 +39,22 @@ export const checkToken = (token) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
+  }).then((res) => handleResponse(res));
+};
+
+export const editProfile = (email, name, token) => {
+  console.log(name, email);
+
+  return fetch(`${BASE_URL}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      name: name,
+    }),
   }).then((res) => handleResponse(res));
 };
 
