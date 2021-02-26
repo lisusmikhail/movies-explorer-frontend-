@@ -2,8 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { getMovies } from '../../utils/MoviesApi';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import * as auth from '../../utils/auth';
+import * as auth from '../../utils/MainApi';
 import handleError from '../../utils/error-handler';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
@@ -16,13 +17,54 @@ import Register from '../Register/Register';
 import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
+  const history = useHistory();
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [user, setUser] = useState({});
-  const [myMovies, setMyMovies] = useState({});
   const [token, setToken] = useState('');
-  const history = useHistory();
+
+  const [allMovies, setAllMovies] = useState([]);
+  const [myMovies, setMyMovies] = useState({});
+  const [searchResult, setSearchResult] = useState([]);
+  const [keyWord, setKeyWord] = useState();
+  const [isShortLength, setIsShortLength] = useState(false);
+
+  useEffect(() => {
+    getMovies().then((movies) => {
+      setAllMovies(movies);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(keyWord);
+    const searchMovies = (keyWord) => {
+      const tempSearchResult = [];
+      allMovies.forEach((movie) => {
+        const nameRu = movie['nameRU'].toLowerCase().trim();
+        const word = keyWord.toLowerCase().trim();
+        const isShort = movie['duration'] < 100;
+        if (!isShortLength || isShort) {
+          if (nameRu.indexOf(word) > -1) {
+            console.log({
+              index: nameRu.indexOf(word) > -1,
+              isShort,
+              isShortLength,
+            });
+            tempSearchResult.push(movie);
+          }
+        }
+        setSearchResult(tempSearchResult);
+      });
+    };
+    allMovies && keyWord && searchMovies(keyWord);
+  }, [allMovies, keyWord, isShortLength]);
+
+  console.log(searchResult, isShortLength);
+
+  const onSearchAllMovies = (searchQuery) => {
+    setKeyWord(searchQuery);
+  };
 
   const onSignUp = (email, password, name) => {
     auth
@@ -127,6 +169,9 @@ function App() {
             path='/movies'
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
+            onSearch={onSearchAllMovies}
+            isShortLength={isShortLength}
+            setIsShortLength={setIsShortLength}
             component={Movies}
           />
           <ProtectedRoute

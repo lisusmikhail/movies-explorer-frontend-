@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-function SearchForm() {
+function SearchForm({ onSearch, isShortLength, setIsShortLength }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  // const [isShortLength, setIsShortLength] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  // console.log(searchQuery, searchError, isShortLength);
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setSearchQuery(value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.length === 0) {
+      setSearchError('Нужно ввести ключевое слово');
+    } else if (searchQuery.length > 35) {
+      setSearchError('Самое длинное словарное слово в русском языке - 35 букв');
+    }
+    onSearch(searchQuery);
+  };
+
   return (
-    <form className='search-form'>
+    <form className='search-form' onSubmit={handleSubmit} noValidate>
       <div className='search-form__container'>
         <label className='search-form__label'>
           <input
@@ -14,14 +34,22 @@ function SearchForm() {
             id='search-form'
             name='search'
             minLength='2'
-            maxLength='140'
+            maxLength='35'
             required
             autoComplete='off'
+            onChange={handleChange}
           />
         </label>
-        <button type='submit' className='search-form__submit-button' />
+        <button
+          type='submit'
+          className='search-form__submit-button'
+          onSubmit={handleSubmit}
+        />
       </div>
-      <FilterCheckbox />
+      <FilterCheckbox
+        setIsChecked={setIsShortLength}
+        isChecked={isShortLength}
+      />
     </form>
   );
 }

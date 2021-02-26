@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
-function FilterCheckbox() {
+function FilterCheckbox(props) {
+  const { isChecked, setIsChecked } = props;
+
   // Данный JS код используется для демонстрации верстки
   // и не будет присутствовать в окончательном варианте проекта
-  let isChecked = false;
+  // let isChecked = false;
   const handleInputChange = (e) => {
+    console.log(e.target.checked);
     const labelElement = document.querySelector('.checkbox__label');
     const labelSwitchElement = document.querySelector(
       '.checkbox__label-switch'
@@ -13,11 +16,11 @@ function FilterCheckbox() {
     if (!isChecked) {
       labelElement.classList.add('checkbox__label_active');
       labelSwitchElement.classList.add('checkbox__label-switch_active');
-      isChecked = true;
+      setIsChecked(true);
     } else {
       labelElement.classList.remove('checkbox__label_active');
       labelSwitchElement.classList.remove('checkbox__label-switch_active');
-      isChecked = false;
+      setIsChecked(false);
     }
   };
 
