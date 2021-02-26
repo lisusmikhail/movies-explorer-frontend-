@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../components/Logo/Logo';
@@ -7,47 +7,51 @@ import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import Navigation from '../Navigation/Navigation';
 import ProfileMenu from '../ProfileMenu/ProfileMenu';
 
-function Header() {
-  // Данный JS код используется для демонстрации верстки
-  // и не будет присутствовать в окончательном варианте проекта
+function Header({ isLoggedIn }) {
   const history = useHistory();
   const location = history.location.pathname;
-  let isRoot = false;
-  let isMenuClicked = false;
-
-  isRoot = location === '/';
+  const [isMenuClicked, setIsMenuClicked] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuClick = () => {
-    const hamburgerMenuElement = document.querySelector('.hamburger');
-    const sliderElement = document.querySelector('.header__navigation');
     if (!isMenuClicked) {
-      hamburgerMenuElement.classList.add('hamburger_open');
-      sliderElement.classList.remove('header__navigation_fade-out');
-      sliderElement.classList.add('header__navigation_fade-in');
-      isMenuClicked = true;
+      setIsMenuClicked(true);
+      setIsMenuOpen(true);
     } else {
-      hamburgerMenuElement.classList.remove('hamburger_open');
-      sliderElement.classList.remove('header__navigation_fade-in');
-      sliderElement.classList.add('header__navigation_fade-out');
-      isMenuClicked = false;
+      setIsMenuClicked(false);
+      setIsMenuOpen(false);
     }
   };
 
   const handleNavClick = () => {
-    isMenuClicked = true;
+    setIsMenuClicked(true);
+    setIsMenuOpen(true);
     handleMenuClick();
   };
 
   return (
-    <div className={isRoot ? 'header header_main' : 'header'}>
+    <div className={location === '/' ? 'header header_main' : 'header'}>
       <div className='header__container'>
         <Logo isHeader={true} />
-        <div className='header__navigation'>
-          <Navigation isRoot={isRoot} handleNavClick={handleNavClick} />
-          <ProfileMenu isRoot={isRoot} handleNavClick={handleNavClick} />
+        <div
+          className={
+            isMenuClicked
+              ? 'header__navigation header__navigation_fade-in'
+              : 'header__navigation header__navigation_fade-out'
+          }
+        >
+          <Navigation isLoggedIn={isLoggedIn} handleNavClick={handleNavClick} />
+          <ProfileMenu
+            isLoggedIn={isLoggedIn}
+            handleNavClick={handleNavClick}
+          />
         </div>
-        <AuthMenu isRoot={isRoot} />
-        <HamburgerMenu isRoot={isRoot} handleMenuClick={handleMenuClick} />
+        <AuthMenu isLoggedIn={isLoggedIn} />
+        <HamburgerMenu
+          isMenuOpen={isMenuOpen}
+          isLoggedIn={isLoggedIn}
+          handleMenuClick={handleMenuClick}
+        />
       </div>
     </div>
   );

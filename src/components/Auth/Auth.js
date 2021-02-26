@@ -13,19 +13,25 @@ function Auth(props) {
     footerTitle,
     footerAction,
     footerLink,
-    onSignUp,
+    errorMsg,
+    onAuth,
+    resetStates,
+    onSignOut,
+    isLoggedIn,
   } = props;
 
   return (
     <section className='auth'>
-      {formPurpose === 'profile' && <Header />}
+      {formPurpose === 'profile' && <Header isLoggedIn={isLoggedIn} />}
       <div className={`auth__container auth__container_${formPurpose}`}>
         {formPurpose !== 'profile' && <Logo isHeader={false} />}
         <AuthForm
           title={title}
           submitButtonTitle={submitButtonTitle}
           formPurpose={formPurpose}
-          onSignUp={onSignUp}
+          errorMsg={errorMsg}
+          onAuth={onAuth}
+          resetStates={resetStates}
         />
         {formPurpose !== 'profile' && (
           <p className='auth__footer'>
@@ -36,7 +42,11 @@ function Auth(props) {
           </p>
         )}
         {formPurpose === 'profile' && (
-          <button type='button' className='auth__footer-button'>
+          <button
+            type='button'
+            className='auth__footer-button'
+            onClick={onSignOut}
+          >
             {footerAction}
           </button>
         )}

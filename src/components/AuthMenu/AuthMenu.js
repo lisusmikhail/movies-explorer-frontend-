@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './AuthMenu.css';
 
-function AuthMenu({ isRoot }) {
+function AuthMenu({ isLoggedIn }) {
   return (
     <div
       className={
-        isRoot
-          ? 'auth-menu auth-menu_position'
-          : 'auth-menu auth-menu_visibility'
+        isLoggedIn
+          ? 'auth-menu auth-menu_visibility'
+          : 'auth-menu auth-menu_position'
       }
     >
       <Link to='/signup' className='auth-menu-item'>

@@ -2,7 +2,7 @@ import React from 'react';
 import './Login.css';
 import Auth from '../Auth/Auth';
 
-function Login() {
+function Login({ resetStates, errorMsg, onAuth, isLoggedIn }) {
   return (
     <Auth
       title={'Рады видеть!'}
@@ -11,6 +11,10 @@ function Login() {
       footerTitle='Ещё не зарегистрированы?'
       footerAction='Регистрация'
       footerLink='/signup'
+      errorMsg={errorMsg}
+      onAuth={onAuth}
+      resetStates={resetStates}
+      isLoggedIn={isLoggedIn}
     />
   );
 }

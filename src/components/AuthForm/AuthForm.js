@@ -1,8 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './AuthForm.css';
 
-function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
+function AuthForm(props) {
+  const {
+    title,
+    submitButtonTitle,
+    formPurpose,
+    errorMsg,
+    onAuth,
+    resetStates,
+  } = props;
+
+  const user = useContext(CurrentUserContext);
   const [values, setValues] = useState({ email: '', password: '', name: '' });
+
+  useMemo(() => {
+    if (user._id) {
+      setValues({ email: user.email, name: user.name });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -10,11 +27,10 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
   };
 
   const handleSubmit = (e) => {
-    // console.log(e);
     e.preventDefault();
+    resetStates();
     const { email, password, name } = values;
-    console.log({ email, password, name });
-    onSignUp(email, password, name);
+    onAuth(email, password, name);
   };
 
   return (
@@ -39,7 +55,6 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
               maxLength='60'
               required
               autoComplete='chrome-off'
-              // defaultValue={'1111111111'}
               value={values.name}
               onChange={handleChange}
             />
@@ -61,7 +76,6 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
             maxLength='60'
             required
             autoComplete='off'
-            // defaultValue={'1111111111@jhhjjhjhj.kk'}
             value={values.email}
             onChange={handleChange}
           />
@@ -83,7 +97,6 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
               maxLength='20'
               required
               autoComplete='off'
-              // defaultValue={'1111111111'}
               value={values.password}
               onChange={handleChange}
             />
@@ -92,6 +105,7 @@ function AuthForm({ title, submitButtonTitle, formPurpose, onSignUp }) {
           </label>
         )}
       </fieldset>
+      <p className='auth-form__error-message'>{errorMsg}</p>
       <button
         type='submit'
         className={`auth-form__submit-button auth-form__submit-button_${formPurpose}`}

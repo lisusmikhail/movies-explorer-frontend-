@@ -1,11 +1,15 @@
 import React from 'react';
 import './HamburgerMenu.css';
 
-function HamburgerMenu({ isRoot, handleMenuClick }) {
+function HamburgerMenu({ isLoggedIn, handleMenuClick, isMenuOpen }) {
   return (
     <button
       className={
-        isRoot ? 'hamburger hamburger_hidden' : 'hamburger hamburger_position'
+        !isLoggedIn
+          ? 'hamburger hamburger_hidden'
+          : isMenuOpen
+          ? 'hamburger hamburger_position hamburger_open'
+          : 'hamburger hamburger_position'
       }
       onClick={handleMenuClick}
     />

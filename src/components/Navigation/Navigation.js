@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './Navigation.css';
 import { NavLink } from 'react-router-dom';
 
-function Navigation({ isRoot, handleNavClick }) {
+function Navigation({ isLoggedIn, handleNavClick }) {
   return (
     <nav
       className={
-        isRoot
-          ? 'navigation navigation_hidden'
-          : 'navigation navigation_position'
+        isLoggedIn
+          ? 'navigation navigation_position'
+          : 'navigation navigation_hidden'
       }
     >
       <NavLink

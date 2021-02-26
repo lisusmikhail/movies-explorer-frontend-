@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Movies.css';
+import Footer from '../Footer/Footer';
+import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 
-function Movies() {
+function Movies(props) {
+  const { isLoggedIn } = props;
   return (
-    <div className='movies'>
-      <SearchForm />
-      <MoviesCardList favoriteOnly={false} />
-    </div>
+    <>
+      <Header isLoggedIn={isLoggedIn} />
+      <div className='movies'>
+        <SearchForm />
+        <MoviesCardList favoriteOnly={false} />
+      </div>
+      <Footer />
+    </>
   );
 }
 
