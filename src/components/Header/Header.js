@@ -11,26 +11,21 @@ function Header({ isLoggedIn }) {
   const history = useHistory();
   const location = history.location.pathname;
   const [isMenuClicked, setIsMenuClicked] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // let isMenuClicked = false;
   const handleMenuClick = () => {
-    const hamburgerMenuElement = document.querySelector('.hamburger');
-    const sliderElement = document.querySelector('.header__navigation');
     if (!isMenuClicked) {
-      hamburgerMenuElement.classList.add('hamburger_open');
-      sliderElement.classList.remove('header__navigation_fade-out');
-      sliderElement.classList.add('header__navigation_fade-in');
       setIsMenuClicked(true);
+      setIsMenuOpen(true);
     } else {
-      hamburgerMenuElement.classList.remove('hamburger_open');
-      sliderElement.classList.remove('header__navigation_fade-in');
-      sliderElement.classList.add('header__navigation_fade-out');
       setIsMenuClicked(false);
+      setIsMenuOpen(false);
     }
   };
 
   const handleNavClick = () => {
     setIsMenuClicked(true);
+    setIsMenuOpen(true);
     handleMenuClick();
   };
 
@@ -38,7 +33,13 @@ function Header({ isLoggedIn }) {
     <div className={location === '/' ? 'header header_main' : 'header'}>
       <div className='header__container'>
         <Logo isHeader={true} />
-        <div className='header__navigation'>
+        <div
+          className={
+            isMenuClicked
+              ? 'header__navigation header__navigation_fade-in'
+              : 'header__navigation header__navigation_fade-out'
+          }
+        >
           <Navigation isLoggedIn={isLoggedIn} handleNavClick={handleNavClick} />
           <ProfileMenu
             isLoggedIn={isLoggedIn}
@@ -47,6 +48,7 @@ function Header({ isLoggedIn }) {
         </div>
         <AuthMenu isLoggedIn={isLoggedIn} />
         <HamburgerMenu
+          isMenuOpen={isMenuOpen}
           isLoggedIn={isLoggedIn}
           handleMenuClick={handleMenuClick}
         />

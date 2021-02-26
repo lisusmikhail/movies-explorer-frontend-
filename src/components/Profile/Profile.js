@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './Profile.css';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Auth from '../Auth/Auth';
 import Header from '../Header/Header';
 
 function Profile({ resetStates, errorMsg, onAuth, onSignOut, isLoggedIn }) {
+  const user = useContext(CurrentUserContext);
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <Auth
-        title={'Привет, Виталий!'}
+        title={`Привет, ${user.name}!`}
         submitButtonTitle={'Редактировать'}
         formPurpose='profile'
         footerTitle='Ещё не зарегистрированы?'
