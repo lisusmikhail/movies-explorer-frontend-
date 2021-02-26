@@ -1,17 +1,12 @@
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo } from 'react';
 import './Navigation.css';
 import { NavLink } from 'react-router-dom';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function Navigation({ handleNavClick }) {
-  const user = useContext(CurrentUserContext);
-
-  useMemo(() => {}, [user]);
-
+function Navigation({ isLoggedIn, handleNavClick }) {
   return (
     <nav
       className={
-        user._id
+        isLoggedIn
           ? 'navigation navigation_position'
           : 'navigation navigation_hidden'
       }

@@ -13,14 +13,11 @@ function AuthForm(props) {
   } = props;
 
   const user = useContext(CurrentUserContext);
-
   const [values, setValues] = useState({ email: '', password: '', name: '' });
 
   useMemo(() => {
     if (user._id) {
       setValues({ email: user.email, name: user.name });
-    } else {
-      setValues({ email: '', password: '', name: '' });
     }
   }, [user]);
 

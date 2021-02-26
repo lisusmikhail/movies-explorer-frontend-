@@ -17,11 +17,12 @@ function Auth(props) {
     onAuth,
     resetStates,
     onSignOut,
+    isLoggedIn,
   } = props;
 
   return (
     <section className='auth'>
-      {formPurpose === 'profile' && <Header />}
+      {formPurpose === 'profile' && <Header isLoggedIn={isLoggedIn} />}
       <div className={`auth__container auth__container_${formPurpose}`}>
         {formPurpose !== 'profile' && <Logo isHeader={false} />}
         <AuthForm

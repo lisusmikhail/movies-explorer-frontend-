@@ -3,10 +3,10 @@ import './Profile.css';
 import Auth from '../Auth/Auth';
 import Header from '../Header/Header';
 
-function Profile({ resetStates, errorMsg, onAuth, onSignOut }) {
+function Profile({ resetStates, errorMsg, onAuth, onSignOut, isLoggedIn }) {
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <Auth
         title={'Привет, Виталий!'}
         submitButtonTitle={'Редактировать'}
@@ -17,6 +17,7 @@ function Profile({ resetStates, errorMsg, onAuth, onSignOut }) {
         errorMsg={errorMsg}
         onAuth={onAuth}
         onSignOut={onSignOut}
+        isLoggedIn={isLoggedIn}
       />
     </>
   );

@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './HamburgerMenu.css';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function HamburgerMenu({ handleMenuClick }) {
-  const user = useContext(CurrentUserContext);
+function HamburgerMenu({ isLoggedIn, handleMenuClick }) {
   return (
     <button
       className={
-        user._id ? 'hamburger hamburger_position' : 'hamburger hamburger_hidden'
+        isLoggedIn
+          ? 'hamburger hamburger_position'
+          : 'hamburger hamburger_hidden'
       }
       onClick={handleMenuClick}
     />

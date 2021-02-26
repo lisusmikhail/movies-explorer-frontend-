@@ -5,10 +5,11 @@ import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 
-function SavedMovies() {
+function SavedMovies(props) {
+  const { isLoggedIn } = props;
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <div className='movies'>
         <SearchForm />
         <MoviesCardList favoriteOnly={true} />

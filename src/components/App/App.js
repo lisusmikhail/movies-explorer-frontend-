@@ -24,10 +24,6 @@ function App() {
   const [token, setToken] = useState('');
   const history = useHistory();
 
-  // if (history.location === '/movies') {
-  //   setIsLoggedIn(true);
-  // }
-
   const onSignUp = (email, password, name) => {
     auth
       .register(email, password, name)
@@ -35,8 +31,6 @@ function App() {
         if (res) {
           resetStates();
           onSignIn(email, password);
-
-          console.log('signup', 'will be appropriate action here...');
         } else {
           console.log('Произошла ошибка');
         }
@@ -74,6 +68,7 @@ function App() {
     localStorage.removeItem('jwt');
     history.push('/');
     setIsLoggedIn(false);
+    setUser({});
   };
 
   useEffect(() => {

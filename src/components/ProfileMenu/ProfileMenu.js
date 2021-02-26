@@ -1,14 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './ProfileMenu.css';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function ProfileMenu({ handleNavClick }) {
-  const user = useContext(CurrentUserContext);
+function ProfileMenu({ isLoggedIn, handleNavClick }) {
   return (
     <Link
       className={
-        user._id
+        isLoggedIn
           ? 'profile-menu profile-menu_position'
           : 'profile-menu profile-menu_visibility'
       }

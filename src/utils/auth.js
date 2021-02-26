@@ -43,8 +43,6 @@ export const checkToken = (token) => {
 };
 
 export const editProfile = (email, name, token) => {
-  console.log(name, email);
-
   return fetch(`${BASE_URL}/users/me`, {
     method: 'PATCH',
     headers: {

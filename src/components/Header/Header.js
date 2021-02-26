@@ -1,26 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../components/Logo/Logo';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import AuthMenu from '../AuthMenu/AuthMenu';
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import Navigation from '../Navigation/Navigation';
 import ProfileMenu from '../ProfileMenu/ProfileMenu';
 
-function Header() {
-  const user = useContext(CurrentUserContext);
+function Header({ isLoggedIn }) {
   const history = useHistory();
   const location = history.location.pathname;
-  const [isRoot, setIsRoot] = useState(false);
+  const [isMenuClicked, setIsMenuClicked] = useState(false);
 
-  useEffect(() => {
-    if (location === '/') {
-      setIsRoot(true);
-    }
-  }, []);
-
-  let isMenuClicked = false;
+  // let isMenuClicked = false;
   const handleMenuClick = () => {
     const hamburgerMenuElement = document.querySelector('.hamburger');
     const sliderElement = document.querySelector('.header__navigation');
@@ -28,29 +20,36 @@ function Header() {
       hamburgerMenuElement.classList.add('hamburger_open');
       sliderElement.classList.remove('header__navigation_fade-out');
       sliderElement.classList.add('header__navigation_fade-in');
-      isMenuClicked = true;
+      setIsMenuClicked(true);
     } else {
       hamburgerMenuElement.classList.remove('hamburger_open');
       sliderElement.classList.remove('header__navigation_fade-in');
       sliderElement.classList.add('header__navigation_fade-out');
-      isMenuClicked = false;
+      setIsMenuClicked(false);
     }
   };
 
   const handleNavClick = () => {
-    isMenuClicked = true;
+    setIsMenuClicked(true);
     handleMenuClick();
   };
+
   return (
-    <div className={isRoot ? 'header header_main' : 'header'}>
+    <div className={location === '/' ? 'header header_main' : 'header'}>
       <div className='header__container'>
         <Logo isHeader={true} />
         <div className='header__navigation'>
-          <Navigation handleNavClick={handleNavClick} />
-          <ProfileMenu handleNavClick={handleNavClick} />
+          <Navigation isLoggedIn={isLoggedIn} handleNavClick={handleNavClick} />
+          <ProfileMenu
+            isLoggedIn={isLoggedIn}
+            handleNavClick={handleNavClick}
+          />
         </div>
-        <AuthMenu />
-        <HamburgerMenu handleMenuClick={handleMenuClick} />
+        <AuthMenu isLoggedIn={isLoggedIn} />
+        <HamburgerMenu
+          isLoggedIn={isLoggedIn}
+          handleMenuClick={handleMenuClick}
+        />
       </div>
     </div>
   );

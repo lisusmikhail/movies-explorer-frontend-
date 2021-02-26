@@ -1,14 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './AuthMenu.css';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function AuthMenu() {
-  const user = useContext(CurrentUserContext);
+function AuthMenu({ isLoggedIn }) {
   return (
     <div
       className={
-        user._id
+        isLoggedIn
           ? 'auth-menu auth-menu_visibility'
           : 'auth-menu auth-menu_position'
       }
