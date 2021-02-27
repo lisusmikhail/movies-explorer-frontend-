@@ -8,20 +8,20 @@ function FilterCheckbox(props) {
   // и не будет присутствовать в окончательном варианте проекта
   // let isChecked = false;
   const handleInputChange = (e) => {
-    console.log(e.target.checked);
-    const labelElement = document.querySelector('.checkbox__label');
-    const labelSwitchElement = document.querySelector(
-      '.checkbox__label-switch'
-    );
-    if (!isChecked) {
-      labelElement.classList.add('checkbox__label_active');
-      labelSwitchElement.classList.add('checkbox__label-switch_active');
-      setIsChecked(true);
-    } else {
-      labelElement.classList.remove('checkbox__label_active');
-      labelSwitchElement.classList.remove('checkbox__label-switch_active');
-      setIsChecked(false);
-    }
+    //   console.log(e.target.checked);
+    //   const labelElement = document.querySelector('.checkbox__label');
+    //   const labelSwitchElement = document.querySelector(
+    //     '.checkbox__label-switch'
+    //   );
+    //   if (!isChecked) {
+    //     labelElement.classList.add('checkbox__label_active');
+    //     labelSwitchElement.classList.add('checkbox__label-switch_active');
+    setIsChecked(e.target.checked);
+    //   } else {
+    //     labelElement.classList.remove('checkbox__label_active');
+    //     labelSwitchElement.classList.remove('checkbox__label-switch_active');
+    //     setIsChecked(false);
+    //   }
   };
 
   return (
@@ -34,8 +34,21 @@ function FilterCheckbox(props) {
         className='checkbox__input'
         type='checkbox'
       />
-      <label htmlFor='offer' className='checkbox__label'>
-        <div className='checkbox__label-switch' />
+      <label
+        htmlFor='offer'
+        className={
+          isChecked
+            ? 'checkbox__label'
+            : 'checkbox__label checkbox__label_active'
+        }
+      >
+        <div
+          className={
+            isChecked
+              ? 'checkbox__label-switch'
+              : 'checkbox__label-switch checkbox__label-switch_active'
+          }
+        />
       </label>
     </div>
   );

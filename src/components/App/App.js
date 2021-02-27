@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { shortMovieThresholdDuration } from '../../utils/constants';
 import { getMovies } from '../../utils/MoviesApi';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as auth from '../../utils/MainApi';
@@ -37,32 +38,28 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(keyWord);
     const searchMovies = (keyWord) => {
-      const tempSearchResult = [];
-      allMovies.forEach((movie) => {
+      const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
-        const isShort = movie['duration'] < 100;
-        if (!isShortLength || isShort) {
-          if (nameRu.indexOf(word) > -1) {
-            console.log({
-              index: nameRu.indexOf(word) > -1,
-              isShort,
-              isShortLength,
-            });
-            tempSearchResult.push(movie);
-          }
-        }
-        setSearchResult(tempSearchResult);
-      });
+        const isShort = movie['duration'] < shortMovieThresholdDuration;
+        return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
+      };
+      const moviesToShow = allMovies.filter(checkMovie);
+      setSearchResult(moviesToShow);
     };
+
     allMovies && keyWord && searchMovies(keyWord);
   }, [allMovies, keyWord, isShortLength]);
 
-  console.log(searchResult, isShortLength);
+  // console.log(searchResult, isShortLength);
 
-  const onSearchAllMovies = (searchQuery) => {
+  useMemo(() => {
+    console.log(searchResult.length);
+    // localStorage.setItem('movie', searchResult);
+  }, [searchResult]);
+
+  const onSearchMovies = (searchQuery) => {
     setKeyWord(searchQuery);
   };
 
@@ -169,7 +166,7 @@ function App() {
             path='/movies'
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
-            onSearch={onSearchAllMovies}
+            onSearch={onSearchMovies}
             isShortLength={isShortLength}
             setIsShortLength={setIsShortLength}
             component={Movies}
