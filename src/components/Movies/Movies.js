@@ -11,7 +11,10 @@ function Movies(props) {
     onSearch,
     isShortLength,
     setIsShortLength,
-    searchResultToShow,
+    setIsFirstRender,
+    resultToShow,
+    onShowMore,
+    isShowMoreBtn,
   } = props;
   return (
     <>
@@ -21,10 +24,13 @@ function Movies(props) {
           onSearch={onSearch}
           isShortLength={isShortLength}
           setIsShortLength={setIsShortLength}
+          setIsFirstRender={setIsFirstRender}
         />
         <MoviesCardList
           favoriteOnly={false}
-          searchResultToShow={searchResultToShow}
+          resultToShow={resultToShow}
+          onShowMore={onShowMore}
+          isShowMoreBtn={isShowMoreBtn}
         />
       </div>
       <Footer />

@@ -3,7 +3,12 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import { keyWordMaxLength } from '../../utils/constants';
 
-function SearchForm({ onSearch, isShortLength, setIsShortLength }) {
+function SearchForm({
+  onSearch,
+  isShortLength,
+  setIsShortLength,
+  setIsFirstRender,
+}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchError, setSearchError] = useState('');
 
@@ -14,6 +19,7 @@ function SearchForm({ onSearch, isShortLength, setIsShortLength }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsFirstRender(false);
     if (searchQuery.length === 0) {
       setSearchError('Нужно ввести ключевое слово');
     } else if (searchQuery.length > keyWordMaxLength) {
@@ -48,6 +54,7 @@ function SearchForm({ onSearch, isShortLength, setIsShortLength }) {
       <FilterCheckbox
         setIsChecked={setIsShortLength}
         isChecked={isShortLength}
+        setIsFirstRender={setIsFirstRender}
       />
     </form>
   );

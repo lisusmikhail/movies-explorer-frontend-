@@ -7,7 +7,8 @@ import delFavorite from '../../images/icon__del_favorite.svg';
 function MoviesCard(props) {
   const { movie, favoriteOnly } = props;
   const { nameRU, image, duration, trailerLink } = movie;
-  const imgURL = 'https://api.nomoreparties.co' + image.url;
+  // console.log(movie);
+  const imgURL = image ? 'https://api.nomoreparties.co' + image.url : null;
 
   const onImageClick = () => {};
 

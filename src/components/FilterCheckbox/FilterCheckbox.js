@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
 function FilterCheckbox(props) {
-  const { isChecked, setIsChecked } = props;
+  const { isChecked, setIsChecked, setIsFirstRender } = props;
 
   const handleInputChange = () => {
+    setIsFirstRender(false);
     setIsChecked(!isChecked);
   };
 

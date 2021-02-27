@@ -1,4 +1,4 @@
-const handleError = (errStatus, setErrorMsg) => {
+export const handleError = (errStatus, setErrorMsg) => {
   if (errStatus === 400) {
     setErrorMsg('Неправильный формат данных');
   } else if (errStatus === 403) {
@@ -11,9 +11,13 @@ const handleError = (errStatus, setErrorMsg) => {
     setErrorMsg('Ошибка авторизации');
   } else if (errStatus === 404) {
     setErrorMsg('Данных, за которыми вы обратились, не существует');
+  } else if (errStatus === 500) {
+    setErrorMsg(
+      'Во время запроса произошла ошибка. ' +
+        'Возможно, проблема с соединением или сервер недоступен. ' +
+        'Подождите немного и попробуйте ещё раз'
+    );
   } else {
     setErrorMsg('Произошла ошибка');
   }
 };
-
-export default handleError;

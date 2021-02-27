@@ -5,8 +5,6 @@ export const getMovies = async () => {
   if (response.ok) {
     return await response.json();
   } else {
-    console.log('Ошибка HTTP:' + response.status);
+    throw new Error(response.status);
   }
 };
-
-// getMovies().then((result) => console.log(result));

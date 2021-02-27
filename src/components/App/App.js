@@ -2,11 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { shortMovieThresholdDuration } from '../../utils/constants';
+import {
+  shortMovieThresholdDuration,
+  initialNumberItems,
+  showMoreIncrement,
+} from '../../utils/constants';
 import { getMovies } from '../../utils/MoviesApi';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as auth from '../../utils/MainApi';
-import handleError from '../../utils/error-handler';
+import { handleError } from '../../utils/error-handler';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
@@ -27,26 +31,48 @@ function App() {
 
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState({});
+
   const [searchResult, setSearchResult] = useState([]);
   const [resultToLocalStorage, setResultToLocalStorage] = useState('');
-  const [searchResultToShow, setSearchResultToShow] = useState([]);
-  const [keyWord, setKeyWord] = useState();
+  const [isStorageUpdated, setIsStorageUpdated] = useState(false);
+  const [resultToShow, setResultToShow] = useState([]);
+
+  const [resultToRender, setResultToRender] = useState([]);
+  const [firstIndex, setFirstIndex] = useState(0);
+  const [lastIndex, setLastIndex] = useState(initialNumberItems);
+  const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
+
+  const [keyWord, setKeyWord] = useState('');
   const [isShortLength, setIsShortLength] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-  console.log(isShortLength);
+  // console.log(firstIndex, lastIndex, isShowMoreBtn);
+
+  const settingInitialState = () => {
+    setResultToRender([]);
+    setResultToShow([]);
+    setFirstIndex(0);
+    setLastIndex(initialNumberItems);
+    localStorage.setItem('movies', '');
+    localStorage.setItem('keyWord', keyWord);
+    localStorage.setItem('isShortLength', isShortLength.toString());
+    setErrorMsg('');
+  };
 
   useEffect(() => {
-    getMovies().then((movies) => {
-      setAllMovies(movies);
-    });
+    getMovies()
+      .then((movies) => {
+        setAllMovies(movies);
+      })
+      .catch(() => {
+        handleError(500, setErrorMsg);
+      });
   }, []);
 
   useEffect(() => {
     if (localStorage.getItem('movies')) {
-      console.log(localStorage.getItem('movies'));
       const resultFromLocalStorage = localStorage.getItem('movies');
-      setSearchResultToShow(JSON.parse(resultFromLocalStorage));
+      setResultToShow(JSON.parse(resultFromLocalStorage));
     }
   }, []);
 
@@ -63,21 +89,23 @@ function App() {
 
   useEffect(() => {
     const searchMovies = (keyWord) => {
-      setIsFirstRender(false);
-      localStorage.setItem('keyWord', keyWord);
-      localStorage.setItem('isShortLength', isShortLength.toString());
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
         const isShort = movie['duration'] < shortMovieThresholdDuration;
         return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
       };
+
       const moviesToShow = allMovies.filter(checkMovie);
       setSearchResult(moviesToShow);
     };
 
-    allMovies && keyWord && searchMovies(keyWord);
-  }, [allMovies, keyWord, isShortLength]);
+    resultToRender.length === 0 &&
+      !isFirstRender &&
+      allMovies &&
+      keyWord &&
+      searchMovies(keyWord);
+  }, [allMovies, keyWord, isShortLength, resultToRender]);
 
   useMemo(() => {
     setResultToLocalStorage(JSON.stringify(searchResult));
@@ -85,16 +113,41 @@ function App() {
 
   useEffect(() => {
     !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
+    !isFirstRender && setIsStorageUpdated(!isStorageUpdated);
   }, [resultToLocalStorage]);
 
   useEffect(() => {
     const resultFromLocalStorage = localStorage.getItem('movies');
-    setSearchResultToShow(JSON.parse(resultFromLocalStorage));
-  }, [resultToLocalStorage]);
+    setResultToShow(JSON.parse(resultFromLocalStorage));
+  }, [isStorageUpdated]);
+
+  console.log(resultToRender, resultToShow, firstIndex, lastIndex);
+
+  useEffect(() => {
+    setResultToRender(
+      resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
+    );
+  }, [resultToShow, lastIndex]);
+
+  useEffect(() => {
+    setIsShowMoreBtn(lastIndex < resultToShow.length);
+  }, [resultToShow, lastIndex]);
+
+  const onShowMore = () => {
+    setFirstIndex(lastIndex);
+    setLastIndex(lastIndex + showMoreIncrement);
+  };
 
   const onSearchMovies = (searchQuery) => {
+    settingInitialState();
     setKeyWord(searchQuery);
   };
+
+  // const {isSubmitBtnActive, errorElements, handleDisplayErrorMsg} = useValidation({
+  //   values,
+  //   isDisplayError,
+  //   setIsDisplayError
+  // }, isOpen)
 
   const onSignUp = (email, password, name) => {
     auth
@@ -202,7 +255,10 @@ function App() {
             onSearch={onSearchMovies}
             isShortLength={isShortLength}
             setIsShortLength={setIsShortLength}
-            searchResultToShow={searchResultToShow}
+            setIsFirstRender={setIsFirstRender}
+            resultToShow={resultToRender}
+            onShowMore={onShowMore}
+            isShowMoreBtn={isShowMoreBtn}
             component={Movies}
           />
           <ProtectedRoute
