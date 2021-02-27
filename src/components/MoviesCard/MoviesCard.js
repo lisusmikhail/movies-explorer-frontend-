@@ -5,8 +5,13 @@ import activeHeart from '../../images/icon__heart_active.png';
 import delFavorite from '../../images/icon__del_favorite.svg';
 
 function MoviesCard(props) {
-  const { title, img, duration, isFavorite, favoriteOnly } = props;
+  const { movie, favoriteOnly } = props;
+  const { nameRU, image, duration, trailerLink } = movie;
+  const imgURL = 'https://api.nomoreparties.co' + image.url;
 
+  const onImageClick = () => {};
+
+  const isFavorite = false;
   // Данный JS код используется для демонстрации верстки
   // и не будет присутствовать в окончательном варианте проекта
   let favoriteIcon;
@@ -31,12 +36,27 @@ function MoviesCard(props) {
     >
       <div className='movies-card__info'>
         <div className='movies-card__description'>
-          <h2 className='movies-card__title'>{title}</h2>
+          <h2 className='movies-card__title'>{nameRU}</h2>
           <p className='movies-card__duration'>{duration}</p>
         </div>
-        <img className='movies-card__favorite' src={favoriteIcon} alt={title} />
+        <img
+          className='movies-card__favorite'
+          src={favoriteIcon}
+          alt={nameRU}
+        />
       </div>
-      <img className='movies-card__poster' src={img} alt={title} />
+      <a
+        className='movies-card__poster-link'
+        href={trailerLink}
+        target='_blank'
+      >
+        <img
+          className='movies-card__poster'
+          src={imgURL}
+          alt={nameRU}
+          onClick={onImageClick}
+        />
+      </a>
     </div>
   );
 }

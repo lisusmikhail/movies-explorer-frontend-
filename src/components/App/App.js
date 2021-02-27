@@ -28,8 +28,13 @@ function App() {
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState({});
   const [searchResult, setSearchResult] = useState([]);
+  const [resultToLocalStorage, setResultToLocalStorage] = useState('');
+  const [searchResultToShow, setSearchResultToShow] = useState([]);
   const [keyWord, setKeyWord] = useState();
   const [isShortLength, setIsShortLength] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  console.log(isShortLength);
 
   useEffect(() => {
     getMovies().then((movies) => {
@@ -38,7 +43,29 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (localStorage.getItem('movies')) {
+      console.log(localStorage.getItem('movies'));
+      const resultFromLocalStorage = localStorage.getItem('movies');
+      setSearchResultToShow(JSON.parse(resultFromLocalStorage));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isFirstRender) {
+      setKeyWord(localStorage.getItem('keyWord'));
+      if (localStorage.getItem('isShortLength') === 'false') {
+        setIsShortLength(false);
+      } else {
+        setIsShortLength(true);
+      }
+    }
+  }, [isFirstRender]);
+
+  useEffect(() => {
     const searchMovies = (keyWord) => {
+      setIsFirstRender(false);
+      localStorage.setItem('keyWord', keyWord);
+      localStorage.setItem('isShortLength', isShortLength.toString());
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
@@ -52,12 +79,18 @@ function App() {
     allMovies && keyWord && searchMovies(keyWord);
   }, [allMovies, keyWord, isShortLength]);
 
-  // console.log(searchResult, isShortLength);
-
   useMemo(() => {
-    console.log(searchResult.length);
-    // localStorage.setItem('movie', searchResult);
+    setResultToLocalStorage(JSON.stringify(searchResult));
   }, [searchResult]);
+
+  useEffect(() => {
+    !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
+  }, [resultToLocalStorage]);
+
+  useEffect(() => {
+    const resultFromLocalStorage = localStorage.getItem('movies');
+    setSearchResultToShow(JSON.parse(resultFromLocalStorage));
+  }, [resultToLocalStorage]);
 
   const onSearchMovies = (searchQuery) => {
     setKeyWord(searchQuery);
@@ -169,6 +202,7 @@ function App() {
             onSearch={onSearchMovies}
             isShortLength={isShortLength}
             setIsShortLength={setIsShortLength}
+            searchResultToShow={searchResultToShow}
             component={Movies}
           />
           <ProtectedRoute

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+import { keyWordMaxLength } from '../../utils/constants';
 
 function SearchForm({ onSearch, isShortLength, setIsShortLength }) {
   const [searchQuery, setSearchQuery] = useState('');
-  // const [isShortLength, setIsShortLength] = useState(false);
   const [searchError, setSearchError] = useState('');
-  // console.log(searchQuery, searchError, isShortLength);
 
   const handleChange = (e) => {
     const { value } = e.target;
@@ -17,7 +16,7 @@ function SearchForm({ onSearch, isShortLength, setIsShortLength }) {
     e.preventDefault();
     if (searchQuery.length === 0) {
       setSearchError('Нужно ввести ключевое слово');
-    } else if (searchQuery.length > 35) {
+    } else if (searchQuery.length > keyWordMaxLength) {
       setSearchError('Самое длинное словарное слово в русском языке - 35 букв');
     }
     onSearch(searchQuery);

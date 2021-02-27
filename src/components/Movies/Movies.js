@@ -6,7 +6,13 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 
 function Movies(props) {
-  const { isLoggedIn, onSearch, isShortLength, setIsShortLength } = props;
+  const {
+    isLoggedIn,
+    onSearch,
+    isShortLength,
+    setIsShortLength,
+    searchResultToShow,
+  } = props;
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
@@ -16,7 +22,10 @@ function Movies(props) {
           isShortLength={isShortLength}
           setIsShortLength={setIsShortLength}
         />
-        <MoviesCardList favoriteOnly={false} />
+        <MoviesCardList
+          favoriteOnly={false}
+          searchResultToShow={searchResultToShow}
+        />
       </div>
       <Footer />
     </>
