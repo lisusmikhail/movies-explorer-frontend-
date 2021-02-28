@@ -9,6 +9,7 @@ import {
 } from '../../utils/constants';
 import { getMovies } from '../../utils/MoviesApi';
 import useAuth from '../hooks/useAuth';
+import useEditProfile from '../hooks/useEditProfile';
 import useWindowSize from '../hooks/useWindowSize';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as auth from '../../utils/MainApi';
@@ -31,6 +32,7 @@ function App() {
   const [user, setUser] = useState({});
   const [token, setToken] = useState('');
   const [credentials, setCredentials] = useState({});
+  const [newProfile, setNewProfile] = useState({});
 
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState({});
@@ -61,9 +63,28 @@ function App() {
     setIsLogOut
   );
 
+  const { newUsersProfile } = useEditProfile(
+    newProfile,
+    isLoggedIn,
+    setErrorMsg
+  );
+
   const onAuth = (email, password, name) => {
     setCredentials({ email, password, name });
   };
+
+  const onSignOut = () => {
+    setIsLogOut(true);
+    setUser({});
+  };
+
+  const onEditProfile = (email, _, name) => {
+    setNewProfile({ email, name, token });
+  };
+
+  useEffect(() => {
+    newUsersProfile.name && setUser(newUsersProfile);
+  }, [newUsersProfile]);
 
   const settingInitialState = () => {
     setResultToRender([]);
@@ -77,13 +98,14 @@ function App() {
   };
 
   useEffect(() => {
-    getMovies()
-      .then((movies) => {
-        setAllMovies(movies);
-      })
-      .catch(() => {
-        handleError(500, setErrorMsg);
-      });
+    isLoggedIn &&
+      getMovies()
+        .then((movies) => {
+          setAllMovies(movies);
+        })
+        .catch(() => {
+          handleError(500, setErrorMsg);
+        });
   }, []);
 
   useEffect(() => {
@@ -141,13 +163,14 @@ function App() {
   // console.log(resultToRender, resultToShow, firstIndex, lastIndex);
 
   useEffect(() => {
-    setResultToRender(
-      resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
-    );
+    resultToShow &&
+      setResultToRender(
+        resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
+      );
   }, [resultToShow, lastIndex]);
 
   useEffect(() => {
-    setIsShowMoreBtn(lastIndex < resultToShow.length);
+    resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
   }, [resultToShow, lastIndex]);
 
   const onShowMore = () => {
@@ -159,78 +182,6 @@ function App() {
     settingInitialState();
     setKeyWord(searchQuery);
   };
-
-  // const {isSubmitBtnActive, errorElements, handleDisplayErrorMsg} = useValidation({
-  //   values,
-  //   isDisplayError,
-  //   setIsDisplayError
-  // }, isOpen)
-
-  const onSignUp = (email, password, name) => {
-    // auth
-    //   .register(email, password, name)
-    //   .then((res) => {
-    //     if (res) {
-    //       resetStates();
-    //       onSignIn(email, password);
-    //     } else {
-    //       console.log('Произошла ошибка');
-    //     }
-    //   })
-    //   .catch((errStatus) => handleError(errStatus, setErrorMsg));
-  };
-
-  const onSignIn = (email, password) => {
-    // auth
-    //   .authorize(email, password)
-    //   .then((data) => {
-    //     if (data.token) {
-    //       localStorage.setItem('jwt', data.token);
-    //       return data;
-    //     }
-    //   })
-    //   .then((data) => {
-    //     setIsLoggedIn(true);
-    //     history.push('/movies');
-    //   })
-    //   .catch((errStatus) => handleError(errStatus, setErrorMsg));
-  };
-
-  const onEditProfile = (email, _, name) => {
-    auth
-      .editProfile(email, name, token)
-      .then((profile) => {
-        setUser(profile.data);
-        history.push('/movies');
-      })
-      .catch((errStatus) => handleError(errStatus, setErrorMsg));
-  };
-
-  const onSignOut = () => {
-    setIsLogOut(true);
-    setUser({});
-  };
-
-  // useEffect(() => {
-  //   const handleTokenCheck = () => {
-  //     if (localStorage.getItem('jwt')) {
-  //       const jwt = localStorage.getItem('jwt');
-  //       setToken(jwt);
-  //       auth
-  //         .checkToken(jwt)
-  //         .then((res) => {
-  //           if (res) {
-  //             setIsLoggedIn(true);
-  //             setIsTokenChecked(true);
-  //           }
-  //         })
-  //         .catch((errStatus) => handleError(errStatus, setErrorMsg));
-  //     } else {
-  //       setIsTokenChecked(true);
-  //     }
-  //   };
-  //   handleTokenCheck();
-  // }, [isLoggedIn, user]);
 
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
