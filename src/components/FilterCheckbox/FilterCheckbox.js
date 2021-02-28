@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
 function FilterCheckbox(props) {
-  const { isChecked, setIsChecked, setIsFirstRender } = props;
-
+  const { isChecked, setIsChecked, setIsFirstRender, onSearch } = props;
   const handleInputChange = () => {
     setIsFirstRender(false);
     setIsChecked(!isChecked);
+    localStorage.getItem('keyWord') &&
+      onSearch(localStorage.getItem('keyWord'));
   };
 
   return (

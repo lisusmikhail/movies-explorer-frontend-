@@ -8,9 +8,9 @@ import {
   showMoreIncrement,
 } from '../../utils/constants';
 import { getMovies } from '../../utils/MoviesApi';
-import useAuth from '../hooks/useAuth';
-import useEditProfile from '../hooks/useEditProfile';
-import useWindowSize from '../hooks/useWindowSize';
+import useAuth from '../../hooks/useAuth';
+import useEditProfile from '../../hooks/useEditProfile';
+import useWindowSize from '../../hooks/useWindowSize';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as auth from '../../utils/MainApi';
 import { handleError } from '../../utils/error-handler';
@@ -29,7 +29,7 @@ function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
-  const [user, setUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
   const [token, setToken] = useState('');
   const [credentials, setCredentials] = useState({});
   const [newProfile, setNewProfile] = useState({});
@@ -53,10 +53,11 @@ function App() {
 
   const size = useWindowSize();
 
+  console.log(currentUser);
+
   const { isLoggedIn } = useAuth(
     credentials,
     setErrorMsg,
-    user,
     setToken,
     setIsTokenChecked,
     isLogOut,
@@ -75,7 +76,7 @@ function App() {
 
   const onSignOut = () => {
     setIsLogOut(true);
-    setUser({});
+    setCurrentUser({});
   };
 
   const onEditProfile = (email, _, name) => {
@@ -83,7 +84,7 @@ function App() {
   };
 
   useEffect(() => {
-    newUsersProfile.name && setUser(newUsersProfile);
+    newUsersProfile.name && setCurrentUser(newUsersProfile);
   }, [newUsersProfile]);
 
   const settingInitialState = () => {
@@ -91,9 +92,6 @@ function App() {
     setResultToShow([]);
     setFirstIndex(0);
     setLastIndex(initialNumberItems);
-    localStorage.setItem('movies', '');
-    localStorage.setItem('keyWord', keyWord);
-    localStorage.setItem('isShortLength', isShortLength.toString());
     setErrorMsg('');
   };
 
@@ -106,7 +104,7 @@ function App() {
         .catch(() => {
           handleError(500, setErrorMsg);
         });
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (localStorage.getItem('movies')) {
@@ -116,9 +114,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (isFirstRender) {
+    const shortLengthItem = localStorage.getItem('isShortLength');
+    if (isFirstRender && shortLengthItem) {
       setKeyWord(localStorage.getItem('keyWord'));
-      if (localStorage.getItem('isShortLength') === 'false') {
+      if (shortLengthItem === 'false') {
         setIsShortLength(false);
       } else {
         setIsShortLength(true);
@@ -134,7 +133,6 @@ function App() {
         const isShort = movie['duration'] < shortMovieThresholdDuration;
         return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
       };
-
       const moviesToShow = allMovies.filter(checkMovie);
       setSearchResult(moviesToShow);
     };
@@ -160,8 +158,6 @@ function App() {
     setResultToShow(JSON.parse(resultFromLocalStorage));
   }, [isStorageUpdated]);
 
-  // console.log(resultToRender, resultToShow, firstIndex, lastIndex);
-
   useEffect(() => {
     resultToShow &&
       setResultToRender(
@@ -173,14 +169,19 @@ function App() {
     resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
   }, [resultToShow, lastIndex]);
 
+  useEffect(() => {
+    localStorage.setItem('keyWord', keyWord);
+    localStorage.setItem('isShortLength', isShortLength.toString());
+  }, [keyWord, isShortLength]);
+
   const onShowMore = () => {
     setFirstIndex(lastIndex);
     setLastIndex(lastIndex + showMoreIncrement);
   };
 
   const onSearchMovies = (searchQuery) => {
-    settingInitialState();
     setKeyWord(searchQuery);
+    settingInitialState();
   };
 
   useEffect(() => {
@@ -188,7 +189,7 @@ function App() {
       auth
         .getUserAndMyMovies(token)
         .then(([user, myMovies]) => {
-          setUser(user);
+          setCurrentUser(user);
           setMyMovies(myMovies);
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
@@ -201,7 +202,7 @@ function App() {
   };
 
   return (
-    <CurrentUserContext.Provider value={user}>
+    <CurrentUserContext.Provider value={currentUser}>
       <div className='app'>
         <Switch>
           <ProtectedRoute

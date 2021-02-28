@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { handleError } from '../../utils/error-handler';
-import * as auth from '../../utils/MainApi';
+import { handleError } from '../utils/error-handler';
+import * as auth from '../utils/MainApi';
 
 function useAuth(
   credentials,
   setErrorMsg,
-  user,
   setToken,
   setIsTokenChecked,
   isLogOut,
@@ -65,9 +64,7 @@ function useAuth(
           .checkToken(jwt)
           .then((res) => {
             if (res) {
-              console.log('before true');
               !isLogOut && setIsLoggedIn(true);
-              console.log('after true');
               setIsTokenChecked(true);
             }
           })
@@ -77,18 +74,14 @@ function useAuth(
       }
     };
     handleTokenCheck();
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    // const onSignOut = () => {
     if (isLogOut) {
       localStorage.removeItem('jwt');
       history.push('/');
       setIsLoggedIn(false);
     }
-    // };
-
-    // onSignOut();
   }, [isLogOut]);
 
   return { isLoggedIn };

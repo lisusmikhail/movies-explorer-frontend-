@@ -24,8 +24,9 @@ function SearchForm({
       setSearchError('Нужно ввести ключевое слово');
     } else if (searchQuery.length > keyWordMaxLength) {
       setSearchError('Самое длинное словарное слово в русском языке - 35 букв');
+    } else {
+      onSearch(searchQuery);
     }
-    onSearch(searchQuery);
   };
 
   return (
@@ -39,7 +40,7 @@ function SearchForm({
             id='search-form'
             name='search'
             minLength='2'
-            maxLength='35'
+            maxLength='36'
             required
             autoComplete='off'
             onChange={handleChange}
@@ -55,6 +56,7 @@ function SearchForm({
         setIsChecked={setIsShortLength}
         isChecked={isShortLength}
         setIsFirstRender={setIsFirstRender}
+        onSearch={onSearch}
       />
     </form>
   );

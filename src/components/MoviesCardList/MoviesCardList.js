@@ -8,8 +8,6 @@ function MoviesCardList({
   onShowMore,
   isShowMoreBtn,
 }) {
-  console.log('start render cards');
-
   return (
     <section className='movies-card-list movies-card-list_position'>
       <>

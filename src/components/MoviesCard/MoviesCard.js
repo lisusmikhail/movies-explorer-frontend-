@@ -7,10 +7,7 @@ import delFavorite from '../../images/icon__del_favorite.svg';
 function MoviesCard(props) {
   const { movie, favoriteOnly } = props;
   const { nameRU, image, duration, trailerLink } = movie;
-  // console.log(movie);
   const imgURL = image ? 'https://api.nomoreparties.co' + image.url : null;
-
-  const onImageClick = () => {};
 
   const isFavorite = false;
   // Данный JS код используется для демонстрации верстки
@@ -51,12 +48,7 @@ function MoviesCard(props) {
         href={trailerLink}
         target='_blank'
       >
-        <img
-          className='movies-card__poster'
-          src={imgURL}
-          alt={nameRU}
-          onClick={onImageClick}
-        />
+        <img className='movies-card__poster' src={imgURL} alt={nameRU} />
       </a>
     </div>
   );

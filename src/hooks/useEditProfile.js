@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { handleError } from '../../utils/error-handler';
-import * as auth from '../../utils/MainApi';
+import { handleError } from '../utils/error-handler';
+import * as auth from '../utils/MainApi';
 
 function useEditProfile(newProfile, isLoggedIn, setErrorMsg) {
   const history = useHistory();
