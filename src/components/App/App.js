@@ -8,6 +8,8 @@ import {
   showMoreIncrement,
 } from '../../utils/constants';
 import { getMovies } from '../../utils/MoviesApi';
+import useAuth from '../hooks/useAuth';
+import useWindowSize from '../hooks/useWindowSize';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as auth from '../../utils/MainApi';
 import { handleError } from '../../utils/error-handler';
@@ -24,10 +26,11 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 function App() {
   const history = useHistory();
   const [errorMsg, setErrorMsg] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [user, setUser] = useState({});
   const [token, setToken] = useState('');
+  const [credentials, setCredentials] = useState({});
 
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState({});
@@ -46,7 +49,21 @@ function App() {
   const [isShortLength, setIsShortLength] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-  // console.log(firstIndex, lastIndex, isShowMoreBtn);
+  const size = useWindowSize();
+
+  const { isLoggedIn } = useAuth(
+    credentials,
+    setErrorMsg,
+    user,
+    setToken,
+    setIsTokenChecked,
+    isLogOut,
+    setIsLogOut
+  );
+
+  const onAuth = (email, password, name) => {
+    setCredentials({ email, password, name });
+  };
 
   const settingInitialState = () => {
     setResultToRender([]);
@@ -121,7 +138,7 @@ function App() {
     setResultToShow(JSON.parse(resultFromLocalStorage));
   }, [isStorageUpdated]);
 
-  console.log(resultToRender, resultToShow, firstIndex, lastIndex);
+  // console.log(resultToRender, resultToShow, firstIndex, lastIndex);
 
   useEffect(() => {
     setResultToRender(
@@ -150,33 +167,33 @@ function App() {
   // }, isOpen)
 
   const onSignUp = (email, password, name) => {
-    auth
-      .register(email, password, name)
-      .then((res) => {
-        if (res) {
-          resetStates();
-          onSignIn(email, password);
-        } else {
-          console.log('Произошла ошибка');
-        }
-      })
-      .catch((errStatus) => handleError(errStatus, setErrorMsg));
+    // auth
+    //   .register(email, password, name)
+    //   .then((res) => {
+    //     if (res) {
+    //       resetStates();
+    //       onSignIn(email, password);
+    //     } else {
+    //       console.log('Произошла ошибка');
+    //     }
+    //   })
+    //   .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
 
   const onSignIn = (email, password) => {
-    auth
-      .authorize(email, password)
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('jwt', data.token);
-          return data;
-        }
-      })
-      .then((data) => {
-        setIsLoggedIn(true);
-        history.push('/movies');
-      })
-      .catch((errStatus) => handleError(errStatus, setErrorMsg));
+    // auth
+    //   .authorize(email, password)
+    //   .then((data) => {
+    //     if (data.token) {
+    //       localStorage.setItem('jwt', data.token);
+    //       return data;
+    //     }
+    //   })
+    //   .then((data) => {
+    //     setIsLoggedIn(true);
+    //     history.push('/movies');
+    //   })
+    //   .catch((errStatus) => handleError(errStatus, setErrorMsg));
   };
 
   const onEditProfile = (email, _, name) => {
@@ -190,32 +207,30 @@ function App() {
   };
 
   const onSignOut = () => {
-    localStorage.removeItem('jwt');
-    history.push('/');
-    setIsLoggedIn(false);
+    setIsLogOut(true);
     setUser({});
   };
 
-  useEffect(() => {
-    const handleTokenCheck = () => {
-      if (localStorage.getItem('jwt')) {
-        const jwt = localStorage.getItem('jwt');
-        setToken(jwt);
-        auth
-          .checkToken(jwt)
-          .then((res) => {
-            if (res) {
-              setIsLoggedIn(true);
-              setIsTokenChecked(true);
-            }
-          })
-          .catch((errStatus) => handleError(errStatus, setErrorMsg));
-      } else {
-        setIsTokenChecked(true);
-      }
-    };
-    handleTokenCheck();
-  }, [isLoggedIn, user]);
+  // useEffect(() => {
+  //   const handleTokenCheck = () => {
+  //     if (localStorage.getItem('jwt')) {
+  //       const jwt = localStorage.getItem('jwt');
+  //       setToken(jwt);
+  //       auth
+  //         .checkToken(jwt)
+  //         .then((res) => {
+  //           if (res) {
+  //             setIsLoggedIn(true);
+  //             setIsTokenChecked(true);
+  //           }
+  //         })
+  //         .catch((errStatus) => handleError(errStatus, setErrorMsg));
+  //     } else {
+  //       setIsTokenChecked(true);
+  //     }
+  //   };
+  //   handleTokenCheck();
+  // }, [isLoggedIn, user]);
 
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
@@ -269,7 +284,7 @@ function App() {
           />
           <Route path='/signup'>
             <Register
-              onAuth={onSignUp}
+              onAuth={onAuth}
               errorMsg={errorMsg}
               resetStates={resetStates}
               isLoggedIn={isLoggedIn}
@@ -277,7 +292,7 @@ function App() {
           </Route>
           <Route path='/signin'>
             <Login
-              onAuth={onSignIn}
+              onAuth={onAuth}
               errorMsg={errorMsg}
               resetStates={resetStates}
               isLoggedIn={isLoggedIn}
