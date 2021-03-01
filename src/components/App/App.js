@@ -12,7 +12,7 @@ import useAuth from '../../hooks/useAuth';
 import useEditProfile from '../../hooks/useEditProfile';
 import useWindowSize from '../../hooks/useWindowSize';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import * as auth from '../../utils/MainApi';
+import * as mainApi from '../../utils/MainApi';
 import { handleError } from '../../utils/error-handler';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
@@ -35,7 +35,11 @@ function App() {
   const [newProfile, setNewProfile] = useState({});
 
   const [allMovies, setAllMovies] = useState([]);
-  const [myMovies, setMyMovies] = useState({});
+  const [myMovies, setMyMovies] = useState([]);
+  const [myMoviesToRender, setMyMoviesToRender] = useState([]);
+  const [myFirstIndex, setMyFirstIndex] = useState(0);
+  const [myLastIndex, setMyLastIndex] = useState(initialNumberItems);
+  const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
 
   const [searchResult, setSearchResult] = useState([]);
   const [resultToLocalStorage, setResultToLocalStorage] = useState('');
@@ -51,9 +55,9 @@ function App() {
   const [isShortLength, setIsShortLength] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-  const size = useWindowSize();
+  const [movieToAdd, setMovieToAdd] = useState({});
 
-  console.log(currentUser);
+  const size = useWindowSize();
 
   const { isLoggedIn } = useAuth(
     credentials,
@@ -95,6 +99,14 @@ function App() {
     setErrorMsg('');
   };
 
+  const settingInitialMyState = () => {
+    setMyMovies([]);
+    setMyMoviesToRender([]);
+    setMyFirstIndex(0);
+    setMyLastIndex(initialNumberItems);
+    setErrorMsg('');
+  };
+
   useEffect(() => {
     isLoggedIn &&
       getMovies()
@@ -125,6 +137,7 @@ function App() {
     }
   }, [isFirstRender]);
 
+  //search start ---------------------------------------------------------
   useEffect(() => {
     const searchMovies = (keyWord) => {
       const checkMovie = (movie) => {
@@ -159,34 +172,31 @@ function App() {
   }, [isStorageUpdated]);
 
   useEffect(() => {
-    resultToShow &&
-      setResultToRender(
-        resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
-      );
-  }, [resultToShow, lastIndex]);
-
-  useEffect(() => {
-    resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
-  }, [resultToShow, lastIndex]);
-
-  useEffect(() => {
     localStorage.setItem('keyWord', keyWord);
     localStorage.setItem('isShortLength', isShortLength.toString());
   }, [keyWord, isShortLength]);
 
-  const onShowMore = () => {
-    setFirstIndex(lastIndex);
-    setLastIndex(lastIndex + showMoreIncrement);
+  const onSearchMovies = (searchQuery) => {
+    setKeyWord(searchQuery);
+    keyWord !== searchQuery && settingInitialState();
   };
 
-  const onSearchMovies = (searchQuery) => {
+  const onCheckBoxSearch = (searchQuery) => {
     setKeyWord(searchQuery);
     settingInitialState();
   };
 
+  //search end ---------------------------------------------------------
+
+  const resetStates = () => {
+    setErrorMsg('');
+  };
+
+  // main api my movies start ----------------------------------
+
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
-      auth
+      mainApi
         .getUserAndMyMovies(token)
         .then(([user, myMovies]) => {
           setCurrentUser(user);
@@ -197,9 +207,76 @@ function App() {
     token && getUserAndMyMovies(token);
   }, [token]);
 
-  const resetStates = () => {
-    setErrorMsg('');
+  useEffect(() => {
+    const addToFavorite = (movieToAdd) => {
+      mainApi
+        .addToFavorite(movieToAdd, token)
+        .then((res) => {
+          if (res) {
+            console.log(res);
+            console.log([...myMovies, res.data]);
+            setMyMovies([...myMovies, res.data]);
+          } else {
+            console.log('Произошла ошибка');
+          }
+        })
+        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+    };
+
+    isLoggedIn && addToFavorite(movieToAdd);
+  }, [movieToAdd]);
+
+  const onAddFavorite = (movieToAdd) => {
+    setMovieToAdd(movieToAdd);
+    settingInitialMyState();
   };
+
+  // main api my movies end ----------------------------------
+
+  // show more movies start ---------------------------------------
+
+  useEffect(() => {
+    resultToShow &&
+      setResultToRender(
+        resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
+      );
+  }, [resultToShow, lastIndex]);
+
+  useEffect(() => {
+    resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
+  }, [resultToShow, lastIndex]);
+
+  const onShowMore = () => {
+    setFirstIndex(lastIndex);
+    setLastIndex(lastIndex + showMoreIncrement);
+  };
+
+  // show more movies end ---------------------------------------
+
+  // const [myMoviesToRender, setMoviesToRender]=useState({})
+  // const [firstMyIndex, setFirstMyIndex] = useState(0);
+  // const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
+  // const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
+
+  // show more My movies start ---------------------------------------
+  // console.log(myMovies, myMoviesToRender);
+  useEffect(() => {
+    myMovies &&
+      setMyMoviesToRender(
+        myMoviesToRender.concat(myMovies.slice(myFirstIndex, myLastIndex))
+      );
+  }, [myMovies, myLastIndex]);
+
+  useEffect(() => {
+    myMovies && setIsShowMyMoreBtn(myLastIndex < myMovies.length);
+  }, [myMovies, myLastIndex]);
+
+  const onMyMoviesShowMore = () => {
+    setMyFirstIndex(myLastIndex);
+    setMyLastIndex(myLastIndex + showMoreIncrement);
+  };
+
+  // show more My movies end ---------------------------------------
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -220,18 +297,24 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             onSearch={onSearchMovies}
+            onCheckBox={onCheckBoxSearch}
             isShortLength={isShortLength}
             setIsShortLength={setIsShortLength}
             setIsFirstRender={setIsFirstRender}
-            resultToShow={resultToRender}
+            resultToRender={resultToRender}
             onShowMore={onShowMore}
             isShowMoreBtn={isShowMoreBtn}
+            onAddFavorite={onAddFavorite}
             component={Movies}
           />
           <ProtectedRoute
             path='/saved-movies'
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
+            myMoviesToRender={myMoviesToRender}
+            onMyMoviesShowMore={onMyMoviesShowMore}
+            isShowMoreBtn={isShowMyMoreBtn}
+            onShowMore={onMyMoviesShowMore}
             component={SavedMovies}
           />
           <Route path='/signup'>

@@ -5,6 +5,7 @@ import { keyWordMaxLength } from '../../utils/constants';
 
 function SearchForm({
   onSearch,
+  onCheckBox,
   isShortLength,
   setIsShortLength,
   setIsFirstRender,
@@ -56,7 +57,7 @@ function SearchForm({
         setIsChecked={setIsShortLength}
         isChecked={isShortLength}
         setIsFirstRender={setIsFirstRender}
-        onSearch={onSearch}
+        onCheckBox={onCheckBox}
       />
     </form>
   );

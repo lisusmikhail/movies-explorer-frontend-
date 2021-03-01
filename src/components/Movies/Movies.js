@@ -9,12 +9,14 @@ function Movies(props) {
   const {
     isLoggedIn,
     onSearch,
+    onCheckBox,
     isShortLength,
     setIsShortLength,
     setIsFirstRender,
-    resultToShow,
+    resultToRender,
     onShowMore,
     isShowMoreBtn,
+    onAddFavorite,
   } = props;
   return (
     <>
@@ -22,15 +24,18 @@ function Movies(props) {
       <div className='movies'>
         <SearchForm
           onSearch={onSearch}
+          onCheckBox={onCheckBox}
           isShortLength={isShortLength}
           setIsShortLength={setIsShortLength}
           setIsFirstRender={setIsFirstRender}
         />
         <MoviesCardList
           favoriteOnly={false}
-          resultToShow={resultToShow}
+          resultToRender={resultToRender}
           onShowMore={onShowMore}
           isShowMoreBtn={isShowMoreBtn}
+          onAddFavorite={onAddFavorite}
+          pageName={'allMovies'}
         />
       </div>
       <Footer />

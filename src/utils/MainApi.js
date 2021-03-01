@@ -2,7 +2,6 @@
 export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
-  // console.log(res);
   if (res.ok) {
     return res.json();
   }
@@ -76,4 +75,15 @@ const getMyMovies = (token) => {
 
 export const getUserAndMyMovies = (token) => {
   return Promise.all([getUser(token), getMyMovies(token)]);
+};
+
+export const addToFavorite = (movie, token) => {
+  return fetch(`${BASE_URL}/movies`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(movie),
+  }).then((res) => handleResponse(res));
 };

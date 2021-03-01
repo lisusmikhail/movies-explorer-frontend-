@@ -6,13 +6,19 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 
 function SavedMovies(props) {
-  const { isLoggedIn } = props;
+  const { isLoggedIn, myMoviesToRender, isShowMoreBtn, onShowMore } = props;
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <div className='movies'>
         <SearchForm />
-        <MoviesCardList favoriteOnly={true} />
+        <MoviesCardList
+          favoriteOnly={false}
+          onShowMore={onShowMore}
+          resultToRender={myMoviesToRender}
+          isShowMoreBtn={isShowMoreBtn}
+          pageName={'myMovies'}
+        />
       </div>
       <Footer />
     </>

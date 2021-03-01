@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { handleError } from '../utils/error-handler';
-import * as auth from '../utils/MainApi';
+import * as mainApi from '../utils/MainApi';
 
 function useAuth(
   credentials,
@@ -18,7 +18,7 @@ function useAuth(
   useEffect(() => {
     const onSignIn = (email, password) => {
       console.log(email, password);
-      auth
+      mainApi
         .authorize(email, password)
         .then((data) => {
           if (data.token) {
@@ -35,7 +35,7 @@ function useAuth(
     };
 
     const onSignUp = (email, password, name) => {
-      auth
+      mainApi
         .register(email, password, name)
         .then((res) => {
           if (res) {
@@ -60,7 +60,7 @@ function useAuth(
       if (localStorage.getItem('jwt')) {
         const jwt = localStorage.getItem('jwt');
         setToken(jwt);
-        auth
+        mainApi
           .checkToken(jwt)
           .then((res) => {
             if (res) {
