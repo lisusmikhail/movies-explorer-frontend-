@@ -8,27 +8,25 @@ function MoviesCard(props) {
   const { movie, favoriteOnly, onAddFavorite, pageName } = props;
   const { nameRU, image, duration } = movie;
 
-  let imageURL;
-  if (pageName === 'myMovies') {
-    imageURL = image;
-  } else {
-    imageURL = image ? 'https://api.nomoreparties.co' + image.url : null;
-  }
-
   const handleFavorite = () => {
     const movieToAdd = {
-      country: movie.country,
-      director: movie.director,
-      duration: movie.duration,
-      year: movie.year,
-      description: movie.description,
-      image: imageURL,
-      trailer: movie.trailerLink,
-      thumbnail:
-        'https://api.nomoreparties.co' + movie.image.formats.thumbnail.url,
+      country: movie.country ? movie.country : 'Unknown Country',
+      director: movie.director ? movie.director : 'Unknown Director',
+      duration: movie.duration ? movie.duration : 0,
+      year: movie.year ? movie.year : 'Unknown Year',
+      description: movie.description
+        ? movie.description
+        : 'Unknown Description',
+      image: image
+        ? 'https://api.nomoreparties.co' + image.url
+        : 'https://mysite.com/default-image',
+      trailer: movie.trailerLink ? movie.trailerLink : 'Unknown Trailer Link',
+      thumbnail: movie.image.formats.thumbnail
+        ? 'https://api.nomoreparties.co' + movie.image.formats.thumbnail.url
+        : 'https://mysite.com/default-image',
       movieId: movie.id,
-      nameRU: movie.nameRU,
-      nameEN: movie.nameEN,
+      nameRU: movie.nameRU ? movie.nameRU : 'unknownNameRU',
+      nameEN: movie.nameEN ? movie.nameEN : 'unknownNameEN',
     };
     onAddFavorite(movieToAdd);
   };
@@ -73,7 +71,17 @@ function MoviesCard(props) {
         href={pageName === 'myMovies' ? movie.trailer : movie.trailerLink}
         target='_blank'
       >
-        <img className='movies-card__poster' src={imageURL} alt={nameRU} />
+        <img
+          className='movies-card__poster'
+          src={
+            pageName === 'myMovies'
+              ? image
+              : image
+              ? 'https://api.nomoreparties.co' + image.url
+              : 'https://mysite.com/default-image'
+          }
+          alt={nameRU}
+        />
       </a>
     </div>
   );

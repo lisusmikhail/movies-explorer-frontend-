@@ -19,7 +19,7 @@ function MoviesCardList({
           resultToRender.map((movie) => (
             <MoviesCard
               movie={movie}
-              key={`${pageName} + ${movie.id}`}
+              key={pageName === 'myMovies' ? movie._id : movie.id}
               favoriteOnly={favoriteOnly}
               onAddFavorite={onAddFavorite}
               pageName={pageName}

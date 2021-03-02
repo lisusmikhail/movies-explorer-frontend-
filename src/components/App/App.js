@@ -40,6 +40,7 @@ function App() {
   const [myFirstIndex, setMyFirstIndex] = useState(0);
   const [myLastIndex, setMyLastIndex] = useState(initialNumberItems);
   const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
+  const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
 
   const [searchResult, setSearchResult] = useState([]);
   const [resultToLocalStorage, setResultToLocalStorage] = useState('');
@@ -205,7 +206,7 @@ function App() {
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
     token && getUserAndMyMovies(token);
-  }, [token]);
+  }, [token, isMyMoviesUpdated]);
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
@@ -213,9 +214,10 @@ function App() {
         .addToFavorite(movieToAdd, token)
         .then((res) => {
           if (res) {
-            console.log(res);
-            console.log([...myMovies, res.data]);
-            setMyMovies([...myMovies, res.data]);
+            setIsMyMoviesUpdated(!isMyMoviesUpdated);
+            // console.log(res);
+            // console.log([...myMovies, res.data]);
+            // setMyMovies([...myMovies, res.data]);
           } else {
             console.log('Произошла ошибка');
           }
@@ -259,7 +261,7 @@ function App() {
   // const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
 
   // show more My movies start ---------------------------------------
-  // console.log(myMovies, myMoviesToRender);
+  console.log(myMovies, myMoviesToRender);
   useEffect(() => {
     myMovies &&
       setMyMoviesToRender(
