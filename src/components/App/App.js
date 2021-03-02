@@ -2,15 +2,17 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+
+import { getMovies } from '../../utils/MoviesApi';
+import useAuth from '../../hooks/useAuth';
 import {
   shortMovieThresholdDuration,
   initialNumberItems,
   showMoreIncrement,
 } from '../../utils/constants';
-import { getMovies } from '../../utils/MoviesApi';
-import useAuth from '../../hooks/useAuth';
 import useEditProfile from '../../hooks/useEditProfile';
 import useWindowSize from '../../hooks/useWindowSize';
+import useShowMore from '../../hooks/useShowMore';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as mainApi from '../../utils/MainApi';
 import { handleError } from '../../utils/error-handler';
@@ -37,8 +39,8 @@ function App() {
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
-  const [myFirstIndex, setMyFirstIndex] = useState(0);
-  const [myLastIndex, setMyLastIndex] = useState(initialNumberItems);
+  // const [myFirstIndex, setMyFirstIndex] = useState(0);
+  // const [myLastIndex, setMyLastIndex] = useState(initialNumberItems);
   const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
 
@@ -48,8 +50,8 @@ function App() {
   const [resultToShow, setResultToShow] = useState([]);
 
   const [resultToRender, setResultToRender] = useState([]);
-  const [firstIndex, setFirstIndex] = useState(0);
-  const [lastIndex, setLastIndex] = useState(initialNumberItems);
+  // const [firstIndex, setFirstIndex] = useState(0);
+  // const [lastIndex, setLastIndex] = useState(initialNumberItems);
   const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
 
   const [keyWord, setKeyWord] = useState('');
@@ -237,17 +239,39 @@ function App() {
 
   // show more movies start ---------------------------------------
 
-  useEffect(() => {
-    resultToShow &&
-      setResultToRender(
-        resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
-      );
-  }, [resultToShow, lastIndex]);
+  const allMoviesShowMoreBtn = useShowMore({
+    rToShow: resultToShow,
+    rToResult: resultToRender,
+    sResultToRender: setResultToRender,
+    sIsShowMoreBtn: setIsShowMoreBtn,
+  });
 
-  useEffect(() => {
-    resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
-  }, [resultToShow, lastIndex]);
+  const setFirstIndex = allMoviesShowMoreBtn.sFirstIndex;
+  const setLastIndex = allMoviesShowMoreBtn.sLastIndex;
+  const lastIndex = allMoviesShowMoreBtn.lIndex;
 
+  const myMoviesShowMoreBtn = useShowMore({
+    rToShow: myMovies,
+    rToResult: myMoviesToRender,
+    sResultToRender: setMyMoviesToRender,
+    sIsShowMoreBtn: setIsShowMyMoreBtn,
+  });
+
+  const setMyFirstIndex = myMoviesShowMoreBtn.sFirstIndex;
+  const setMyLastIndex = myMoviesShowMoreBtn.sLastIndex;
+  const myLastIndex = myMoviesShowMoreBtn.lIndex;
+
+  // useEffect(() => {
+  //   resultToShow &&
+  //     setResultToRender(
+  //       resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
+  //     );
+  // }, [resultToShow, lastIndex]);
+  //
+  // useEffect(() => {
+  //   resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
+  // }, [resultToShow, lastIndex]);
+  //
   const onShowMore = () => {
     setFirstIndex(lastIndex);
     setLastIndex(lastIndex + showMoreIncrement);
@@ -261,17 +285,17 @@ function App() {
   // const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
 
   // show more My movies start ---------------------------------------
-  console.log(myMovies, myMoviesToRender);
-  useEffect(() => {
-    myMovies &&
-      setMyMoviesToRender(
-        myMoviesToRender.concat(myMovies.slice(myFirstIndex, myLastIndex))
-      );
-  }, [myMovies, myLastIndex]);
-
-  useEffect(() => {
-    myMovies && setIsShowMyMoreBtn(myLastIndex < myMovies.length);
-  }, [myMovies, myLastIndex]);
+  // console.log(myMovies, myMoviesToRender);
+  // useEffect(() => {
+  //   myMovies &&
+  //     setMyMoviesToRender(
+  //       myMoviesToRender.concat(myMovies.slice(myFirstIndex, myLastIndex))
+  //     );
+  // }, [myMovies, myLastIndex]);
+  //
+  // useEffect(() => {
+  //   myMovies && setIsShowMyMoreBtn(myLastIndex < myMovies.length);
+  // }, [myMovies, myLastIndex]);
 
   const onMyMoviesShowMore = () => {
     setMyFirstIndex(myLastIndex);
