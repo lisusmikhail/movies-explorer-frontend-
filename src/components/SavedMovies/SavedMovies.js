@@ -6,12 +6,27 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 
 function SavedMovies(props) {
-  const { isLoggedIn, myMoviesToRender, isShowMoreBtn, onShowMore } = props;
+  const {
+    isLoggedIn,
+    myMoviesToRender,
+    isShowMoreBtn,
+    onShowMore,
+    handleIsFirstRender,
+    handleIsShortLength,
+    onCheckBox,
+    isShortLength,
+  } = props;
+
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <div className='movies'>
-        <SearchForm />
+        <SearchForm
+          handleIsFirstRender={handleIsFirstRender}
+          handleIsShortLength={handleIsShortLength}
+          isShortLength={isShortLength}
+          onCheckBox={onCheckBox}
+        />
         <MoviesCardList
           favoriteOnly={false}
           onShowMore={onShowMore}

@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
 function FilterCheckbox(props) {
-  const { isChecked, setIsChecked, setIsFirstRender, onCheckBox } = props;
+  const {
+    isShortLength,
+    handleIsShortLength,
+    handleIsFirstRender,
+    onCheckBox,
+  } = props;
   const handleInputChange = () => {
-    setIsFirstRender(false);
-    setIsChecked(!isChecked);
+    handleIsFirstRender(false);
+    handleIsShortLength(!isShortLength);
     localStorage.getItem('keyWord') &&
       onCheckBox(localStorage.getItem('keyWord'));
   };
@@ -19,19 +24,19 @@ function FilterCheckbox(props) {
         name='offer'
         className='checkbox__input'
         type='checkbox'
-        defaultChecked={isChecked}
+        defaultChecked={isShortLength}
       />
       <label
         htmlFor='offer'
         className={
-          isChecked
+          isShortLength
             ? 'checkbox__label'
             : 'checkbox__label checkbox__label_active'
         }
       >
         <div
           className={
-            isChecked
+            isShortLength
               ? 'checkbox__label-switch'
               : 'checkbox__label-switch checkbox__label-switch_active'
           }

@@ -7,8 +7,8 @@ function SearchForm({
   onSearch,
   onCheckBox,
   isShortLength,
-  setIsShortLength,
-  setIsFirstRender,
+  handleIsShortLength,
+  handleIsFirstRender,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchError, setSearchError] = useState('');
@@ -20,7 +20,7 @@ function SearchForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsFirstRender(false);
+    handleIsFirstRender(false);
     if (searchQuery.length === 0) {
       setSearchError('Нужно ввести ключевое слово');
     } else if (searchQuery.length > keyWordMaxLength) {
@@ -54,9 +54,9 @@ function SearchForm({
         />
       </div>
       <FilterCheckbox
-        setIsChecked={setIsShortLength}
-        isChecked={isShortLength}
-        setIsFirstRender={setIsFirstRender}
+        handleIsShortLength={handleIsShortLength}
+        isShortLength={isShortLength}
+        handleIsFirstRender={handleIsFirstRender}
         onCheckBox={onCheckBox}
       />
     </form>

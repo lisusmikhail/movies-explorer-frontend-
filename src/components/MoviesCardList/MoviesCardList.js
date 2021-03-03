@@ -10,7 +10,7 @@ function MoviesCardList({
   onAddFavorite,
   pageName,
 }) {
-  console.log(resultToRender);
+  console.log({ resultToRender });
 
   return (
     <section className='movies-card-list movies-card-list_position'>

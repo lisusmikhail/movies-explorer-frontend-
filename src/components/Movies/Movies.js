@@ -11,8 +11,8 @@ function Movies(props) {
     onSearch,
     onCheckBox,
     isShortLength,
-    setIsShortLength,
-    setIsFirstRender,
+    handleIsShortLength,
+    handleIsFirstRender,
     resultToRender,
     onShowMore,
     isShowMoreBtn,
@@ -26,8 +26,8 @@ function Movies(props) {
           onSearch={onSearch}
           onCheckBox={onCheckBox}
           isShortLength={isShortLength}
-          setIsShortLength={setIsShortLength}
-          setIsFirstRender={setIsFirstRender}
+          handleIsFirstRender={handleIsFirstRender}
+          handleIsShortLength={handleIsShortLength}
         />
         <MoviesCardList
           favoriteOnly={false}

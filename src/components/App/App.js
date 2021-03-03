@@ -39,8 +39,6 @@ function App() {
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
-  // const [myFirstIndex, setMyFirstIndex] = useState(0);
-  // const [myLastIndex, setMyLastIndex] = useState(initialNumberItems);
   const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
 
@@ -50,8 +48,6 @@ function App() {
   const [resultToShow, setResultToShow] = useState([]);
 
   const [resultToRender, setResultToRender] = useState([]);
-  // const [firstIndex, setFirstIndex] = useState(0);
-  // const [lastIndex, setLastIndex] = useState(initialNumberItems);
   const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
 
   const [keyWord, setKeyWord] = useState('');
@@ -108,6 +104,15 @@ function App() {
     setMyFirstIndex(0);
     setMyLastIndex(initialNumberItems);
     setErrorMsg('');
+  };
+
+  const handleIsFirstRender = (state) => {
+    setIsFirstRender(state);
+  };
+
+  const handleIsShortLength = (state) => {
+    console.log(state);
+    setIsShortLength(state);
   };
 
   useEffect(() => {
@@ -325,12 +330,13 @@ function App() {
             onSearch={onSearchMovies}
             onCheckBox={onCheckBoxSearch}
             isShortLength={isShortLength}
-            setIsShortLength={setIsShortLength}
+            handleIsShortLength={handleIsShortLength}
             setIsFirstRender={setIsFirstRender}
             resultToRender={resultToRender}
             onShowMore={onShowMore}
             isShowMoreBtn={isShowMoreBtn}
             onAddFavorite={onAddFavorite}
+            handleIsFirstRender={handleIsFirstRender}
             component={Movies}
           />
           <ProtectedRoute
@@ -341,6 +347,10 @@ function App() {
             onMyMoviesShowMore={onMyMoviesShowMore}
             isShowMoreBtn={isShowMyMoreBtn}
             onShowMore={onMyMoviesShowMore}
+            handleIsFirstRender={handleIsFirstRender}
+            handleIsShortLength={handleIsShortLength}
+            onCheckBox={onCheckBoxSearch}
+            isShortLength={isShortLength}
             component={SavedMovies}
           />
           <Route path='/signup'>
