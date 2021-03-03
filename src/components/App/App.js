@@ -37,7 +37,7 @@ function App() {
   const [newProfile, setNewProfile] = useState({});
 
   const [allMovies, setAllMovies] = useState([]);
-  const [myMovies, setMyMovies] = useState([]);
+  const [myMoviesToShow, setMyMoviesToShow] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
   const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
@@ -45,9 +45,9 @@ function App() {
   const [searchResult, setSearchResult] = useState([]);
   const [resultToLocalStorage, setResultToLocalStorage] = useState('');
   const [isStorageUpdated, setIsStorageUpdated] = useState(false);
-  const [resultToShow, setResultToShow] = useState([]);
+  const [moviesToShow, setMoviesToShow] = useState([]);
 
-  const [resultToRender, setResultToRender] = useState([]);
+  const [moviesToRender, setMoviesToRender] = useState([]);
   const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
 
   const [keyWord, setKeyWord] = useState('');
@@ -91,15 +91,15 @@ function App() {
   }, [newUsersProfile]);
 
   const settingInitialState = () => {
-    setResultToRender([]);
-    setResultToShow([]);
+    setMoviesToRender([]);
+    setMoviesToShow([]);
     setFirstIndex(0);
     setLastIndex(initialNumberItems);
     setErrorMsg('');
   };
 
   const settingInitialMyState = () => {
-    setMyMovies([]);
+    setMyMoviesToShow([]);
     setMyMoviesToRender([]);
     setMyFirstIndex(0);
     setMyLastIndex(initialNumberItems);
@@ -129,7 +129,7 @@ function App() {
   useEffect(() => {
     if (localStorage.getItem('movies')) {
       const resultFromLocalStorage = localStorage.getItem('movies');
-      setResultToShow(JSON.parse(resultFromLocalStorage));
+      setMoviesToShow(JSON.parse(resultFromLocalStorage));
     }
   }, []);
 
@@ -158,12 +158,12 @@ function App() {
       setSearchResult(moviesToShow);
     };
 
-    resultToRender.length === 0 &&
+    moviesToRender.length === 0 &&
       !isFirstRender &&
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [allMovies, keyWord, isShortLength, resultToRender]);
+  }, [allMovies, keyWord, isShortLength, moviesToRender]);
 
   useMemo(() => {
     setResultToLocalStorage(JSON.stringify(searchResult));
@@ -176,7 +176,7 @@ function App() {
 
   useEffect(() => {
     const resultFromLocalStorage = localStorage.getItem('movies');
-    setResultToShow(JSON.parse(resultFromLocalStorage));
+    setMoviesToShow(JSON.parse(resultFromLocalStorage));
   }, [isStorageUpdated]);
 
   useEffect(() => {
@@ -208,7 +208,7 @@ function App() {
         .getUserAndMyMovies(token)
         .then(([user, myMovies]) => {
           setCurrentUser(user);
-          setMyMovies(myMovies);
+          setMyMoviesToShow(myMovies);
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
@@ -243,12 +243,12 @@ function App() {
   // main api my movies end ----------------------------------
 
   // show more movies start ---------------------------------------
-
+  console.log(moviesToRender);
   const allMoviesShowMoreBtn = useShowMore({
-    rToShow: resultToShow,
-    rToResult: resultToRender,
-    sResultToRender: setResultToRender,
-    sIsShowMoreBtn: setIsShowMoreBtn,
+    resultToShow: moviesToShow,
+    resultToRender: moviesToRender,
+    setResultToRender: setMoviesToRender,
+    setIsShowMoreBtn: setIsShowMoreBtn,
   });
 
   const setFirstIndex = allMoviesShowMoreBtn.sFirstIndex;
@@ -256,51 +256,20 @@ function App() {
   const lastIndex = allMoviesShowMoreBtn.lIndex;
 
   const myMoviesShowMoreBtn = useShowMore({
-    rToShow: myMovies,
-    rToResult: myMoviesToRender,
-    sResultToRender: setMyMoviesToRender,
-    sIsShowMoreBtn: setIsShowMyMoreBtn,
+    resultToShow: myMoviesToShow,
+    resultToRender: myMoviesToRender,
+    setResultToRender: setMyMoviesToRender,
+    setIsShowMoreBtn: setIsShowMyMoreBtn,
   });
 
   const setMyFirstIndex = myMoviesShowMoreBtn.sFirstIndex;
   const setMyLastIndex = myMoviesShowMoreBtn.sLastIndex;
   const myLastIndex = myMoviesShowMoreBtn.lIndex;
 
-  // useEffect(() => {
-  //   resultToShow &&
-  //     setResultToRender(
-  //       resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
-  //     );
-  // }, [resultToShow, lastIndex]);
-  //
-  // useEffect(() => {
-  //   resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
-  // }, [resultToShow, lastIndex]);
-  //
   const onShowMore = () => {
     setFirstIndex(lastIndex);
     setLastIndex(lastIndex + showMoreIncrement);
   };
-
-  // show more movies end ---------------------------------------
-
-  // const [myMoviesToRender, setMoviesToRender]=useState({})
-  // const [firstMyIndex, setFirstMyIndex] = useState(0);
-  // const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
-  // const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
-
-  // show more My movies start ---------------------------------------
-  // console.log(myMovies, myMoviesToRender);
-  // useEffect(() => {
-  //   myMovies &&
-  //     setMyMoviesToRender(
-  //       myMoviesToRender.concat(myMovies.slice(myFirstIndex, myLastIndex))
-  //     );
-  // }, [myMovies, myLastIndex]);
-  //
-  // useEffect(() => {
-  //   myMovies && setIsShowMyMoreBtn(myLastIndex < myMovies.length);
-  // }, [myMovies, myLastIndex]);
 
   const onMyMoviesShowMore = () => {
     setMyFirstIndex(myLastIndex);
@@ -332,7 +301,7 @@ function App() {
             isShortLength={isShortLength}
             handleIsShortLength={handleIsShortLength}
             setIsFirstRender={setIsFirstRender}
-            resultToRender={resultToRender}
+            moviesToRender={moviesToRender}
             onShowMore={onShowMore}
             isShowMoreBtn={isShowMoreBtn}
             onAddFavorite={onAddFavorite}

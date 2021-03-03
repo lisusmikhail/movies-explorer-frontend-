@@ -4,19 +4,19 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList({
   favoriteOnly,
-  resultToRender,
+  moviesToRender,
   onShowMore,
   isShowMoreBtn,
   onAddFavorite,
   pageName,
 }) {
-  console.log({ resultToRender });
+  console.log({ moviesToRender });
 
   return (
     <section className='movies-card-list movies-card-list_position'>
       <>
-        {resultToRender &&
-          resultToRender.map((movie) => (
+        {moviesToRender &&
+          moviesToRender.map((movie) => (
             <MoviesCard
               movie={movie}
               key={pageName === 'myMovies' ? movie._id : movie.id}

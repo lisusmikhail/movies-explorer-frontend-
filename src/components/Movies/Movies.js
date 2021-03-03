@@ -13,7 +13,7 @@ function Movies(props) {
     isShortLength,
     handleIsShortLength,
     handleIsFirstRender,
-    resultToRender,
+    moviesToRender,
     onShowMore,
     isShowMoreBtn,
     onAddFavorite,
@@ -31,7 +31,7 @@ function Movies(props) {
         />
         <MoviesCardList
           favoriteOnly={false}
-          resultToRender={resultToRender}
+          moviesToRender={moviesToRender}
           onShowMore={onShowMore}
           isShowMoreBtn={isShowMoreBtn}
           onAddFavorite={onAddFavorite}

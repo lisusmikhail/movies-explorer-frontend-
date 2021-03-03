@@ -32,6 +32,7 @@ function SavedMovies(props) {
           onShowMore={onShowMore}
           resultToRender={myMoviesToRender}
           isShowMoreBtn={isShowMoreBtn}
+          moviesToRender={myMoviesToRender}
           pageName={'myMovies'}
         />
       </div>

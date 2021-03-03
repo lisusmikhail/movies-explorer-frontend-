@@ -4,11 +4,12 @@ import { initialNumberItems, showMoreIncrement } from '../utils/constants';
 function useShowMore(props) {
   const [firstIndex, setFirstIndex] = useState(0);
   const [lastIndex, setLastIndex] = useState(initialNumberItems);
+  console.log(props);
 
-  const resultToShow = props.rToShow;
-  const setResultToRender = props.sResultToRender;
-  const resultToRender = props.rToResult;
-  const setIsShowMoreBtn = props.sIsShowMoreBtn;
+  const resultToShow = props.resultToShow;
+  const setResultToRender = props.setResultToRender;
+  const resultToRender = props.resultToRender;
+  const setIsShowMoreBtn = props.setIsShowMoreBtn;
 
   useEffect(() => {
     resultToShow &&
