@@ -4,12 +4,22 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Auth from '../Auth/Auth';
 import Header from '../Header/Header';
 
-function Profile({ resetStates, errorMsg, onAuth, onSignOut, isLoggedIn }) {
+function Profile({
+  resetStates,
+  errorMsg,
+  onAuth,
+  onSignOut,
+  isLoggedIn,
+  handleMovieMenuClick,
+}) {
   const user = useContext(CurrentUserContext);
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header
+        isLoggedIn={isLoggedIn}
+        handleMovieMenuClick={handleMovieMenuClick}
+      />
       <Auth
         title={`Привет, ${user.name}!`}
         submitButtonTitle={'Редактировать'}

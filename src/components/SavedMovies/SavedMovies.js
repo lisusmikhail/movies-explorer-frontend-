@@ -15,11 +15,15 @@ function SavedMovies(props) {
     handleIsShortLength,
     onCheckBox,
     isShortLength,
+    handleMovieMenuClick,
   } = props;
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header
+        isLoggedIn={isLoggedIn}
+        handleMovieMenuClick={handleMovieMenuClick}
+      />
       <div className='movies'>
         <SearchForm
           handleIsFirstRender={handleIsFirstRender}

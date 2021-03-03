@@ -28,6 +28,10 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
   const history = useHistory();
+  // const location = history.location.pathname;
+  // console.log(location);
+
+  const [location, setLocation] = useState('/');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
@@ -37,6 +41,7 @@ function App() {
   const [newProfile, setNewProfile] = useState({});
 
   const [allMovies, setAllMovies] = useState([]);
+  const [myMovies, setMyMovies] = useState([]);
   const [myMoviesToShow, setMyMoviesToShow] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
   const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
@@ -57,6 +62,8 @@ function App() {
   const [movieToAdd, setMovieToAdd] = useState({});
 
   const size = useWindowSize();
+
+  console.log('tru location', location);
 
   const { isLoggedIn } = useAuth(
     credentials,
@@ -112,6 +119,22 @@ function App() {
     setMyMoviesToRender([]);
     resetMyMoviesIndex();
     setErrorMsg('');
+  };
+
+  const resetStates = () => {
+    setErrorMsg('');
+  };
+  const [checkLocation, setCheckLocation] = useState(false);
+
+  useEffect(() => {
+    console.log('location is changed');
+    setLocation(history.location.pathname);
+  }, [checkLocation]);
+
+  const handleMovieMenuClick = (location) => {
+    console.log('handleMovie', location);
+    setCheckLocation(!checkLocation);
+    setMyMoviesToRender([]);
   };
 
   // получение фильмов из базы данных
@@ -171,7 +194,7 @@ function App() {
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [keyWord, isShortLength]);
+  }, [keyWord, isShortLength, location]);
 
   useEffect(() => {
     !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
@@ -194,7 +217,7 @@ function App() {
     keyWord !== searchQuery && settingInitialState();
   };
 
-  const onCheckBoxSearch = (searchQuery) => {
+  const onCheckBoxMovie = (searchQuery) => {
     console.log('search started because of checkbox');
     setKeyWord(searchQuery);
     settingInitialState();
@@ -202,10 +225,6 @@ function App() {
   };
 
   //search end ---------------------------------------------------------
-
-  const resetStates = () => {
-    setErrorMsg('');
-  };
 
   // main api my movies start ----------------------------------
 
@@ -215,12 +234,23 @@ function App() {
         .getUserAndMyMovies(token)
         .then(([user, myMovies]) => {
           setCurrentUser(user);
-          setMyMoviesToShow(myMovies);
+          setMyMovies(myMovies);
+          // setMyMoviesToShow(myMovies);
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
     token && getUserAndMyMovies(token);
-  }, [token, isMyMoviesUpdated]);
+  }, [token, isMyMoviesUpdated, location]);
+
+  useEffect(() => {
+    const checkMovie = (movie) => {
+      const isShort = movie['duration'] < shortMovieThresholdDuration;
+      return !isShortLength || isShort;
+    };
+    const moviesToShow = myMovies.filter(checkMovie);
+    // console.log('search My movies To Show', moviesToShow);
+    setMyMoviesToShow(moviesToShow);
+  }, [myMovies, isShortLength]);
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
@@ -229,16 +259,12 @@ function App() {
         .then((res) => {
           if (res) {
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
-            // console.log(res);
-            // console.log([...myMovies, res.data]);
-            // setMyMovies([...myMovies, res.data]);
           } else {
             console.log('Произошла ошибка');
           }
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
-
     isLoggedIn && addToFavorite(movieToAdd);
   }, [movieToAdd]);
 
@@ -247,24 +273,56 @@ function App() {
     settingInitialMyState();
   };
 
+  const onCheckBoxMyMovie = () => {
+    console.log('search My Movie started because of checkbox');
+    settingInitialMyState();
+  };
+
   // main api my movies end ----------------------------------
 
   // show more movies start ---------------------------------------
+  console.log('movies', moviesToShow, moviesToRender);
+  console.log('my movies', myMoviesToShow, myMoviesToRender);
+
+  const handleResultMovies = (result) => {
+    console.log('handle Result Movies');
+    location === '/movies' && setMoviesToRender(result);
+    // setMoviesToRender(result);
+  };
+
+  const handleBtnMovies = (state) => {
+    setIsShowMoreBtn(state);
+  };
+
   const moviesShowMoreBtn = useShowMore({
     resultToShow: moviesToShow,
     resultToRender: moviesToRender,
-    setResultToRender: setMoviesToRender,
-    setIsShowMoreBtn: setIsShowMoreBtn,
+    handleResult: handleResultMovies,
+    handleBtn: handleBtnMovies,
+    isMyMovie: false,
+    location,
   });
 
   const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
 
+  const handleResultMyMovies = (result) => {
+    console.log('handle Result My Movies');
+    location === '/saved-movies' && setMyMoviesToRender(result);
+    // setMyMoviesToRender(result);
+  };
+
+  const handleBtnMyMovies = (state) => {
+    setIsShowMyMoreBtn(state);
+  };
+
   const myMoviesShowMoreBtn = useShowMore({
     resultToShow: myMoviesToShow,
     resultToRender: myMoviesToRender,
-    setResultToRender: setMyMoviesToRender,
-    setIsShowMoreBtn: setIsShowMyMoreBtn,
+    handleResult: handleResultMyMovies,
+    handleBtn: handleBtnMyMovies,
+    isMyMovie: true,
+    location,
   });
 
   const onMyMoviesShowMore = myMoviesShowMoreBtn.onShowMore;
@@ -284,6 +342,7 @@ function App() {
             resetStates={resetStates}
             errorMsg={errorMsg}
             onSignOut={onSignOut}
+            handleMovieMenuClick={handleMovieMenuClick}
             component={Profile}
           />
           <ProtectedRoute
@@ -291,7 +350,7 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             onSearch={onSearchMovies}
-            onCheckBox={onCheckBoxSearch}
+            onCheckBox={onCheckBoxMovie}
             isShortLength={isShortLength}
             handleIsShortLength={handleIsShortLength}
             setIsFirstRender={setIsFirstRender}
@@ -299,6 +358,7 @@ function App() {
             onShowMore={onMoviesShowMore}
             isShowMoreBtn={isShowMoreBtn}
             onAddFavorite={onAddFavorite}
+            handleMovieMenuClick={handleMovieMenuClick}
             handleIsFirstRender={handleIsFirstRender}
             component={Movies}
           />
@@ -311,8 +371,9 @@ function App() {
             onShowMore={onMyMoviesShowMore}
             handleIsFirstRender={handleIsFirstRender}
             handleIsShortLength={handleIsShortLength}
-            onCheckBox={onCheckBoxSearch}
+            onCheckBox={onCheckBoxMyMovie}
             isShortLength={isShortLength}
+            handleMovieMenuClick={handleMovieMenuClick}
             component={SavedMovies}
           />
           <Route path='/signup'>
@@ -332,7 +393,10 @@ function App() {
             />
           </Route>
           <Route exact path='/'>
-            <Header isLoggedIn={isLoggedIn} />
+            <Header
+              isLoggedIn={isLoggedIn}
+              handleMovieMenuClick={handleMovieMenuClick}
+            />
             <Main />
             <Footer />
           </Route>

@@ -7,7 +7,7 @@ import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import Navigation from '../Navigation/Navigation';
 import ProfileMenu from '../ProfileMenu/ProfileMenu';
 
-function Header({ isLoggedIn }) {
+function Header({ isLoggedIn, handleMovieMenuClick }) {
   const history = useHistory();
   const location = history.location.pathname;
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -27,6 +27,7 @@ function Header({ isLoggedIn }) {
     setIsMenuClicked(true);
     setIsMenuOpen(true);
     handleMenuClick();
+    handleMovieMenuClick(location);
   };
 
   return (

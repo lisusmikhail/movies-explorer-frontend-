@@ -17,10 +17,14 @@ function Movies(props) {
     onShowMore,
     isShowMoreBtn,
     onAddFavorite,
+    handleMovieMenuClick,
   } = props;
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header
+        isLoggedIn={isLoggedIn}
+        handleMovieMenuClick={handleMovieMenuClick}
+      />
       <div className='movies'>
         <SearchForm
           onSearch={onSearch}
