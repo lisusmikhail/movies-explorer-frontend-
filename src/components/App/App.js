@@ -28,8 +28,6 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
   const history = useHistory();
-  // const location = history.location.pathname;
-  // console.log(location);
 
   const [location, setLocation] = useState('/');
   const [errorMsg, setErrorMsg] = useState('');
@@ -44,7 +42,6 @@ function App() {
   const [myMovies, setMyMovies] = useState([]);
   const [myMoviesToShow, setMyMoviesToShow] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
-  const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
 
   const [isResultUpdated, setIsResultUpdated] = useState(false);
@@ -63,7 +60,7 @@ function App() {
 
   const size = useWindowSize();
 
-  console.log('tru location', location);
+  // console.log('tru location', location);
 
   const { isLoggedIn } = useAuth(
     credentials,
@@ -114,9 +111,10 @@ function App() {
     setErrorMsg('');
   };
 
-  const settingInitialMyState = () => {
-    setMyMoviesToShow([]);
+  const settingMyInitialState = () => {
+    console.log('settingMyInitialState');
     setMyMoviesToRender([]);
+    setMyMoviesToShow([]);
     resetMyMoviesIndex();
     setErrorMsg('');
   };
@@ -132,9 +130,8 @@ function App() {
   }, [checkLocation]);
 
   const handleMovieMenuClick = (location) => {
-    console.log('handleMovie', location);
+    // console.log('handleMovie', location);
     setCheckLocation(!checkLocation);
-    setMyMoviesToRender([]);
   };
 
   // получение фильмов из базы данных
@@ -172,11 +169,8 @@ function App() {
 
   //search start ---------------------------------------------------------
 
-  console.log(isShortLength);
   useEffect(() => {
-    console.log('search 0');
     const searchMovies = (keyWord) => {
-      console.log('search 1');
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
@@ -184,7 +178,6 @@ function App() {
         return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
       };
       const moviesToShow = allMovies.filter(checkMovie);
-      console.log('search 2 moviesToShow', moviesToShow);
       setResultToLocalStorage(JSON.stringify(moviesToShow));
       setIsResultUpdated(!isResultUpdated);
     };
@@ -194,7 +187,7 @@ function App() {
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [keyWord, isShortLength, location]);
+  }, [keyWord, isShortLength, location, checkLocation]);
 
   useEffect(() => {
     !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
@@ -217,11 +210,15 @@ function App() {
     keyWord !== searchQuery && settingInitialState();
   };
 
+  useEffect(() => {}, [checkLocation]);
+
   const onCheckBoxMovie = (searchQuery) => {
-    console.log('search started because of checkbox');
-    setKeyWord(searchQuery);
-    settingInitialState();
-    // settingInitialMyState();
+    if (location === '/movies') {
+      console.log('onCheckBoxMovie');
+      setKeyWord(searchQuery);
+      settingInitialState();
+      setMyMoviesToRender([]);
+    }
   };
 
   //search end ---------------------------------------------------------
@@ -235,12 +232,11 @@ function App() {
         .then(([user, myMovies]) => {
           setCurrentUser(user);
           setMyMovies(myMovies);
-          // setMyMoviesToShow(myMovies);
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
     token && getUserAndMyMovies(token);
-  }, [token, isMyMoviesUpdated, location]);
+  }, [token, isMyMoviesUpdated]);
 
   useEffect(() => {
     const checkMovie = (movie) => {
@@ -248,7 +244,6 @@ function App() {
       return !isShortLength || isShort;
     };
     const moviesToShow = myMovies.filter(checkMovie);
-    // console.log('search My movies To Show', moviesToShow);
     setMyMoviesToShow(moviesToShow);
   }, [myMovies, isShortLength]);
 
@@ -270,24 +265,58 @@ function App() {
 
   const onAddFavorite = (movieToAdd) => {
     setMovieToAdd(movieToAdd);
-    settingInitialMyState();
+    settingMyInitialState();
   };
 
   const onCheckBoxMyMovie = () => {
-    console.log('search My Movie started because of checkbox');
-    settingInitialMyState();
+    if (location === '/saved-movies') {
+      console.log('onCheckBoxMyMovie');
+      setMoviesToRender([]);
+      settingMyInitialState();
+    }
+  };
+
+  const [firstMyIndex, setFirstMyIndex] = useState(0);
+  const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
+  const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
+
+  const handleResultMyMovies = (result) => {
+    setMyMoviesToRender(result);
+  };
+
+  const handleBtnMyMovies = (state) => {
+    setIsShowMoreMyBtn(state);
+  };
+
+  useEffect(() => {
+    myMoviesToShow &&
+      handleResultMyMovies(
+        myMoviesToRender.concat(myMoviesToShow.slice(firstMyIndex, lastMyIndex))
+      );
+  }, [myMoviesToShow, lastMyIndex]);
+
+  useEffect(() => {
+    myMoviesToShow && handleBtnMyMovies(lastMyIndex < myMoviesToShow.length);
+  }, [myMoviesToShow, lastMyIndex]);
+
+  const onMyMoviesShowMore = () => {
+    setFirstMyIndex(lastMyIndex);
+    setLastMyIndex(lastMyIndex + showMoreIncrement);
+  };
+
+  const resetMyMoviesIndex = () => {
+    setFirstMyIndex(0);
+    setLastMyIndex(initialNumberItems);
   };
 
   // main api my movies end ----------------------------------
 
-  // show more movies start ---------------------------------------
-  console.log('movies', moviesToShow, moviesToRender);
-  console.log('my movies', myMoviesToShow, myMoviesToRender);
+  console.log('myMoviesToRender===>', myMoviesToRender);
+  console.log('moviesToRender===>', moviesToRender);
 
+  // show more movies start ---------------------------------------
   const handleResultMovies = (result) => {
-    console.log('handle Result Movies');
-    location === '/movies' && setMoviesToRender(result);
-    // setMoviesToRender(result);
+    setMoviesToRender(result);
   };
 
   const handleBtnMovies = (state) => {
@@ -299,34 +328,10 @@ function App() {
     resultToRender: moviesToRender,
     handleResult: handleResultMovies,
     handleBtn: handleBtnMovies,
-    isMyMovie: false,
-    location,
   });
 
   const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
-
-  const handleResultMyMovies = (result) => {
-    console.log('handle Result My Movies');
-    location === '/saved-movies' && setMyMoviesToRender(result);
-    // setMyMoviesToRender(result);
-  };
-
-  const handleBtnMyMovies = (state) => {
-    setIsShowMyMoreBtn(state);
-  };
-
-  const myMoviesShowMoreBtn = useShowMore({
-    resultToShow: myMoviesToShow,
-    resultToRender: myMoviesToRender,
-    handleResult: handleResultMyMovies,
-    handleBtn: handleBtnMyMovies,
-    isMyMovie: true,
-    location,
-  });
-
-  const onMyMoviesShowMore = myMoviesShowMoreBtn.onShowMore;
-  const resetMyMoviesIndex = myMoviesShowMoreBtn.resetIndex;
 
   // show more My movies end ---------------------------------------
 
@@ -367,7 +372,7 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             myMoviesToRender={myMoviesToRender}
-            isShowMoreBtn={isShowMyMoreBtn}
+            isShowMoreBtn={isShowMoreMyBtn}
             onShowMore={onMyMoviesShowMore}
             handleIsFirstRender={handleIsFirstRender}
             handleIsShortLength={handleIsShortLength}

@@ -9,22 +9,12 @@ function useShowMore(props) {
   const handleResult = props.handleResult;
   const resultToRender = props.resultToRender;
   const handleBtn = props.handleBtn;
-  const isMyMovie = props.isMyMovie;
-  const location = props.location;
 
   useEffect(() => {
-    if (
-      (isMyMovie && location === '/saved-movies') ||
-      (!isMyMovie && location === '/movies')
-    ) {
-      console.log({ isMyMovie, location });
-      resultToShow &&
-        handleResult(
-          resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
-        );
-    } else {
-      handleResult([]);
-    }
+    resultToShow &&
+      handleResult(
+        resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
+      );
   }, [resultToShow, lastIndex]);
 
   useEffect(() => {
