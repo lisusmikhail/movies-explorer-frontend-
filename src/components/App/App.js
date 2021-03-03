@@ -42,7 +42,7 @@ function App() {
   const [isShowMyMoreBtn, setIsShowMyMoreBtn] = useState(false);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
 
-  const [searchResult, setSearchResult] = useState([]);
+  const [isResultUpdated, setIsResultUpdated] = useState(false);
   const [resultToLocalStorage, setResultToLocalStorage] = useState('');
   const [isStorageUpdated, setIsStorageUpdated] = useState(false);
   const [moviesToShow, setMoviesToShow] = useState([]);
@@ -86,26 +86,6 @@ function App() {
     setNewProfile({ email, name, token });
   };
 
-  useEffect(() => {
-    newUsersProfile.name && setCurrentUser(newUsersProfile);
-  }, [newUsersProfile]);
-
-  const settingInitialState = () => {
-    setMoviesToRender([]);
-    setMoviesToShow([]);
-    setFirstIndex(0);
-    setLastIndex(initialNumberItems);
-    setErrorMsg('');
-  };
-
-  const settingInitialMyState = () => {
-    setMyMoviesToShow([]);
-    setMyMoviesToRender([]);
-    setMyFirstIndex(0);
-    setMyLastIndex(initialNumberItems);
-    setErrorMsg('');
-  };
-
   const handleIsFirstRender = (state) => {
     setIsFirstRender(state);
   };
@@ -115,6 +95,26 @@ function App() {
     setIsShortLength(state);
   };
 
+  useEffect(() => {
+    newUsersProfile.name && setCurrentUser(newUsersProfile);
+  }, [newUsersProfile]);
+
+  const settingInitialState = () => {
+    console.log('settingInitialState');
+    setMoviesToRender([]);
+    setMoviesToShow([]);
+    resetMoviesIndex();
+    setErrorMsg('');
+  };
+
+  const settingInitialMyState = () => {
+    setMyMoviesToShow([]);
+    setMyMoviesToRender([]);
+    resetMyMoviesIndex();
+    setErrorMsg('');
+  };
+
+  // получение фильмов из базы данных
   useEffect(() => {
     isLoggedIn &&
       getMovies()
@@ -126,6 +126,7 @@ function App() {
         });
   }, [isLoggedIn]);
 
+  // получение фильмов для показа при загрузке страницы
   useEffect(() => {
     if (localStorage.getItem('movies')) {
       const resultFromLocalStorage = localStorage.getItem('movies');
@@ -133,6 +134,7 @@ function App() {
     }
   }, []);
 
+  // назначение атрибутов из localStorage
   useEffect(() => {
     const shortLengthItem = localStorage.getItem('isShortLength');
     if (isFirstRender && shortLengthItem) {
@@ -146,8 +148,12 @@ function App() {
   }, [isFirstRender]);
 
   //search start ---------------------------------------------------------
+
+  console.log(isShortLength);
   useEffect(() => {
+    console.log('search 0');
     const searchMovies = (keyWord) => {
+      console.log('search 1');
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
@@ -155,7 +161,9 @@ function App() {
         return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
       };
       const moviesToShow = allMovies.filter(checkMovie);
-      setSearchResult(moviesToShow);
+      console.log('search 2 moviesToShow', moviesToShow);
+      setResultToLocalStorage(JSON.stringify(moviesToShow));
+      setIsResultUpdated(!isResultUpdated);
     };
 
     moviesToRender.length === 0 &&
@@ -163,16 +171,12 @@ function App() {
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [allMovies, keyWord, isShortLength, moviesToRender]);
-
-  useMemo(() => {
-    setResultToLocalStorage(JSON.stringify(searchResult));
-  }, [searchResult]);
+  }, [keyWord, isShortLength]);
 
   useEffect(() => {
     !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
     !isFirstRender && setIsStorageUpdated(!isStorageUpdated);
-  }, [resultToLocalStorage]);
+  }, [isResultUpdated]);
 
   useEffect(() => {
     const resultFromLocalStorage = localStorage.getItem('movies');
@@ -185,13 +189,16 @@ function App() {
   }, [keyWord, isShortLength]);
 
   const onSearchMovies = (searchQuery) => {
+    console.log('search started because of enter');
     setKeyWord(searchQuery);
     keyWord !== searchQuery && settingInitialState();
   };
 
   const onCheckBoxSearch = (searchQuery) => {
+    console.log('search started because of checkbox');
     setKeyWord(searchQuery);
     settingInitialState();
+    // settingInitialMyState();
   };
 
   //search end ---------------------------------------------------------
@@ -243,17 +250,15 @@ function App() {
   // main api my movies end ----------------------------------
 
   // show more movies start ---------------------------------------
-  console.log(moviesToRender);
-  const allMoviesShowMoreBtn = useShowMore({
+  const moviesShowMoreBtn = useShowMore({
     resultToShow: moviesToShow,
     resultToRender: moviesToRender,
     setResultToRender: setMoviesToRender,
     setIsShowMoreBtn: setIsShowMoreBtn,
   });
 
-  const setFirstIndex = allMoviesShowMoreBtn.sFirstIndex;
-  const setLastIndex = allMoviesShowMoreBtn.sLastIndex;
-  const lastIndex = allMoviesShowMoreBtn.lIndex;
+  const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
+  const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
 
   const myMoviesShowMoreBtn = useShowMore({
     resultToShow: myMoviesToShow,
@@ -262,19 +267,8 @@ function App() {
     setIsShowMoreBtn: setIsShowMyMoreBtn,
   });
 
-  const setMyFirstIndex = myMoviesShowMoreBtn.sFirstIndex;
-  const setMyLastIndex = myMoviesShowMoreBtn.sLastIndex;
-  const myLastIndex = myMoviesShowMoreBtn.lIndex;
-
-  const onShowMore = () => {
-    setFirstIndex(lastIndex);
-    setLastIndex(lastIndex + showMoreIncrement);
-  };
-
-  const onMyMoviesShowMore = () => {
-    setMyFirstIndex(myLastIndex);
-    setMyLastIndex(myLastIndex + showMoreIncrement);
-  };
+  const onMyMoviesShowMore = myMoviesShowMoreBtn.onShowMore;
+  const resetMyMoviesIndex = myMoviesShowMoreBtn.resetIndex;
 
   // show more My movies end ---------------------------------------
 
@@ -302,7 +296,7 @@ function App() {
             handleIsShortLength={handleIsShortLength}
             setIsFirstRender={setIsFirstRender}
             moviesToRender={moviesToRender}
-            onShowMore={onShowMore}
+            onShowMore={onMoviesShowMore}
             isShowMoreBtn={isShowMoreBtn}
             onAddFavorite={onAddFavorite}
             handleIsFirstRender={handleIsFirstRender}
@@ -313,7 +307,6 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             myMoviesToRender={myMoviesToRender}
-            onMyMoviesShowMore={onMyMoviesShowMore}
             isShowMoreBtn={isShowMyMoreBtn}
             onShowMore={onMyMoviesShowMore}
             handleIsFirstRender={handleIsFirstRender}

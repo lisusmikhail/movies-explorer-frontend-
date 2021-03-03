@@ -22,14 +22,19 @@ function useShowMore(props) {
     resultToShow && setIsShowMoreBtn(lastIndex < resultToShow.length);
   }, [resultToShow, lastIndex]);
 
-  // const onShowMore = () => {
-  //   setFirstIndex(lastIndex);
-  //   setLastIndex(lastIndex + showMoreIncrement);
-  // };
+  const onShowMore = () => {
+    setFirstIndex(lastIndex);
+    setLastIndex(lastIndex + showMoreIncrement);
+  };
+
+  const resetIndex = () => {
+    setFirstIndex(0);
+    setLastIndex(initialNumberItems);
+  };
+
   return {
-    sFirstIndex: setFirstIndex,
-    sLastIndex: setLastIndex,
-    lIndex: lastIndex,
+    onShowMore,
+    resetIndex,
   };
 }
 
