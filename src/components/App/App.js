@@ -55,6 +55,7 @@ function App() {
   const [keyWord, setKeyWord] = useState('');
   const [isShortLength, setIsShortLength] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
+  const [isNewRender, setIsNewRender] = useState(false);
 
   const [movieToAdd, setMovieToAdd] = useState({});
 
@@ -211,27 +212,17 @@ function App() {
   }, [isStorageUpdated]);
 
   useEffect(() => {
-    // console.log('current', currentUser._id);
-    // if (currentUser._id) {
     localStorage.setItem('keyWord', keyWord);
     localStorage.setItem('isShortLength', isShortLength.toString());
-    // }
   }, [keyWord, isShortLength]);
 
   const onSearchMovies = (searchQuery) => {
-    // console.log('search started because of enter');
     setKeyWord(searchQuery);
     keyWord !== searchQuery && settingInitialState();
     setMyMoviesToRender([]);
   };
 
-  const [isNewRender, setIsNewRender] = useState(false);
-
   useEffect(() => {
-    // console.log(
-    //   'onCheckBoxMovie+++++++++++++++++++++++++++++++++++++++++++++',
-    //   location
-    // );
     if (location !== '/saved-movies') {
       setMyMoviesToRender([]);
       setFirstMyIndex(0);
@@ -247,9 +238,7 @@ function App() {
     settingInitialState();
   };
 
-  //search end ---------------------------------------------------------
-
-  // main api my movies start ----------------------------------
+  // main api my movies  ----------------------------------
 
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
@@ -294,10 +283,9 @@ function App() {
     settingMyInitialState();
   };
 
+  // showMore my movies
+
   const onCheckBoxMyMovie = () => {
-    // console.log(
-    //   'checkBoxMyMovie----------------------------------------------------'
-    // );
     settingMyInitialState();
     setMyMoviesToRender([]);
   };
@@ -311,8 +299,6 @@ function App() {
   };
 
   useEffect(() => {
-    // console.log('concat', firstMyIndex, lastMyIndex);
-
     myMoviesToShow &&
       handleResultMyMovies(
         myMoviesToRender.concat(myMoviesToShow.slice(firstMyIndex, lastMyIndex))
@@ -333,19 +319,6 @@ function App() {
     setLastMyIndex(initialNumberItems);
   };
 
-  // main api my movies end ----------------------------------
-
-  // console.log('myMoviesToShow===>', myMoviesToShow);
-  // console.log(
-  //   'myMoviesToRender===>',
-  //   myMoviesToRender,
-  //   firstMyIndex,
-  //   lastMyIndex,
-  //   isFirstRender
-  // );
-  // console.log('MoviesToShow===>', moviesToShow);
-  // console.log('moviesToRender===>', moviesToRender);
-
   // show more movies start ---------------------------------------
   const handleResultMovies = (result) => {
     setMoviesToRender(result);
@@ -364,26 +337,6 @@ function App() {
 
   const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
-
-  //
-  // const handleResultMovies = (result) => {
-  //   setMoviesToRender(result);
-  // };
-  //
-  // const handleBtnMovies = (state) => {
-  //   setIsShowMoreBtn(state);
-  // };
-  //
-  // const moviesShowMoreBtn = useShowMore({
-  //   resultToShow: moviesToShow,
-  //   resultToRender: moviesToRender,
-  //   handleResult: handleResultMovies,
-  //   handleBtn: handleBtnMovies,
-  // });
-  //
-  // const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
-  // const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
-  //
 
   // show more My movies end ---------------------------------------
 
