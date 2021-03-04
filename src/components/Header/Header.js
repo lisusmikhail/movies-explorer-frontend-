@@ -7,7 +7,8 @@ import HamburgerMenu from '../HamburgerMenu/HamburgerMenu';
 import Navigation from '../Navigation/Navigation';
 import ProfileMenu from '../ProfileMenu/ProfileMenu';
 
-function Header({ isLoggedIn, handleMovieMenuClick }) {
+function Header(props) {
+  const { isLoggedIn, handleMovieMenuClick } = props;
   const history = useHistory();
   const location = history.location.pathname;
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -23,17 +24,17 @@ function Header({ isLoggedIn, handleMovieMenuClick }) {
     }
   };
 
-  const handleNavClick = () => {
+  function handleNavClick(e) {
     setIsMenuClicked(true);
     setIsMenuOpen(true);
     handleMenuClick();
-    handleMovieMenuClick(location);
-  };
+    handleMovieMenuClick(e.target.href);
+  }
 
   return (
     <div className={location === '/' ? 'header header_main' : 'header'}>
       <div className='header__container'>
-        <Logo isHeader={true} />
+        <Logo isHeader={true} handleMovieMenuClick={handleMovieMenuClick} />
         <div
           className={
             isMenuClicked

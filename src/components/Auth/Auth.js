@@ -18,11 +18,17 @@ function Auth(props) {
     resetStates,
     onSignOut,
     isLoggedIn,
+    handleMovieMenuClick,
   } = props;
 
   return (
     <section className='auth'>
-      {formPurpose === 'profile' && <Header isLoggedIn={isLoggedIn} />}
+      {formPurpose === 'profile' && (
+        <Header
+          isLoggedIn={isLoggedIn}
+          handleMovieMenuClick={handleMovieMenuClick}
+        />
+      )}
       <div className={`auth__container auth__container_${formPurpose}`}>
         {formPurpose !== 'profile' && <Logo isHeader={false} />}
         <AuthForm

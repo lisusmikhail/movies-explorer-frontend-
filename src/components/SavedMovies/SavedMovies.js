@@ -3,6 +3,7 @@ import './SavedMovies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import SearchForm from '../SearchForm/SearchForm';
 
 function SavedMovies(props) {
@@ -16,6 +17,8 @@ function SavedMovies(props) {
     onCheckBox,
     isShortLength,
     handleMovieMenuClick,
+    myMovies,
+    location,
   } = props;
 
   return (
@@ -38,6 +41,8 @@ function SavedMovies(props) {
           isShowMoreBtn={isShowMoreBtn}
           moviesToRender={myMoviesToRender}
           pageName={'myMovies'}
+          myMovies={myMovies}
+          location={location}
         />
       </div>
       <Footer />

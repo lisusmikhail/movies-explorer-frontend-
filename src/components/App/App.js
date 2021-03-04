@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import useGetMovies from '../../hooks/useGetMovies';
 
 import { getMovies } from '../../utils/MoviesApi';
 import useAuth from '../../hooks/useAuth';
@@ -29,7 +30,10 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 function App() {
   const history = useHistory();
 
-  const [location, setLocation] = useState('/');
+  const [location, setLocation] = useState('');
+  const [isLocationChanged, seIsLocationChanged] = useState(false);
+  const [isLocationCorrect, setIsLocationCorrect] = useState(false);
+
   const [errorMsg, setErrorMsg] = useState('');
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
@@ -57,15 +61,16 @@ function App() {
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [isNewRender, setIsNewRender] = useState(false);
 
-  const [movieToAdd, setMovieToAdd] = useState({});
+  const [movieToFavorite, setMovieToFavorite] = useState({});
 
   const [firstMyIndex, setFirstMyIndex] = useState(0);
   const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
   const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
 
-  const size = useWindowSize();
+  const [checkLocation, setCheckLocation] = useState(false);
+  const [isMovieReadyToRender, setIsMovieReadyToRender] = useState(false);
 
-  // console.log('tru location', location);
+  // Authentication and Authorization
 
   const { isLoggedIn } = useAuth(
     credentials,
@@ -96,92 +101,115 @@ function App() {
     setNewProfile({ email, name, token });
   };
 
+  useEffect(() => {
+    newUsersProfile.name && setCurrentUser(newUsersProfile);
+  }, [newUsersProfile]);
+
+  const resetStates = () => {
+    setErrorMsg('');
+  };
+
+  // First render: get attributes from localStorage
+  useEffect(() => {
+    if (isFirstRender) {
+      const shortLengthItem = localStorage.getItem('isShortLength');
+      const keyWordItem = localStorage.getItem('keyWord');
+      const moviesToShowItems = JSON.parse(localStorage.getItem('movies'));
+      setMoviesToShow(moviesToShowItems);
+      setKeyWord(keyWordItem);
+      shortLengthItem === 'false'
+        ? setIsShortLength(false)
+        : setIsShortLength(true);
+    }
+  }, [isFirstRender]);
+
+  // Got initial set of movies
+  const { gottenMovies } = useGetMovies(isLoggedIn);
+
+  useMemo(() => {
+    setAllMovies(gottenMovies);
+  }, [gottenMovies]);
+
+  // Initial States and Location
+  // console.log('location==>', location, isLocationCorrect);
+
   const handleIsFirstRender = (state) => {
     setIsFirstRender(state);
   };
 
   const handleIsShortLength = (state) => {
-    console.log(state);
     setIsShortLength(state);
   };
 
-  useEffect(() => {
-    newUsersProfile.name && setCurrentUser(newUsersProfile);
-  }, [newUsersProfile]);
-
-  const settingInitialState = () => {
-    // console.log('settingInitialState');
-    setMoviesToRender([]);
-    setMoviesToShow([]);
-    resetMoviesIndex();
-    setErrorMsg('');
-  };
-
-  const settingMyInitialState = () => {
-    // console.log('settingMyInitialState');
-    setMyMoviesToRender([]);
-    setMyMoviesToShow([]);
-    resetMyMoviesIndex();
-    setErrorMsg('');
-  };
-
-  const resetStates = () => {
-    setErrorMsg('');
-  };
-  const [checkLocation, setCheckLocation] = useState(false);
-  const [isLocationChanged, seIsLocationChanged] = useState(false);
-
-  useEffect(() => {
-    // console.log('location is changed');
-    setLocation(history.location.pathname);
-    seIsLocationChanged(!isLocationChanged);
-    if (location === '/movies') {
-      setMoviesToRender([]);
+  const handleMovieMenuClick = (link) => {
+    if (typeof link === 'string') {
+      if (link.indexOf(location) === -1) {
+        setIsLocationCorrect(false);
+      }
+    } else {
+      setIsLocationCorrect(false);
     }
-  }, [checkLocation]);
-
-  const handleMovieMenuClick = (location) => {
-    // console.log('handleMovie', location);
     setCheckLocation(!checkLocation);
   };
 
-  // получение фильмов из базы данных
   useEffect(() => {
-    isLoggedIn &&
-      getMovies()
-        .then((movies) => {
-          setAllMovies(movies);
-        })
-        .catch(() => {
-          handleError(500, setErrorMsg);
-        });
-  }, [isLoggedIn]);
+    console.log('click2');
+    setLocation(history.location.pathname);
+    seIsLocationChanged(!isLocationChanged);
+  }, [checkLocation]);
 
-  // получение фильмов для показа при загрузке страницы
   useEffect(() => {
-    if (localStorage.getItem('movies')) {
-      const resultFromLocalStorage = localStorage.getItem('movies');
-      setMoviesToShow(JSON.parse(resultFromLocalStorage));
-    }
-  }, []);
+    (location === '/saved-movies' || location === '/movies') &&
+      setIsLocationCorrect(true);
+  }, [location]);
 
-  // назначение атрибутов из localStorage
   useEffect(() => {
-    const shortLengthItem = localStorage.getItem('isShortLength');
-    if (isFirstRender && shortLengthItem) {
-      setKeyWord(localStorage.getItem('keyWord'));
-      if (shortLengthItem === 'false') {
-        setIsShortLength(false);
-      } else {
-        setIsShortLength(true);
-      }
+    console.log('movie length is changed', isShortLength);
+  }, [isShortLength]);
+
+  // Render movies preparation
+  useEffect(() => {
+    setIsMovieReadyToRender(false);
+    console.log('is location correct', location, isLocationCorrect);
+    if (isLocationCorrect && location === '/saved-movies') {
+      setMyMoviesToRender([]);
+    } else if (isLocationCorrect && location === '/movies') {
+      resetMoviesIndex();
+      setMoviesToRender([]);
+      setIsMovieReadyToRender(true);
     }
-  }, [isFirstRender]);
+  }, [isLocationCorrect]);
+
+  console.log(moviesToRender, moviesToShow);
+  // console.log(location, isLocationCorrect, moviesToShow);
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  // show more movies start ---------------------------------------
+  const handleResultMovies = (result) => {
+    setMoviesToRender(result);
+  };
+
+  const handleBtnMovies = (state) => {
+    setIsShowMoreBtn(state);
+  };
+
+  const moviesShowMoreBtn = useShowMore({
+    isReadyToRender: isMovieReadyToRender,
+    resultToShow: moviesToShow,
+    resultToRender: moviesToRender,
+    handleResult: handleResultMovies,
+    handleBtn: handleBtnMovies,
+  });
+
+  const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
+  const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
 
   //search start ---------------------------------------------------------
 
   useEffect(() => {
+    console.log('search start');
     const searchMovies = (keyWord) => {
+      console.log('search start1');
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
@@ -189,53 +217,36 @@ function App() {
         return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
       };
       const moviesToShow = allMovies.filter(checkMovie);
-      setResultToLocalStorage(JSON.stringify(moviesToShow));
-      setIsResultUpdated(!isResultUpdated);
+      setMoviesToShow(moviesToShow);
+      localStorage.setItem('movies', JSON.stringify(moviesToShow));
+      localStorage.setItem('keyWord', keyWord);
+      localStorage.setItem('isShortLength', isShortLength.toString());
+      setIsMovieReadyToRender(true);
     };
 
     moviesToRender.length === 0 &&
-      location === '/movies' &&
       !isFirstRender &&
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [keyWord, isShortLength, isLocationChanged]);
-
-  useEffect(() => {
-    !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
-    !isFirstRender && setIsStorageUpdated(!isStorageUpdated);
-  }, [isResultUpdated]);
-
-  useEffect(() => {
-    const resultFromLocalStorage = localStorage.getItem('movies');
-    setMoviesToShow(JSON.parse(resultFromLocalStorage));
-  }, [isStorageUpdated]);
-
-  useEffect(() => {
-    localStorage.setItem('keyWord', keyWord);
-    localStorage.setItem('isShortLength', isShortLength.toString());
   }, [keyWord, isShortLength]);
 
   const onSearchMovies = (searchQuery) => {
+    resetMoviesSet();
+    resetMoviesIndex();
     setKeyWord(searchQuery);
-    keyWord !== searchQuery && settingInitialState();
-    setMyMoviesToRender([]);
   };
 
-  useEffect(() => {
-    if (location !== '/saved-movies') {
-      setMyMoviesToRender([]);
-      setFirstMyIndex(0);
-      setLastMyIndex(initialNumberItems);
-      setIsNewRender(!isNewRender);
-    } else if (location !== '/movies') {
-      setMoviesToRender([]);
-    }
-  }, [isShortLength, isLocationChanged]);
-
   const onCheckBoxMovie = (searchQuery = '') => {
+    resetMoviesSet();
+    resetMoviesIndex();
     setKeyWord(searchQuery);
-    settingInitialState();
+  };
+
+  const resetMoviesSet = () => {
+    setMoviesToShow([]);
+    setMoviesToRender([]);
+    setIsMovieReadyToRender(false);
   };
 
   // main api my movies  ----------------------------------
@@ -275,18 +286,16 @@ function App() {
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
-    isLoggedIn && addToFavorite(movieToAdd);
-  }, [movieToAdd]);
+    isLoggedIn && addToFavorite(movieToFavorite);
+  }, [movieToFavorite]);
 
-  const onAddFavorite = (movieToAdd) => {
-    setMovieToAdd(movieToAdd);
-    settingMyInitialState();
+  const onFavorite = (movie) => {
+    setMovieToFavorite(movie);
   };
 
-  // showMore my movies
+  // showMoreBtn my movies
 
   const onCheckBoxMyMovie = () => {
-    settingMyInitialState();
     setMyMoviesToRender([]);
   };
 
@@ -319,27 +328,6 @@ function App() {
     setLastMyIndex(initialNumberItems);
   };
 
-  // show more movies start ---------------------------------------
-  const handleResultMovies = (result) => {
-    setMoviesToRender(result);
-  };
-
-  const handleBtnMovies = (state) => {
-    setIsShowMoreBtn(state);
-  };
-
-  const moviesShowMoreBtn = useShowMore({
-    resultToShow: moviesToShow,
-    resultToRender: moviesToRender,
-    handleResult: handleResultMovies,
-    handleBtn: handleBtnMovies,
-  });
-
-  const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
-  const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
-
-  // show more My movies end ---------------------------------------
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='app'>
@@ -367,9 +355,11 @@ function App() {
             moviesToRender={moviesToRender}
             onShowMore={onMoviesShowMore}
             isShowMoreBtn={isShowMoreBtn}
-            onAddFavorite={onAddFavorite}
+            onFavorite={onFavorite}
             handleMovieMenuClick={handleMovieMenuClick}
             handleIsFirstRender={handleIsFirstRender}
+            myMovies={myMovies}
+            location={location}
             component={Movies}
           />
           <ProtectedRoute
@@ -384,6 +374,8 @@ function App() {
             onCheckBox={onCheckBoxMyMovie}
             isShortLength={isShortLength}
             handleMovieMenuClick={handleMovieMenuClick}
+            myMovies={myMovies}
+            location={location}
             component={SavedMovies}
           />
           <Route path='/signup'>
@@ -420,3 +412,52 @@ function App() {
 }
 
 export default App;
+
+// const settingInitialState = () => {
+//   // console.log('settingInitialState');
+//   setMoviesToRender([]);
+//   setMoviesToShow([]);
+//   resetMoviesIndex();
+//   setErrorMsg('');
+// };
+//
+// const settingMyInitialState = () => {
+//   // console.log('settingMyInitialState');
+//   setMyMoviesToRender([]);
+//   setMyMoviesToShow([]);
+//   resetMyMoviesIndex();
+//   setErrorMsg('');
+// };
+//
+// получение фильмов для показа при загрузке страницы
+// useEffect(() => {
+//   if (localStorage.getItem('movies')) {
+//     const resultFromLocalStorage = localStorage.getItem('movies');
+//     setMoviesToShow(JSON.parse(resultFromLocalStorage));
+//   }
+// }, []);
+// useEffect(() => {
+//   if (location !== '/saved-movies') {
+//     setMyMoviesToRender([]);
+//     setFirstMyIndex(0);
+//     setLastMyIndex(initialNumberItems);
+//     setIsNewRender(!isNewRender);
+//   } else if (location !== '/movies') {
+//     setMoviesToRender([]);
+//   }
+// }, [isShortLength, isLocationChanged]);
+
+// useEffect(() => {
+//   !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
+//   !isFirstRender && setIsStorageUpdated(!isStorageUpdated);
+// }, [isResultUpdated]);
+
+// useEffect(() => {
+//   const resultFromLocalStorage = localStorage.getItem('movies');
+//   setMoviesToShow(JSON.parse(resultFromLocalStorage));
+// }, [isStorageUpdated]);
+
+// useEffect(() => {
+//   localStorage.setItem('keyWord', keyWord);
+//   localStorage.setItem('isShortLength', isShortLength.toString());
+// }, [keyWord, isShortLength]);

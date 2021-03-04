@@ -14,6 +14,9 @@ function Profile({
 }) {
   const user = useContext(CurrentUserContext);
 
+  // debugger;
+  // console.log(handleMovieMenuClick);
+
   return (
     <>
       <Header
@@ -31,6 +34,7 @@ function Profile({
         onAuth={onAuth}
         onSignOut={onSignOut}
         isLoggedIn={isLoggedIn}
+        handleMovieMenuClick={handleMovieMenuClick}
       />
     </>
   );

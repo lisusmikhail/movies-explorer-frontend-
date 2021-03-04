@@ -9,7 +9,7 @@ function MoviesCard(props) {
   const { nameRU, image, duration } = movie;
 
   const handleFavorite = () => {
-    const movieToAdd = {
+    const movieToFavorite = {
       country: movie.country ? movie.country : 'Unknown Country',
       director: movie.director ? movie.director : 'Unknown Director',
       duration: movie.duration ? movie.duration : 0,
@@ -21,14 +21,15 @@ function MoviesCard(props) {
         ? 'https://api.nomoreparties.co' + image.url
         : 'https://mysite.com/default-image',
       trailer: movie.trailerLink ? movie.trailerLink : 'Unknown Trailer Link',
-      thumbnail: movie.image.formats.thumbnail
-        ? 'https://api.nomoreparties.co' + movie.image.formats.thumbnail.url
-        : 'https://mysite.com/default-image',
+      thumbnail:
+        movie.image && movie.image.formats.thumbnail
+          ? 'https://api.nomoreparties.co' + movie.image.formats.thumbnail.url
+          : 'https://mysite.com/default-image',
       movieId: movie.id,
       nameRU: movie.nameRU ? movie.nameRU : 'unknownNameRU',
       nameEN: movie.nameEN ? movie.nameEN : 'unknownNameEN',
     };
-    onAddFavorite(movieToAdd);
+    onAddFavorite(movieToFavorite);
   };
 
   const isFavorite = false;
@@ -68,7 +69,13 @@ function MoviesCard(props) {
       </div>
       <a
         className='movies-card__poster-link'
-        href={pageName === 'myMovies' ? movie.trailer : movie.trailerLink}
+        href={
+          pageName === 'myMovies'
+            ? movie.trailer
+            : movie.trailerLink
+            ? movie.trailerLink
+            : 'https://images.unsplash.com/photo-1552452380-4137214f33b6'
+        }
         target='_blank'
       >
         <img
@@ -78,7 +85,7 @@ function MoviesCard(props) {
               ? image
               : image
               ? 'https://api.nomoreparties.co' + image.url
-              : 'https://mysite.com/default-image'
+              : 'https://images.unsplash.com/photo-1552452380-4137214f33b6'
           }
           alt={nameRU}
         />

@@ -3,6 +3,7 @@ import './Movies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import SearchForm from '../SearchForm/SearchForm';
 
 function Movies(props) {
@@ -18,6 +19,8 @@ function Movies(props) {
     isShowMoreBtn,
     onAddFavorite,
     handleMovieMenuClick,
+    myMovies,
+    location,
   } = props;
   return (
     <>
@@ -40,6 +43,8 @@ function Movies(props) {
           isShowMoreBtn={isShowMoreBtn}
           onAddFavorite={onAddFavorite}
           pageName={'allMovies'}
+          myMovies={myMovies}
+          location={location}
         />
       </div>
       <Footer />
