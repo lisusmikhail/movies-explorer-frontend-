@@ -58,6 +58,10 @@ function App() {
 
   const [movieToAdd, setMovieToAdd] = useState({});
 
+  const [firstMyIndex, setFirstMyIndex] = useState(0);
+  const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
+  const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
+
   const size = useWindowSize();
 
   // console.log('tru location', location);
@@ -84,6 +88,7 @@ function App() {
   const onSignOut = () => {
     setIsLogOut(true);
     setCurrentUser({});
+    localStorage.clear();
   };
 
   const onEditProfile = (email, _, name) => {
@@ -104,7 +109,7 @@ function App() {
   }, [newUsersProfile]);
 
   const settingInitialState = () => {
-    console.log('settingInitialState');
+    // console.log('settingInitialState');
     setMoviesToRender([]);
     setMoviesToShow([]);
     resetMoviesIndex();
@@ -112,7 +117,7 @@ function App() {
   };
 
   const settingMyInitialState = () => {
-    console.log('settingMyInitialState');
+    // console.log('settingMyInitialState');
     setMyMoviesToRender([]);
     setMyMoviesToShow([]);
     resetMyMoviesIndex();
@@ -123,10 +128,15 @@ function App() {
     setErrorMsg('');
   };
   const [checkLocation, setCheckLocation] = useState(false);
+  const [isLocationChanged, seIsLocationChanged] = useState(false);
 
   useEffect(() => {
-    console.log('location is changed');
+    // console.log('location is changed');
     setLocation(history.location.pathname);
+    seIsLocationChanged(!isLocationChanged);
+    if (location === '/movies') {
+      setMoviesToRender([]);
+    }
   }, [checkLocation]);
 
   const handleMovieMenuClick = (location) => {
@@ -183,11 +193,12 @@ function App() {
     };
 
     moviesToRender.length === 0 &&
+      location === '/movies' &&
       !isFirstRender &&
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [keyWord, isShortLength, location, checkLocation]);
+  }, [keyWord, isShortLength, isLocationChanged]);
 
   useEffect(() => {
     !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
@@ -200,25 +211,40 @@ function App() {
   }, [isStorageUpdated]);
 
   useEffect(() => {
+    // console.log('current', currentUser._id);
+    // if (currentUser._id) {
     localStorage.setItem('keyWord', keyWord);
     localStorage.setItem('isShortLength', isShortLength.toString());
+    // }
   }, [keyWord, isShortLength]);
 
   const onSearchMovies = (searchQuery) => {
-    console.log('search started because of enter');
+    // console.log('search started because of enter');
     setKeyWord(searchQuery);
     keyWord !== searchQuery && settingInitialState();
+    setMyMoviesToRender([]);
   };
 
-  useEffect(() => {}, [checkLocation]);
+  const [isNewRender, setIsNewRender] = useState(false);
 
-  const onCheckBoxMovie = (searchQuery) => {
-    if (location === '/movies') {
-      console.log('onCheckBoxMovie');
-      setKeyWord(searchQuery);
-      settingInitialState();
+  useEffect(() => {
+    // console.log(
+    //   'onCheckBoxMovie+++++++++++++++++++++++++++++++++++++++++++++',
+    //   location
+    // );
+    if (location !== '/saved-movies') {
       setMyMoviesToRender([]);
+      setFirstMyIndex(0);
+      setLastMyIndex(initialNumberItems);
+      setIsNewRender(!isNewRender);
+    } else if (location !== '/movies') {
+      setMoviesToRender([]);
     }
+  }, [isShortLength, isLocationChanged]);
+
+  const onCheckBoxMovie = (searchQuery = '') => {
+    setKeyWord(searchQuery);
+    settingInitialState();
   };
 
   //search end ---------------------------------------------------------
@@ -269,16 +295,12 @@ function App() {
   };
 
   const onCheckBoxMyMovie = () => {
-    if (location === '/saved-movies') {
-      console.log('onCheckBoxMyMovie');
-      setMoviesToRender([]);
-      settingMyInitialState();
-    }
+    // console.log(
+    //   'checkBoxMyMovie----------------------------------------------------'
+    // );
+    settingMyInitialState();
+    setMyMoviesToRender([]);
   };
-
-  const [firstMyIndex, setFirstMyIndex] = useState(0);
-  const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
-  const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
 
   const handleResultMyMovies = (result) => {
     setMyMoviesToRender(result);
@@ -289,11 +311,13 @@ function App() {
   };
 
   useEffect(() => {
+    // console.log('concat', firstMyIndex, lastMyIndex);
+
     myMoviesToShow &&
       handleResultMyMovies(
         myMoviesToRender.concat(myMoviesToShow.slice(firstMyIndex, lastMyIndex))
       );
-  }, [myMoviesToShow, lastMyIndex]);
+  }, [myMoviesToShow, lastMyIndex, isNewRender]);
 
   useEffect(() => {
     myMoviesToShow && handleBtnMyMovies(lastMyIndex < myMoviesToShow.length);
@@ -311,8 +335,16 @@ function App() {
 
   // main api my movies end ----------------------------------
 
-  console.log('myMoviesToRender===>', myMoviesToRender);
-  console.log('moviesToRender===>', moviesToRender);
+  // console.log('myMoviesToShow===>', myMoviesToShow);
+  // console.log(
+  //   'myMoviesToRender===>',
+  //   myMoviesToRender,
+  //   firstMyIndex,
+  //   lastMyIndex,
+  //   isFirstRender
+  // );
+  // console.log('MoviesToShow===>', moviesToShow);
+  // console.log('moviesToRender===>', moviesToRender);
 
   // show more movies start ---------------------------------------
   const handleResultMovies = (result) => {
@@ -332,6 +364,26 @@ function App() {
 
   const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
+
+  //
+  // const handleResultMovies = (result) => {
+  //   setMoviesToRender(result);
+  // };
+  //
+  // const handleBtnMovies = (state) => {
+  //   setIsShowMoreBtn(state);
+  // };
+  //
+  // const moviesShowMoreBtn = useShowMore({
+  //   resultToShow: moviesToShow,
+  //   resultToRender: moviesToRender,
+  //   handleResult: handleResultMovies,
+  //   handleBtn: handleBtnMovies,
+  // });
+  //
+  // const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
+  // const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
+  //
 
   // show more My movies end ---------------------------------------
 

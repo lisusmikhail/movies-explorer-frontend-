@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
@@ -11,6 +11,10 @@ function MoviesCardList({
   pageName,
 }) {
   // console.log({ moviesToRender });
+
+  // useEffect(() => {
+  //   console.log('location changed');
+  // }, []);
 
   return (
     <section className='movies-card-list movies-card-list_position'>

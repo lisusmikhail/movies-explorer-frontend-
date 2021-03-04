@@ -8,11 +8,12 @@ function FilterCheckbox(props) {
     handleIsFirstRender,
     onCheckBox,
   } = props;
+
   const handleInputChange = () => {
     handleIsFirstRender(false);
     handleIsShortLength(!isShortLength);
-    localStorage.getItem('keyWord') &&
-      onCheckBox(localStorage.getItem('keyWord'));
+    // localStorage.getItem('keyWord') &&
+    onCheckBox(localStorage.getItem('keyWord'));
   };
 
   return (
