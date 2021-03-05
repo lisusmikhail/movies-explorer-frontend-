@@ -10,7 +10,6 @@ function SavedMovies(props) {
   const {
     isLoggedIn,
     myMoviesToRender,
-    isShowMoreBtn,
     onShowMore,
     handleIsFirstRender,
     handleIsShortLength,
@@ -38,7 +37,6 @@ function SavedMovies(props) {
           favoriteOnly={false}
           onShowMore={onShowMore}
           resultToRender={myMoviesToRender}
-          isShowMoreBtn={isShowMoreBtn}
           moviesToRender={myMoviesToRender}
           pageName={'myMovies'}
           myMovies={myMovies}

@@ -3,16 +3,9 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useGetMovies from '../../hooks/useGetMovies';
-import useSearch from '../../hooks/useSearch';
-import { getMovies } from '../../utils/MoviesApi';
 import useAuth from '../../hooks/useAuth';
-import {
-  shortMovieThresholdDuration,
-  initialNumberItems,
-  showMoreIncrement,
-} from '../../utils/constants';
+import { shortMovieThresholdDuration } from '../../utils/constants';
 import useEditProfile from '../../hooks/useEditProfile';
-import useWindowSize from '../../hooks/useWindowSize';
 import useShowMore from '../../hooks/useShowMore';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as mainApi from '../../utils/MainApi';
@@ -44,13 +37,9 @@ function App() {
 
   const [allMovies, setAllMovies] = useState([]);
   const [myMovies, setMyMovies] = useState([]);
-  const [myMoviesToShow, setMyMoviesToShow] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
 
-  const [isResultUpdated, setIsResultUpdated] = useState(false);
-  const [resultToLocalStorage, setResultToLocalStorage] = useState('');
-  const [isStorageUpdated, setIsStorageUpdated] = useState(false);
   const [moviesToShow, setMoviesToShow] = useState([]);
 
   const [moviesToRender, setMoviesToRender] = useState([]);
@@ -59,24 +48,13 @@ function App() {
   const [keyWord, setKeyWord] = useState('');
   const [isShortLength, setIsShortLength] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
-  const [isNewRender, setIsNewRender] = useState(false);
 
   const [movieToFavorite, setMovieToFavorite] = useState({});
 
-  const [firstMyIndex, setFirstMyIndex] = useState(0);
-  const [lastMyIndex, setLastMyIndex] = useState(initialNumberItems);
-  const [isShowMoreMyBtn, setIsShowMoreMyBtn] = useState(false);
-
   const [checkLocation, setCheckLocation] = useState(false);
   const [isMovieReadyToRender, setIsMovieReadyToRender] = useState(false);
-  const [isMyMovieReadyToRender, setIsMyMovieReadyToRender] = useState(false);
 
-  console.log(
-    'My Movies',
-    isMyMovieReadyToRender,
-    myMoviesToShow.length,
-    myMoviesToRender.length
-  );
+  console.log('My Movies', myMoviesToRender.length);
   console.log(
     'All Movies',
     isMovieReadyToRender,
@@ -137,11 +115,8 @@ function App() {
         ? setIsShortLength(false)
         : setIsShortLength(true);
     }
+  }, [isFirstRender, moviesToShow]);
 
-    // if (myMoviesToShow.length > 0) {
-    //   setIsMyMovieReadyToRender(true);
-    // }
-  }, [isFirstRender, myMoviesToShow]);
   // Get initial set of movies
   const { gottenMovies } = useGetMovies(isLoggedIn);
 
@@ -150,8 +125,6 @@ function App() {
   }, [gottenMovies]);
 
   // Initial States and Location
-  // console.log('location==>', location, isLocationCorrect);
-
   const handleIsFirstRender = (state) => {
     setIsFirstRender(state);
   };
@@ -172,7 +145,6 @@ function App() {
   };
 
   useEffect(() => {
-    // console.log('checkLocation ');
     setLocation(history.location.pathname);
     seIsLocationChanged(!isLocationChanged);
   }, [checkLocation]);
@@ -182,43 +154,15 @@ function App() {
       setIsLocationCorrect(true);
   }, [location]);
 
-  useEffect(() => {
-    // console.log('movie length is changed', isShortLength);
-  }, [isShortLength]);
-
   // Render movies preparation
   useEffect(() => {
-    // console.log('is location correct', location, isLocationCorrect);
     setIsMovieReadyToRender(false);
-    setIsMyMovieReadyToRender(false);
-    if (isLocationCorrect && location === '/saved-movies') {
-      resetMyMoviesIndex();
-      // debugger;
-      setMyMoviesToRender([]);
-      console.log('set111111111111');
-      setIsMyMovieReadyToRender(true);
-    } else if (isLocationCorrect && location === '/movies') {
+    if (isLocationCorrect && location === '/movies') {
       resetMoviesIndex();
       setMoviesToRender([]);
       setIsMovieReadyToRender(true);
-
-      // resetMyMoviesIndex();
     }
   }, [isLocationCorrect]);
-
-  // console.log(
-  //   'MYMYMY',
-  //   myMoviesToShow.length,
-  //   myMoviesToRender.length,
-  //   isMyMovieReadyToRender
-  // );
-  // console.log(
-  //   'ALLALLALL',
-  //   moviesToShow.length,
-  //   moviesToRender.length,
-  //   isMovieReadyToRender
-  // );
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // show more movies start ---------------------------------------
   const handleResultMovies = (result) => {
@@ -226,8 +170,6 @@ function App() {
   };
 
   const handleBtnMovies = (state) => {
-    console.log('handleBtnMovies', state);
-
     setIsShowMoreBtn(state);
   };
 
@@ -241,30 +183,6 @@ function App() {
 
   const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
-
-  // show more my movies start ---------------------------------------
-  const handleResultMyMovies = (result) => {
-    // debugger;
-    setMyMoviesToRender(result);
-  };
-
-  const handleBtnMyMovies = (state) => {
-    console.log('handle Btn My Movies', state);
-
-    setIsShowMoreMyBtn(state);
-  };
-
-  const myMoviesShowMoreBtn = useShowMore({
-    isReadyToRender: isMyMovieReadyToRender,
-    resultToShow: myMoviesToShow,
-    resultToRender: myMoviesToRender,
-    handleResult: handleResultMyMovies,
-    handleBtn: handleBtnMyMovies,
-    isNewRender,
-  });
-
-  const onMyMoviesShowMore = myMoviesShowMoreBtn.onShowMore;
-  const resetMyMoviesIndex = myMoviesShowMoreBtn.resetIndex;
 
   //Movie search
 
@@ -303,9 +221,6 @@ function App() {
     resetMoviesSet();
     resetMoviesIndex();
     setKeyWord(searchQuery);
-
-    resetMyMoviesIndex();
-    resetMyMoviesSet();
   };
 
   const resetMoviesSet = () => {
@@ -315,8 +230,6 @@ function App() {
   };
 
   // main api my movies  ----------------------------------
-
-  // console.log(myMovies, myMoviesToShow);
 
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
@@ -337,23 +250,8 @@ function App() {
       return !isShortLength || isShort;
     };
     const moviesToShow = myMovies.filter(checkMovie);
-    setMyMoviesToShow(moviesToShow);
-    console.log('set2222222222222');
-    setIsMyMovieReadyToRender(true);
+    setMyMoviesToRender(moviesToShow);
   }, [myMovies, isShortLength]);
-
-  useEffect(() => {
-    if (
-      isLocationCorrect &&
-      location === '/saved-movies' &&
-      myMoviesToShow.length > 0 &&
-      isMyMovieReadyToRender &&
-      isFirstRender
-    ) {
-      console.log('setsetsetsetsetsetsetsetsetsetsetsetsetsetset');
-      setIsNewRender(!isNewRender);
-    }
-  }, [isMyMovieReadyToRender, myMoviesToShow]);
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
@@ -376,19 +274,8 @@ function App() {
   };
 
   const onCheckBoxMyMovie = (searchQuery = '') => {
-    console.log('onCheckBoxMyMovie');
-    resetMyMoviesSet();
-    resetMyMoviesIndex();
-    // setKeyWord(searchQuery);
-    resetMoviesSet();
-    resetMoviesIndex();
-  };
-
-  const resetMyMoviesSet = () => {
-    setMyMoviesToShow([]);
-    // debugger;
-    setMyMoviesToRender([]);
-    setIsMyMovieReadyToRender(false);
+    // resetMoviesSet();
+    // resetMoviesIndex();
   };
 
   return (
@@ -430,8 +317,6 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             myMoviesToRender={myMoviesToRender}
-            isShowMoreBtn={isShowMoreMyBtn}
-            onShowMore={onMyMoviesShowMore}
             handleIsFirstRender={handleIsFirstRender}
             handleIsShortLength={handleIsShortLength}
             onCheckBox={onCheckBoxMyMovie}
@@ -475,95 +360,3 @@ function App() {
 }
 
 export default App;
-
-// const settingInitialState = () => {
-//   // console.log('settingInitialState');
-//   setMoviesToRender([]);
-//   setMoviesToShow([]);
-//   resetMoviesIndex();
-//   setErrorMsg('');
-// };
-//
-// const settingMyInitialState = () => {
-//   // console.log('settingMyInitialState');
-//   setMyMoviesToRender([]);
-//   setMyMoviesToShow([]);
-//   resetMyMoviesIndex();
-//   setErrorMsg('');
-// };
-//
-// получение фильмов для показа при загрузке страницы
-// useEffect(() => {
-//   if (localStorage.getItem('movies')) {
-//     const resultFromLocalStorage = localStorage.getItem('movies');
-//     setMoviesToShow(JSON.parse(resultFromLocalStorage));
-//   }
-// }, []);
-// useEffect(() => {
-//   if (location !== '/saved-movies') {
-//     setMyMoviesToRender([]);
-//     setFirstMyIndex(0);
-//     setLastMyIndex(initialNumberItems);
-//     setIsNewRender(!isNewRender);
-//   } else if (location !== '/movies') {
-//     setMoviesToRender([]);
-//   }
-// }, [isShortLength, isLocationChanged]);
-
-// useEffect(() => {
-//   !isFirstRender && localStorage.setItem('movies', resultToLocalStorage);
-//   !isFirstRender && setIsStorageUpdated(!isStorageUpdated);
-// }, [isResultUpdated]);
-
-// useEffect(() => {
-//   const resultFromLocalStorage = localStorage.getItem('movies');
-//   setMoviesToShow(JSON.parse(resultFromLocalStorage));
-// }, [isStorageUpdated]);
-
-// useEffect(() => {
-//   localStorage.setItem('keyWord', keyWord);
-//   localStorage.setItem('isShortLength', isShortLength.toString());
-// }, [keyWord, isShortLength]);
-
-// const onCheckBoxMyMovie = () => {
-//   setMyMoviesToRender([]);
-// };
-//
-
-// const onSearchMovies = (searchQuery) => {
-//   resetMoviesSet();
-//   resetMoviesIndex();
-//   setKeyWord(searchQuery);
-// }
-
-// showMoreBtn my movies
-
-//
-// const handleResultMyMovies = (result) => {
-//   setMyMoviesToRender(result);
-// };
-//
-// const handleBtnMyMovies = (state) => {
-//   setIsShowMoreMyBtn(state);
-// };
-//
-// useEffect(() => {
-//   myMoviesToShow &&
-//     handleResultMyMovies(
-//       myMoviesToRender.concat(myMoviesToShow.slice(firstMyIndex, lastMyIndex))
-//     );
-// }, [myMoviesToShow, lastMyIndex, isNewRender]);
-//
-// useEffect(() => {
-//   myMoviesToShow && handleBtnMyMovies(lastMyIndex < myMoviesToShow.length);
-// }, [myMoviesToShow, lastMyIndex]);
-//
-// const onMyMoviesShowMore = () => {
-//   setFirstMyIndex(lastMyIndex);
-//   setLastMyIndex(lastMyIndex + showMoreIncrement);
-// };
-//
-// const resetMyMoviesIndex = () => {
-//   setFirstMyIndex(0);
-//   setLastMyIndex(initialNumberItems);
-// };
