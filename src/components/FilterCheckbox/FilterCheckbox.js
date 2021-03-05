@@ -2,18 +2,11 @@ import React, { useState } from 'react';
 import './FilterCheckbox.css';
 
 function FilterCheckbox(props) {
-  const {
-    isShortLength,
-    handleIsShortLength,
-    handleIsFirstRender,
-    onCheckBox,
-  } = props;
+  const { isShortLength, handleIsShortLength, handleIsFirstRender } = props;
 
   const handleInputChange = () => {
     handleIsFirstRender(false);
     handleIsShortLength(!isShortLength);
-    // localStorage.getItem('keyWord') &&
-    onCheckBox(localStorage.getItem('keyWord'));
   };
 
   return (

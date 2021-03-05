@@ -24,11 +24,11 @@ function Header(props) {
     }
   };
 
-  function handleNavClick(e) {
+  function handleNavClick() {
     setIsMenuClicked(true);
     setIsMenuOpen(true);
     handleMenuClick();
-    handleMovieMenuClick(e.target.href);
+    handleMovieMenuClick();
   }
 
   return (

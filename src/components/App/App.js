@@ -21,12 +21,6 @@ import Register from '../Register/Register';
 import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
-  const history = useHistory();
-
-  const [location, setLocation] = useState('');
-  const [isLocationChanged, seIsLocationChanged] = useState(false);
-  const [isLocationCorrect, setIsLocationCorrect] = useState(false);
-
   const [errorMsg, setErrorMsg] = useState('');
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
@@ -50,17 +44,7 @@ function App() {
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   const [movieToFavorite, setMovieToFavorite] = useState({});
-
-  const [checkLocation, setCheckLocation] = useState(false);
   const [isMovieReadyToRender, setIsMovieReadyToRender] = useState(false);
-
-  console.log('My Movies', myMoviesToRender.length);
-  console.log(
-    'All Movies',
-    isMovieReadyToRender,
-    moviesToShow.length,
-    moviesToRender.length
-  );
 
   // Authentication and Authorization
 
@@ -114,6 +98,7 @@ function App() {
       shortLengthItem === 'false' || !shortLengthItem
         ? setIsShortLength(false)
         : setIsShortLength(true);
+      setIsMovieReadyToRender(true);
     }
   }, [isFirstRender, moviesToShow]);
 
@@ -133,36 +118,7 @@ function App() {
     setIsShortLength(state);
   };
 
-  const handleMovieMenuClick = (link) => {
-    if (typeof link === 'string') {
-      if (link.indexOf(location) === -1) {
-        setIsLocationCorrect(false);
-      }
-    } else {
-      setIsLocationCorrect(false);
-    }
-    setCheckLocation(!checkLocation);
-  };
-
-  useEffect(() => {
-    setLocation(history.location.pathname);
-    seIsLocationChanged(!isLocationChanged);
-  }, [checkLocation]);
-
-  useEffect(() => {
-    (location === '/saved-movies' || location === '/movies') &&
-      setIsLocationCorrect(true);
-  }, [location]);
-
-  // Render movies preparation
-  useEffect(() => {
-    setIsMovieReadyToRender(false);
-    if (isLocationCorrect && location === '/movies') {
-      resetMoviesIndex();
-      setMoviesToRender([]);
-      setIsMovieReadyToRender(true);
-    }
-  }, [isLocationCorrect]);
+  const handleMovieMenuClick = () => {};
 
   // show more movies start ---------------------------------------
   const handleResultMovies = (result) => {
@@ -217,12 +173,6 @@ function App() {
     setKeyWord(searchQuery);
   };
 
-  const onCheckBoxMovie = (searchQuery = '') => {
-    resetMoviesSet();
-    resetMoviesIndex();
-    setKeyWord(searchQuery);
-  };
-
   const resetMoviesSet = () => {
     setMoviesToShow([]);
     setMoviesToRender([]);
@@ -273,11 +223,6 @@ function App() {
     setMovieToFavorite(movie);
   };
 
-  const onCheckBoxMyMovie = (searchQuery = '') => {
-    // resetMoviesSet();
-    // resetMoviesIndex();
-  };
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='app'>
@@ -298,10 +243,8 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             onSearch={onSearchMovies}
-            onCheckBox={onCheckBoxMovie}
             isShortLength={isShortLength}
             handleIsShortLength={handleIsShortLength}
-            setIsFirstRender={setIsFirstRender}
             moviesToRender={moviesToRender}
             onShowMore={onMoviesShowMore}
             isShowMoreBtn={isShowMoreBtn}
@@ -309,7 +252,6 @@ function App() {
             handleMovieMenuClick={handleMovieMenuClick}
             handleIsFirstRender={handleIsFirstRender}
             myMovies={myMovies}
-            location={location}
             component={Movies}
           />
           <ProtectedRoute
@@ -319,11 +261,9 @@ function App() {
             myMoviesToRender={myMoviesToRender}
             handleIsFirstRender={handleIsFirstRender}
             handleIsShortLength={handleIsShortLength}
-            onCheckBox={onCheckBoxMyMovie}
             isShortLength={isShortLength}
             handleMovieMenuClick={handleMovieMenuClick}
             myMovies={myMovies}
-            location={location}
             component={SavedMovies}
           />
           <Route path='/signup'>

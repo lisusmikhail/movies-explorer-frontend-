@@ -13,11 +13,9 @@ function SavedMovies(props) {
     onShowMore,
     handleIsFirstRender,
     handleIsShortLength,
-    onCheckBox,
     isShortLength,
     handleMovieMenuClick,
     myMovies,
-    location,
   } = props;
 
   return (
@@ -31,7 +29,6 @@ function SavedMovies(props) {
           handleIsFirstRender={handleIsFirstRender}
           handleIsShortLength={handleIsShortLength}
           isShortLength={isShortLength}
-          onCheckBox={onCheckBox}
         />
         <MoviesCardList
           favoriteOnly={false}
@@ -40,7 +37,6 @@ function SavedMovies(props) {
           moviesToRender={myMoviesToRender}
           pageName={'myMovies'}
           myMovies={myMovies}
-          location={location}
         />
       </div>
       <Footer />

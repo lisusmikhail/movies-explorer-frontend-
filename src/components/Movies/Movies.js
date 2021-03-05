@@ -10,7 +10,6 @@ function Movies(props) {
   const {
     isLoggedIn,
     onSearch,
-    onCheckBox,
     isShortLength,
     handleIsShortLength,
     handleIsFirstRender,
@@ -20,7 +19,6 @@ function Movies(props) {
     onAddFavorite,
     handleMovieMenuClick,
     myMovies,
-    location,
   } = props;
   return (
     <>
@@ -31,7 +29,6 @@ function Movies(props) {
       <div className='movies'>
         <SearchForm
           onSearch={onSearch}
-          onCheckBox={onCheckBox}
           isShortLength={isShortLength}
           handleIsFirstRender={handleIsFirstRender}
           handleIsShortLength={handleIsShortLength}
@@ -44,7 +41,6 @@ function Movies(props) {
           onAddFavorite={onAddFavorite}
           pageName={'allMovies'}
           myMovies={myMovies}
-          location={location}
         />
       </div>
       <Footer />
