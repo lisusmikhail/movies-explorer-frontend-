@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './FilterCheckbox.css';
 
 function FilterCheckbox(props) {
-  const { isShortLength, handleIsShortLength, handleIsFirstRender } = props;
+  const { isShortLength, handleIsShortLength } = props;
 
-  const handleInputChange = () => {
-    handleIsFirstRender(false);
+  function handleInputChange() {
     handleIsShortLength(!isShortLength);
-  };
+  }
 
   return (
     <div className='checkbox'>

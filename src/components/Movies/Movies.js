@@ -3,7 +3,6 @@ import './Movies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import SearchForm from '../SearchForm/SearchForm';
 
 function Movies(props) {
@@ -12,7 +11,6 @@ function Movies(props) {
     onSearch,
     isShortLength,
     handleIsShortLength,
-    handleIsFirstRender,
     moviesToRender,
     onShowMore,
     isShowMoreBtn,
@@ -30,7 +28,6 @@ function Movies(props) {
         <SearchForm
           onSearch={onSearch}
           isShortLength={isShortLength}
-          handleIsFirstRender={handleIsFirstRender}
           handleIsShortLength={handleIsShortLength}
         />
         <MoviesCardList

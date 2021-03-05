@@ -3,7 +3,6 @@ import './SavedMovies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import SearchForm from '../SearchForm/SearchForm';
 
 function SavedMovies(props) {
@@ -11,7 +10,6 @@ function SavedMovies(props) {
     isLoggedIn,
     myMoviesToRender,
     onShowMore,
-    handleIsFirstRender,
     handleIsShortLength,
     isShortLength,
     handleMovieMenuClick,
@@ -26,7 +24,6 @@ function SavedMovies(props) {
       />
       <div className='movies'>
         <SearchForm
-          handleIsFirstRender={handleIsFirstRender}
           handleIsShortLength={handleIsShortLength}
           isShortLength={isShortLength}
         />

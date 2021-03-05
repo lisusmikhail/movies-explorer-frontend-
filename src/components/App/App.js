@@ -22,30 +22,46 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
   const [errorMsg, setErrorMsg] = useState('');
+  //user
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [token, setToken] = useState('');
   const [credentials, setCredentials] = useState({});
   const [newProfile, setNewProfile] = useState({});
-
-  const [allMovies, setAllMovies] = useState([]);
-  const [myMovies, setMyMovies] = useState([]);
-  const [myMoviesToRender, setMyMoviesToRender] = useState([]);
-  const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
-
-  const [moviesToShow, setMoviesToShow] = useState([]);
-
-  const [moviesToRender, setMoviesToRender] = useState([]);
-  const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
-
+  // search criteria
   const [keyWord, setKeyWord] = useState('');
   const [isShortLength, setIsShortLength] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
-
+  //my movies
+  const [myMovies, setMyMovies] = useState([]);
+  const [myMoviesSearchResult, setMyMoviesSearchResult] = useState([]);
+  const [myMoviesFilteredResult, setMyMoviesFilteredResult] = useState([]);
+  const [myMoviesToRender, setMyMoviesToRender] = useState([]);
+  const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
+  //all movies
+  const [allMovies, setAllMovies] = useState([]);
+  const [moviesSearchResult, setMoviesSearchResult] = useState([]);
+  const [moviesFilteredResult, setMoviesFilteredResult] = useState([]);
+  const [moviesToRender, setMoviesToRender] = useState([]);
+  // movies rendering
+  const [newSearch, setNewSearch] = useState(false);
+  const [newRender, setNewRender] = useState(false);
+  const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
+  const [isMoviesReadyToRender, setIsMoviesReadyToRender] = useState(false);
+  // favorite
   const [movieToFavorite, setMovieToFavorite] = useState({});
-  const [isMovieReadyToRender, setIsMovieReadyToRender] = useState(false);
 
+  // console
+  // console.log({ isFirstRender });
+  // console.log({ isMovieReadyToRender });
+  // console.log('search', moviesSearchResult && moviesSearchResult.length);
+  // console.log('filter', moviesFilteredResult && moviesFilteredResult.length);
+  // console.log('filter', moviesFilteredResult);
+
+  console.log('initial', myMoviesSearchResult && myMoviesSearchResult.length);
+  console.log('render', myMoviesToRender && myMoviesToRender.length);
+  console.log('render', myMoviesToRender);
   // Authentication and Authorization
 
   const { isLoggedIn } = useAuth(
@@ -87,18 +103,18 @@ function App() {
     setErrorMsg('');
   };
 
-  // First render: get attributes from localStorage
+  // First render: get values and attributes from localStorage
   useEffect(() => {
     if (isFirstRender) {
       const shortLengthItem = localStorage.getItem('isShortLength');
       const keyWordItem = localStorage.getItem('keyWord');
       const moviesToShowItems = JSON.parse(localStorage.getItem('movies'));
-      setMoviesToShow(moviesToShowItems);
+      setMoviesSearchResult(moviesToShowItems);
       setKeyWord(keyWordItem);
       shortLengthItem === 'false' || !shortLengthItem
         ? setIsShortLength(false)
         : setIsShortLength(true);
-      setIsMovieReadyToRender(true);
+      setIsMoviesReadyToRender(true);
     }
   }, [isFirstRender]);
 
@@ -109,20 +125,9 @@ function App() {
     setAllMovies(gottenMovies);
   }, [gottenMovies]);
 
-  // Initial States and Location
-  const handleIsFirstRender = (state) => {
-    setIsFirstRender(state);
-  };
-
-  const handleIsShortLength = (state) => {
-    setIsShortLength(state);
-    resetMoviesSet();
-    resetMoviesIndex();
-  };
-
   const handleMovieMenuClick = () => {};
 
-  // show more movies start ---------------------------------------
+  // movies rendering and show more button state
   const handleResultMovies = (result) => {
     setMoviesToRender(result);
   };
@@ -132,34 +137,33 @@ function App() {
   };
 
   const moviesShowMoreBtn = useShowMore({
-    isReadyToRender: isMovieReadyToRender,
-    resultToShow: moviesToShow,
+    isReadyToRender: isMoviesReadyToRender,
+    resultToShow: moviesFilteredResult,
     resultToRender: moviesToRender,
     handleResult: handleResultMovies,
     handleBtn: handleBtnMovies,
+    newRender: newRender,
   });
 
   const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
 
-  //Movie search
-
+  //movies search
   useEffect(() => {
     const searchMovies = (keyWord) => {
-      console.log('moviesToShow');
+      console.log('new search');
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
-        const isShort = movie['duration'] < shortMovieThresholdDuration;
-        return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
+        return nameRu.indexOf(word) > -1;
       };
       const moviesToShow = allMovies.filter(checkMovie);
-      console.log(moviesToShow);
-      setMoviesToShow(moviesToShow);
+      setMoviesSearchResult(moviesToShow);
+      setMoviesFilteredResult([]);
       localStorage.setItem('movies', JSON.stringify(moviesToShow));
       localStorage.setItem('keyWord', keyWord);
-      localStorage.setItem('isShortLength', isShortLength.toString());
-      setIsMovieReadyToRender(true);
+      setIsMoviesReadyToRender(true);
+      setNewRender(!newRender);
     };
 
     moviesToRender.length === 0 &&
@@ -167,24 +171,50 @@ function App() {
       allMovies &&
       keyWord &&
       searchMovies(keyWord);
-  }, [keyWord, isShortLength]);
+  }, [keyWord, newSearch]);
 
+  //movies filter
+  useEffect(() => {
+    if (moviesSearchResult && moviesFilteredResult.length === 0) {
+      const checkMovie = (movie) => {
+        const isShort = movie['duration'] < shortMovieThresholdDuration;
+        return !isShortLength || isShort;
+      };
+      const moviesToShow = moviesSearchResult.filter(checkMovie);
+      setMoviesFilteredResult(moviesToShow);
+      setNewRender(!newRender);
+    }
+  }, [moviesSearchResult, moviesFilteredResult, isShortLength]);
+
+  //search and filter triggers
   const onSearchMovies = (searchQuery) => {
+    setIsFirstRender(false);
     if (searchQuery !== keyWord) {
-      resetMoviesSet();
+      setMoviesSearchResult([]);
+      setMoviesFilteredResult([]);
+      setMoviesToRender([]);
+      setIsMoviesReadyToRender(false);
       resetMoviesIndex();
+    } else {
+      resetMoviesIndex();
+      setMoviesSearchResult([]);
+      setMoviesFilteredResult([]);
+      setMoviesToRender([]);
+      setNewSearch(!newSearch);
     }
     setKeyWord(searchQuery);
   };
 
-  const resetMoviesSet = () => {
-    setMoviesToShow([]);
+  const handleIsShortLength = (state) => {
+    localStorage.setItem('isShortLength', state);
+    setIsShortLength(state);
+    setMoviesFilteredResult([]);
     setMoviesToRender([]);
-    setIsMovieReadyToRender(false);
+    setMyMoviesToRender([]);
+    resetMoviesIndex();
   };
 
-  // main api my movies  ----------------------------------
-
+  // main api get my movies  ----------------------------------
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
       mainApi
@@ -192,11 +222,24 @@ function App() {
         .then(([user, myMovies]) => {
           setCurrentUser(user);
           setMyMovies(myMovies);
+          setMyMoviesSearchResult(myMovies);
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
     token && getUserAndMyMovies(token);
   }, [token, isMyMoviesUpdated]);
+
+  // my movies search and filter triggers
+  useEffect(() => {
+    if (myMoviesSearchResult && myMoviesSearchResult.length === 0) {
+      const checkMovie = (movie) => {
+        const isShort = movie['duration'] < shortMovieThresholdDuration;
+        return !isShortLength || isShort;
+      };
+      const moviesToShow = myMoviesSearchResult.filter(checkMovie);
+      setMyMoviesToRender(moviesToShow);
+    }
+  }, [myMoviesSearchResult, myMoviesToRender, isShortLength]);
 
   useEffect(() => {
     const checkMovie = (movie) => {
@@ -254,7 +297,6 @@ function App() {
             isShowMoreBtn={isShowMoreBtn}
             onFavorite={onFavorite}
             handleMovieMenuClick={handleMovieMenuClick}
-            handleIsFirstRender={handleIsFirstRender}
             myMovies={myMovies}
             component={Movies}
           />
@@ -263,7 +305,6 @@ function App() {
             isLoggedIn={isLoggedIn}
             isTokenChecked={isTokenChecked}
             myMoviesToRender={myMoviesToRender}
-            handleIsFirstRender={handleIsFirstRender}
             handleIsShortLength={handleIsShortLength}
             isShortLength={isShortLength}
             handleMovieMenuClick={handleMovieMenuClick}

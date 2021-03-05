@@ -3,31 +3,27 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import { keyWordMaxLength } from '../../utils/constants';
 
-function SearchForm({
-  onSearch,
-  isShortLength,
-  handleIsShortLength,
-  handleIsFirstRender,
-}) {
+function SearchForm({ onSearch, isShortLength, handleIsShortLength }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchError, setSearchError] = useState('');
 
-  const handleChange = (e) => {
+  function handleChange(e) {
     const { value } = e.target;
     setSearchQuery(value);
-  };
+  }
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    handleIsFirstRender(false);
     if (searchQuery.length === 0) {
       setSearchError('Нужно ввести ключевое слово');
     } else if (searchQuery.length > keyWordMaxLength) {
-      setSearchError('Самое длинное словарное слово в русском языке - 35 букв');
+      setSearchError(
+        'Самое длинное словарное слово в русском языке состоит из 35 букв'
+      );
     } else {
       onSearch(searchQuery);
     }
-  };
+  }
 
   return (
     <form className='search-form' onSubmit={handleSubmit} noValidate>
@@ -55,7 +51,6 @@ function SearchForm({
       <FilterCheckbox
         handleIsShortLength={handleIsShortLength}
         isShortLength={isShortLength}
-        handleIsFirstRender={handleIsFirstRender}
       />
     </form>
   );
