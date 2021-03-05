@@ -100,7 +100,7 @@ function App() {
         : setIsShortLength(true);
       setIsMovieReadyToRender(true);
     }
-  }, [isFirstRender, moviesToShow]);
+  }, [isFirstRender]);
 
   // Get initial set of movies
   const { gottenMovies } = useGetMovies(isLoggedIn);
@@ -116,6 +116,8 @@ function App() {
 
   const handleIsShortLength = (state) => {
     setIsShortLength(state);
+    resetMoviesSet();
+    resetMoviesIndex();
   };
 
   const handleMovieMenuClick = () => {};
@@ -144,6 +146,7 @@ function App() {
 
   useEffect(() => {
     const searchMovies = (keyWord) => {
+      console.log('moviesToShow');
       const checkMovie = (movie) => {
         const nameRu = movie['nameRU'].toLowerCase().trim();
         const word = keyWord.toLowerCase().trim();
@@ -151,6 +154,7 @@ function App() {
         return (!isShortLength || isShort) && nameRu.indexOf(word) > -1;
       };
       const moviesToShow = allMovies.filter(checkMovie);
+      console.log(moviesToShow);
       setMoviesToShow(moviesToShow);
       localStorage.setItem('movies', JSON.stringify(moviesToShow));
       localStorage.setItem('keyWord', keyWord);
