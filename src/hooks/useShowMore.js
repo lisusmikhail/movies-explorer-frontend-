@@ -10,20 +10,31 @@ function useShowMore(props) {
   const handleResult = props.handleResult;
   const resultToRender = props.resultToRender;
   const handleBtn = props.handleBtn;
+  const isNewRender = props.isNewRender;
 
-  console.log({ firstIndex, lastIndex });
+  // console.log({ firstIndex, lastIndex, resultToShow });
 
   useEffect(() => {
+    // debugger;
+    console.log({ resultToShow, isReadyToRender, firstIndex, lastIndex });
+    console.log(
+      resultToShow.slice(firstIndex, lastIndex),
+      firstIndex,
+      lastIndex
+    );
     resultToShow &&
       isReadyToRender &&
       handleResult(
         resultToRender.concat(resultToShow.slice(firstIndex, lastIndex))
       );
+
+    // console.log(lastIndex < resultToShow.length - 1);
+    resultToShow && handleBtn(lastIndex < resultToShow.length - 1);
   }, [lastIndex, isReadyToRender]);
 
-  useEffect(() => {
-    resultToShow && handleBtn(lastIndex < resultToShow.length);
-  }, [lastIndex, isReadyToRender]);
+  // useEffect(() => {
+  //   resultToShow && handleBtn(lastIndex < resultToShow.length - 1);
+  // }, [lastIndex, isReadyToRender]);
 
   const onShowMore = () => {
     setFirstIndex(lastIndex);
