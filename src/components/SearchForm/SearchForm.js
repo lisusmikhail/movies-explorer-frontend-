@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+import ClearSearchIcon from '../../images/clear_search.svg';
 import { keyWordMaxLength } from '../../utils/constants';
 
-function SearchForm({ onSearch, isShortLength, handleIsShortLength }) {
+function SearchForm({
+  onSearch,
+  isShortLength,
+  handleIsShortLength,
+  onClearSearch,
+  keyWord,
+}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchError, setSearchError] = useState('');
+  const [isClearBtn, setIsClearBtn] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
+  console.log(keyWord);
 
   function handleChange(e) {
     const { value } = e.target;
+    setInputValue(value);
     setSearchQuery(value);
   }
 
@@ -21,8 +33,26 @@ function SearchForm({ onSearch, isShortLength, handleIsShortLength }) {
         'Самое длинное словарное слово в русском языке состоит из 35 букв'
       );
     } else {
+      setIsClearBtn(true);
       onSearch(searchQuery);
     }
+  }
+
+  useEffect(() => {
+    keyWord && setInputValue(keyWord);
+    keyWord && setIsClearBtn(true);
+    console.log('readInputValue', keyWord);
+  }, [keyWord]);
+
+  useEffect(() => {
+    keyWord === undefined && setIsClearBtn(false);
+    console.log('!!!!!!!!!!!!!!!!!!', keyWord);
+  }, []);
+
+  function handleClearSearch() {
+    setIsClearBtn(false);
+    setInputValue('');
+    onClearSearch();
   }
 
   return (
@@ -30,7 +60,11 @@ function SearchForm({ onSearch, isShortLength, handleIsShortLength }) {
       <div className='search-form__container'>
         <label className='search-form__label'>
           <input
-            className='search-form__input'
+            className={
+              isClearBtn
+                ? 'search-form__input search-form__input_keyword-position'
+                : 'search-form__input'
+            }
             placeholder='Фильм'
             type='text'
             id='search-form'
@@ -39,9 +73,20 @@ function SearchForm({ onSearch, isShortLength, handleIsShortLength }) {
             maxLength='36'
             required
             autoComplete='off'
+            value={inputValue}
             onChange={handleChange}
           />
         </label>
+        <img
+          className={
+            isClearBtn
+              ? 'search-form__clear'
+              : 'search-form__clear search-form__clear_visibility'
+          }
+          src={ClearSearchIcon}
+          onClick={handleClearSearch}
+          alt={'ClearSearch'}
+        />
         <button
           type='submit'
           className='search-form__submit-button'

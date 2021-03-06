@@ -14,6 +14,9 @@ function SavedMovies(props) {
     isShortLength,
     handleMovieMenuClick,
     myMovies,
+    onSearch,
+    onClearSearch,
+    keyWord,
   } = props;
 
   return (
@@ -26,6 +29,9 @@ function SavedMovies(props) {
         <SearchForm
           handleIsShortLength={handleIsShortLength}
           isShortLength={isShortLength}
+          onSearch={onSearch}
+          onClearSearch={onClearSearch}
+          keyWord={keyWord}
         />
         <MoviesCardList
           favoriteOnly={false}

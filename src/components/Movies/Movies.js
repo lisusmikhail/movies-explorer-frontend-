@@ -17,6 +17,8 @@ function Movies(props) {
     onAddFavorite,
     handleMovieMenuClick,
     myMovies,
+    onClearSearch,
+    keyWord,
   } = props;
   return (
     <>
@@ -29,6 +31,8 @@ function Movies(props) {
           onSearch={onSearch}
           isShortLength={isShortLength}
           handleIsShortLength={handleIsShortLength}
+          onClearSearch={onClearSearch}
+          keyWord={keyWord}
         />
         <MoviesCardList
           favoriteOnly={false}

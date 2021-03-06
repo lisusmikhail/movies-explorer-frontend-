@@ -39,6 +39,9 @@ function App() {
   const [myMoviesFilteredResult, setMyMoviesFilteredResult] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
+  //my search
+  const [myKeyWord, setMyKeyWord] = useState('');
+  const [newMySearch, setNewMySearch] = useState(false);
   //all movies
   const [allMovies, setAllMovies] = useState([]);
   const [moviesSearchResult, setMoviesSearchResult] = useState([]);
@@ -52,16 +55,16 @@ function App() {
   // favorite
   const [movieToFavorite, setMovieToFavorite] = useState({});
 
-  // console
+  console.log('++++++++++++++++++++++++++++++++++', myKeyWord);
   // console.log({ isFirstRender });
   // console.log({ isMovieReadyToRender });
   // console.log('search', moviesSearchResult && moviesSearchResult.length);
   // console.log('filter', moviesFilteredResult && moviesFilteredResult.length);
   // console.log('filter', moviesFilteredResult);
 
-  console.log('initial', myMoviesSearchResult && myMoviesSearchResult.length);
-  console.log('render', myMoviesToRender && myMoviesToRender.length);
-  console.log('render', myMoviesToRender);
+  // console.log('initial', myMoviesSearchResult && myMoviesSearchResult.length);
+  // console.log('render', myMoviesToRender && myMoviesToRender.length);
+  // console.log('render', myMoviesToRender);
   // Authentication and Authorization
 
   const { isLoggedIn } = useAuth(
@@ -115,6 +118,8 @@ function App() {
         ? setIsShortLength(false)
         : setIsShortLength(true);
       setIsMoviesReadyToRender(true);
+      const myKeyWordItem = localStorage.getItem('myKeyWord');
+      setMyKeyWord(myKeyWordItem);
     }
   }, [isFirstRender]);
 
@@ -149,15 +154,19 @@ function App() {
   const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
 
   //movies search
+  const getNewSearchResult = (moviesSet, newKeyWord) => {
+    const checkMovie = (movie) => {
+      const nameRu = movie['nameRU'].toLowerCase().trim();
+      const word = newKeyWord.toLowerCase().trim();
+      return nameRu.indexOf(word) > -1;
+    };
+    return moviesSet.filter(checkMovie);
+  };
+
   useEffect(() => {
     const searchMovies = (keyWord) => {
       console.log('new search');
-      const checkMovie = (movie) => {
-        const nameRu = movie['nameRU'].toLowerCase().trim();
-        const word = keyWord.toLowerCase().trim();
-        return nameRu.indexOf(word) > -1;
-      };
-      const moviesToShow = allMovies.filter(checkMovie);
+      const moviesToShow = getNewSearchResult(allMovies, keyWord);
       setMoviesSearchResult(moviesToShow);
       setMoviesFilteredResult([]);
       localStorage.setItem('movies', JSON.stringify(moviesToShow));
@@ -174,32 +183,38 @@ function App() {
   }, [keyWord, newSearch]);
 
   //movies filter
+  const getMoviesToShow = (moviesResult) => {
+    const checkMovie = (movie) => {
+      const isShort = movie['duration'] < shortMovieThresholdDuration;
+      return !isShortLength || isShort;
+    };
+    return moviesResult.filter(checkMovie);
+  };
+
   useEffect(() => {
     if (moviesSearchResult && moviesFilteredResult.length === 0) {
-      const checkMovie = (movie) => {
-        const isShort = movie['duration'] < shortMovieThresholdDuration;
-        return !isShortLength || isShort;
-      };
-      const moviesToShow = moviesSearchResult.filter(checkMovie);
+      const moviesToShow = getMoviesToShow(moviesSearchResult);
       setMoviesFilteredResult(moviesToShow);
       setNewRender(!newRender);
     }
-  }, [moviesSearchResult, moviesFilteredResult, isShortLength]);
+  }, [moviesSearchResult, isShortLength]);
 
   //search and filter triggers
+  const resetMoviesResults = () => {
+    setMoviesSearchResult([]);
+    setMoviesFilteredResult([]);
+    setMoviesToRender([]);
+  };
+
   const onSearchMovies = (searchQuery) => {
     setIsFirstRender(false);
     if (searchQuery !== keyWord) {
-      setMoviesSearchResult([]);
-      setMoviesFilteredResult([]);
-      setMoviesToRender([]);
+      resetMoviesResults();
       setIsMoviesReadyToRender(false);
       resetMoviesIndex();
     } else {
       resetMoviesIndex();
-      setMoviesSearchResult([]);
-      setMoviesFilteredResult([]);
-      setMoviesToRender([]);
+      resetMoviesResults();
       setNewSearch(!newSearch);
     }
     setKeyWord(searchQuery);
@@ -210,11 +225,12 @@ function App() {
     setIsShortLength(state);
     setMoviesFilteredResult([]);
     setMoviesToRender([]);
-    setMyMoviesToRender([]);
+    // setMyMoviesToRender([]);
     resetMoviesIndex();
   };
 
   // main api get my movies  ----------------------------------
+
   useEffect(() => {
     const getUserAndMyMovies = (token) => {
       mainApi
@@ -223,6 +239,7 @@ function App() {
           setCurrentUser(user);
           setMyMovies(myMovies);
           setMyMoviesSearchResult(myMovies);
+          setMyMoviesToRender([]); //???????????????????
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
@@ -231,24 +248,53 @@ function App() {
 
   // my movies search and filter triggers
   useEffect(() => {
-    if (myMoviesSearchResult && myMoviesSearchResult.length === 0) {
-      const checkMovie = (movie) => {
-        const isShort = movie['duration'] < shortMovieThresholdDuration;
-        return !isShortLength || isShort;
-      };
-      const moviesToShow = myMoviesSearchResult.filter(checkMovie);
+    // debugger;
+    if (myMoviesSearchResult) {
+      const moviesToShow = getMoviesToShow(myMoviesSearchResult);
+      console.log('move search 222222', moviesToShow);
       setMyMoviesToRender(moviesToShow);
     }
-  }, [myMoviesSearchResult, myMoviesToRender, isShortLength]);
+  }, [myMoviesSearchResult, isShortLength]);
 
   useEffect(() => {
-    const checkMovie = (movie) => {
-      const isShort = movie['duration'] < shortMovieThresholdDuration;
-      return !isShortLength || isShort;
+    const searchMyMovies = (myKeyWord) => {
+      console.log('new my search');
+      const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
+      setMyMoviesSearchResult(moviesToShow);
     };
-    const moviesToShow = myMovies.filter(checkMovie);
-    setMyMoviesToRender(moviesToShow);
-  }, [myMovies, isShortLength]);
+
+    myMoviesToRender.length === 0 &&
+      myMovies &&
+      myKeyWord &&
+      searchMyMovies(myKeyWord);
+  }, [myKeyWord, myMoviesSearchResult]);
+
+  const resetMyMoviesResults = () => {
+    setMyMoviesSearchResult([]);
+    setMyMoviesFilteredResult([]);
+    setMyMoviesToRender([]);
+  };
+
+  const onSearchMyMovies = (searchQuery) => {
+    setIsFirstRender(false);
+    resetMyMoviesResults();
+    localStorage.setItem('myKeyWord', searchQuery);
+    setMyKeyWord(searchQuery);
+  };
+
+  const onClearSearchMovies = () => {
+    setKeyWord('');
+    resetMoviesResults();
+    localStorage.removeItem('keyWord');
+    localStorage.removeItem('movies');
+    localStorage.removeItem('isShortLength');
+  };
+
+  const onClearSearchMyMovies = () => {
+    setMyKeyWord('');
+    localStorage.removeItem('myKeyWord');
+    setMyMoviesSearchResult(myMovies);
+  };
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
@@ -298,17 +344,22 @@ function App() {
             onFavorite={onFavorite}
             handleMovieMenuClick={handleMovieMenuClick}
             myMovies={myMovies}
+            onClearSearch={onClearSearchMovies}
+            keyWord={keyWord}
             component={Movies}
           />
           <ProtectedRoute
             path='/saved-movies'
             isLoggedIn={isLoggedIn}
+            onSearch={onSearchMyMovies}
             isTokenChecked={isTokenChecked}
             myMoviesToRender={myMoviesToRender}
             handleIsShortLength={handleIsShortLength}
             isShortLength={isShortLength}
             handleMovieMenuClick={handleMovieMenuClick}
             myMovies={myMovies}
+            onClearSearch={onClearSearchMyMovies}
+            keyWord={myKeyWord}
             component={SavedMovies}
           />
           <Route path='/signup'>
