@@ -14,12 +14,16 @@ function Movies(props) {
     moviesToRender,
     onShowMore,
     isShowMoreBtn,
-    onAddFavorite,
+    onFavorite,
     handleMovieMenuClick,
     myMovies,
     onClearSearch,
     keyWord,
+    isMyMoviesUpdated,
   } = props;
+
+  // console.log(moviesToRender);
+
   return (
     <>
       <Header
@@ -39,9 +43,10 @@ function Movies(props) {
           moviesToRender={moviesToRender}
           onShowMore={onShowMore}
           isShowMoreBtn={isShowMoreBtn}
-          onAddFavorite={onAddFavorite}
+          onFavorite={onFavorite}
           pageName={'allMovies'}
           myMovies={myMovies}
+          isMyMoviesUpdated={isMyMoviesUpdated}
         />
       </div>
       <Footer />

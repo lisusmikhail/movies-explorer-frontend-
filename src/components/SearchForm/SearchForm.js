@@ -16,7 +16,7 @@ function SearchForm({
   const [isClearBtn, setIsClearBtn] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  console.log(keyWord);
+  // console.log(keyWord);
 
   function handleChange(e) {
     const { value } = e.target;
@@ -41,12 +41,12 @@ function SearchForm({
   useEffect(() => {
     keyWord && setInputValue(keyWord);
     keyWord && setIsClearBtn(true);
-    console.log('readInputValue', keyWord);
+    // console.log('readInputValue', keyWord);
   }, [keyWord]);
 
   useEffect(() => {
     keyWord === undefined && setIsClearBtn(false);
-    console.log('!!!!!!!!!!!!!!!!!!', keyWord);
+    // console.log('!!!!!!!!!!!!!!!!!!', keyWord);
   }, []);
 
   function handleClearSearch() {

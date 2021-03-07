@@ -7,15 +7,11 @@ function MoviesCardList({
   moviesToRender,
   onShowMore,
   isShowMoreBtn,
-  onAddFavorite,
+  onFavorite,
   pageName,
+  myMovies,
+  isMyMoviesUpdated,
 }) {
-  // console.log({ moviesToRender });
-
-  // useEffect(() => {
-  //   console.log('location changed');
-  // }, []);
-
   return (
     <section className='movies-card-list movies-card-list_position'>
       <>
@@ -23,10 +19,12 @@ function MoviesCardList({
           moviesToRender.map((movie) => (
             <MoviesCard
               movie={movie}
-              key={pageName === 'myMovies' ? movie._id : movie.id}
+              key={movie._id || movie.movieId}
               favoriteOnly={favoriteOnly}
-              onAddFavorite={onAddFavorite}
+              onFavorite={onFavorite}
               pageName={pageName}
+              myMovies={myMovies}
+              isMyMoviesUpdated={isMyMoviesUpdated}
             />
           ))}
       </>

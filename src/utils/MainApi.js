@@ -1,4 +1,6 @@
 // export const BASE_URL = '//api.myvideobookmark.com';
+import { getMovies } from './MoviesApi';
+
 export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
@@ -75,6 +77,10 @@ const getMyMovies = (token) => {
 
 export const getUserAndMyMovies = (token) => {
   return Promise.all([getUser(token), getMyMovies(token)]);
+};
+
+export const getInitialData = (token) => {
+  return Promise.all([getUser(token), getMyMovies(token), getMovies()]);
 };
 
 export const addToFavorite = (movie, token) => {

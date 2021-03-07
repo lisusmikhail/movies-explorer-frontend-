@@ -4,6 +4,7 @@ import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useGetMovies from '../../hooks/useGetMovies';
 import useAuth from '../../hooks/useAuth';
+import useGetInitialData from '../../hooks/useGetInitialData';
 import { shortMovieThresholdDuration } from '../../utils/constants';
 import useEditProfile from '../../hooks/useEditProfile';
 import useShowMore from '../../hooks/useShowMore';
@@ -36,12 +37,10 @@ function App() {
   //my movies
   const [myMovies, setMyMovies] = useState([]);
   const [myMoviesSearchResult, setMyMoviesSearchResult] = useState([]);
-  const [myMoviesFilteredResult, setMyMoviesFilteredResult] = useState([]);
   const [myMoviesToRender, setMyMoviesToRender] = useState([]);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
   //my search
   const [myKeyWord, setMyKeyWord] = useState('');
-  const [newMySearch, setNewMySearch] = useState(false);
   //all movies
   const [allMovies, setAllMovies] = useState([]);
   const [moviesSearchResult, setMoviesSearchResult] = useState([]);
@@ -52,19 +51,22 @@ function App() {
   const [newRender, setNewRender] = useState(false);
   const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
   const [isMoviesReadyToRender, setIsMoviesReadyToRender] = useState(false);
+  const [isMovieMenuClicked, setIsMovieMenuClicked] = useState(false);
   // favorite
   const [movieToFavorite, setMovieToFavorite] = useState({});
 
-  console.log('++++++++++++++++++++++++++++++++++', myKeyWord);
+  // console.log('++++++++++++++++++++++++++++++++++', myKeyWord);
   // console.log({ isFirstRender });
+  // console.log('=================================', myMovies);
   // console.log({ isMovieReadyToRender });
   // console.log('search', moviesSearchResult && moviesSearchResult.length);
   // console.log('filter', moviesFilteredResult && moviesFilteredResult.length);
   // console.log('filter', moviesFilteredResult);
-
+  // console.log(currentUser);
   // console.log('initial', myMoviesSearchResult && myMoviesSearchResult.length);
   // console.log('render', myMoviesToRender && myMoviesToRender.length);
   // console.log('render', myMoviesToRender);
+  console.log('isFirstRender', isFirstRender);
   // Authentication and Authorization
 
   const { isLoggedIn } = useAuth(
@@ -106,6 +108,23 @@ function App() {
     setErrorMsg('');
   };
 
+  // Get initial set of movies , my movies, and  current user
+  const {
+    initialUser,
+    initialMyMovies,
+    readyToUseAllMovies,
+  } = useGetInitialData(token, isMyMoviesUpdated);
+
+  // console.log('initialUser, initialMyMovies, ', readyToUseAllMovies);
+
+  useMemo(() => {
+    setCurrentUser(initialUser);
+    setMyMovies(initialMyMovies);
+    setMyMoviesSearchResult(initialMyMovies);
+    // setMyMoviesToRender([]); //???????????????????
+    setAllMovies(readyToUseAllMovies);
+  }, [initialUser, initialMyMovies, readyToUseAllMovies]);
+
   // First render: get values and attributes from localStorage
   useEffect(() => {
     if (isFirstRender) {
@@ -123,14 +142,9 @@ function App() {
     }
   }, [isFirstRender]);
 
-  // Get initial set of movies
-  const { gottenMovies } = useGetMovies(isLoggedIn);
-
-  useMemo(() => {
-    setAllMovies(gottenMovies);
-  }, [gottenMovies]);
-
-  const handleMovieMenuClick = () => {};
+  const handleMovieMenuClick = () => {
+    setIsMovieMenuClicked(!isMovieMenuClicked);
+  };
 
   // movies rendering and show more button state
   const handleResultMovies = (result) => {
@@ -225,53 +239,49 @@ function App() {
     setIsShortLength(state);
     setMoviesFilteredResult([]);
     setMoviesToRender([]);
-    // setMyMoviesToRender([]);
+    // setMyMoviesToRender([]); // ??????
     resetMoviesIndex();
   };
 
   // main api get my movies  ----------------------------------
 
-  useEffect(() => {
-    const getUserAndMyMovies = (token) => {
-      mainApi
-        .getUserAndMyMovies(token)
-        .then(([user, myMovies]) => {
-          setCurrentUser(user);
-          setMyMovies(myMovies);
-          setMyMoviesSearchResult(myMovies);
-          setMyMoviesToRender([]); //???????????????????
-        })
-        .catch((errStatus) => handleError(errStatus, setErrorMsg));
-    };
-    token && getUserAndMyMovies(token);
-  }, [token, isMyMoviesUpdated]);
+  // useEffect(() => {
+  //   const getUserAndMyMovies = (token) => {
+  //     mainApi
+  //       .getUserAndMyMovies(token)
+  //       .then(([user, myMovies]) => {
+  //         // setCurrentUser(user);//??????
+  //         // setMyMovies(myMovies);
+  //         // setMyMoviesSearchResult(myMovies);
+  //         // setMyMoviesToRender([]); //???????????????????
+  //       })
+  //       .catch((errStatus) => handleError(errStatus, setErrorMsg));
+  //   };
+  //   token && getUserAndMyMovies(token);
+  // }, [token, isMyMoviesUpdated]);
 
   // my movies search and filter triggers
   useEffect(() => {
-    // debugger;
     if (myMoviesSearchResult) {
       const moviesToShow = getMoviesToShow(myMoviesSearchResult);
-      console.log('move search 222222', moviesToShow);
+      // console.log('move search 222222', moviesToShow);
       setMyMoviesToRender(moviesToShow);
     }
   }, [myMoviesSearchResult, isShortLength]);
 
-  useEffect(() => {
+  useMemo(() => {
     const searchMyMovies = (myKeyWord) => {
       console.log('new my search');
       const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
       setMyMoviesSearchResult(moviesToShow);
     };
 
-    myMoviesToRender.length === 0 &&
-      myMovies &&
-      myKeyWord &&
-      searchMyMovies(myKeyWord);
-  }, [myKeyWord, myMoviesSearchResult]);
+    // myMoviesToRender.length === 0 &&
+    myMovies && myKeyWord && searchMyMovies(myKeyWord);
+  }, [myKeyWord, isMovieMenuClicked]);
 
   const resetMyMoviesResults = () => {
     setMyMoviesSearchResult([]);
-    setMyMoviesFilteredResult([]);
     setMyMoviesToRender([]);
   };
 
@@ -298,10 +308,45 @@ function App() {
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
+      console.log('onFavorite in App 2', token, movieToAdd);
       mainApi
         .addToFavorite(movieToAdd, token)
         .then((res) => {
           if (res) {
+            if (res.data._id) {
+              let indexOfUpdatedMovieInAllMovies,
+                indexOfUpdatedMovieInSearchResult;
+
+              const updatedMovie = allMovies.find((movie) => {
+                indexOfUpdatedMovieInAllMovies = allMovies.indexOf(movie);
+                return movie.movieId === res.data.movieId;
+              });
+
+              allMovies[indexOfUpdatedMovieInAllMovies].isFavorite = true;
+              allMovies.splice(indexOfUpdatedMovieInAllMovies, 1, updatedMovie);
+
+              const updatedMovieInSearchResult = moviesSearchResult.find(
+                (movie) => {
+                  indexOfUpdatedMovieInSearchResult = moviesSearchResult.indexOf(
+                    movie
+                  );
+                  return movie.movieId === res.data.movieId;
+                }
+              );
+
+              moviesSearchResult[
+                indexOfUpdatedMovieInSearchResult
+              ].isFavorite = true;
+              moviesSearchResult.splice(
+                indexOfUpdatedMovieInSearchResult,
+                1,
+                updatedMovieInSearchResult
+              );
+              localStorage.setItem(
+                'movies',
+                JSON.stringify(moviesSearchResult)
+              );
+            }
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           } else {
             console.log('Произошла ошибка');
@@ -313,6 +358,7 @@ function App() {
   }, [movieToFavorite]);
 
   const onFavorite = (movie) => {
+    console.log('onFavorite in App');
     setMovieToFavorite(movie);
   };
 
@@ -346,6 +392,7 @@ function App() {
             myMovies={myMovies}
             onClearSearch={onClearSearchMovies}
             keyWord={keyWord}
+            isMyMoviesUpdated={isMyMoviesUpdated}
             component={Movies}
           />
           <ProtectedRoute
