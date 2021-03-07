@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import './MoviesCard.css';
 import heart from '../../images/icon__heart_empty.png';
 import activeHeart from '../../images/icon__heart_active.png';
 import delFavorite from '../../images/icon__del_favorite.svg';
 
 function MoviesCard(props) {
-  const {
-    movie,
-    favoriteOnly,
-    onFavorite,
-    pageName,
-    myMovies,
-    isMyMoviesUpdated,
-  } = props;
-  const { nameRU, image, duration, trailer, isFavorite } = movie;
+  const { movie, onFavorite, isMyMoviesUpdated } = props;
 
-  const handleFavorite = () => {
-    const toDelete = () => {
-      if (movie.isFavorite) {
-        console.log(movie);
-        return true;
-      } else return !!movie._id;
-    };
-    onFavorite(movie, toDelete());
-  };
+  const { nameRU, image, duration, trailer, _id } = movie;
+
+  const [myHeart, setMyHeart] = useState('');
+
+  const history = useHistory();
+  const location = history.location.pathname;
 
   useEffect(() => {
-    // console.log('current value= ', movie.isFavorite);
-  }, [isMyMoviesUpdated]);
+    if (location === '/saved-movies') {
+      setMyHeart(delFavorite);
+    } else {
+      setMyHeart(activeHeart);
+    }
+  }, [location]);
+
+  const handleFavorite = () => {
+    onFavorite(movie);
+  };
+
+  useEffect(() => {}, [isMyMoviesUpdated]);
 
   let isVisible = true;
 
@@ -46,13 +46,7 @@ function MoviesCard(props) {
         </div>
         <img
           className='movies-card__favorite'
-          src={
-            isFavorite
-              ? activeHeart
-              : isFavorite === undefined
-              ? delFavorite
-              : heart
-          }
+          src={!_id ? heart : myHeart}
           alt={nameRU}
           onClick={handleFavorite}
         />

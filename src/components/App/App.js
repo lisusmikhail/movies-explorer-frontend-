@@ -84,6 +84,8 @@ function App() {
   // console.log('render', myMoviesToRender);
   // console.log(myMovies, myMoviesSearchResult, isAllDataReady);
   // console.log('isFirstRender', isFirstRender);
+  // console.log(allMovies);
+  // console.log(myMovies);
   // Authentication and Authorization
 
   const { isLoggedIn } = useAuth(
@@ -138,7 +140,6 @@ function App() {
     setCurrentUser(initialUser);
     setMyMovies(initialMyMovies);
     setMyMoviesSearchResult(initialMyMovies);
-    // setMyMoviesToRender([]); //???????????????????
     setAllMovies(readyToUseAllMovies);
     setIsAllDataReady(!isAllDataReady);
   }, [initialUser, initialMyMovies, readyToUseAllMovies]);
@@ -187,7 +188,6 @@ function App() {
 
   //movies search
   const getNewSearchResult = (moviesSet, newKeyWord) => {
-    console.log(moviesSet, newKeyWord);
     const checkMovie = (movie) => {
       const nameRu = movie['nameRU'].toLowerCase().trim();
       const word = newKeyWord.toLowerCase().trim();
@@ -198,7 +198,6 @@ function App() {
 
   useEffect(() => {
     const searchMovies = (keyWord) => {
-      console.log('new search');
       const moviesToShow = getNewSearchResult(allMovies, keyWord);
       setMoviesSearchResult(moviesToShow);
       setMoviesFilteredResult([]);
@@ -258,7 +257,6 @@ function App() {
     setIsShortLength(state);
     setMoviesFilteredResult([]);
     setMoviesToRender([]);
-    // setMyMoviesToRender([]); // ??????
     resetMoviesIndex();
   };
 
@@ -266,19 +264,15 @@ function App() {
   useEffect(() => {
     if (myMoviesSearchResult) {
       const moviesToShow = getMoviesToShow(myMoviesSearchResult);
-      // console.log('move search 222222', moviesToShow);
       setMyMoviesToRender(moviesToShow);
     }
   }, [myMoviesSearchResult, isShortLength]);
 
   useEffect(() => {
     const searchMyMovies = (myKeyWord) => {
-      console.log('new my search', myKeyWord);
       const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
-      console.log(moviesToShow);
       setMyMoviesSearchResult(moviesToShow);
     };
-    // myMoviesToRender.length === 0 &&
     myMovies && myKeyWord && searchMyMovies(myKeyWord);
   }, [myKeyWord, isMovieMenuClicked, isAllDataReady, myMovies]);
 
@@ -315,30 +309,14 @@ function App() {
         .addToFavorite(movieToAdd, token)
         .then((res) => {
           if (res) {
-            if (res.data._id) {
-              let indexOfUpdatedMovieInSearchResult;
-              const updatedMovieInSearchResult = moviesSearchResult.find(
-                (movie) => {
-                  indexOfUpdatedMovieInSearchResult = moviesSearchResult.indexOf(
-                    movie
-                  );
-                  return movie.movieId === res.data.movieId;
-                }
-              );
+            let indexOfAdd;
+            moviesSearchResult.find((movie) => {
+              indexOfAdd = moviesSearchResult.indexOf(movie);
+              return movie.movieId === res.data.movieId;
+            });
 
-              moviesSearchResult[
-                indexOfUpdatedMovieInSearchResult
-              ].isFavorite = true;
-              moviesSearchResult.splice(
-                indexOfUpdatedMovieInSearchResult,
-                1,
-                updatedMovieInSearchResult
-              );
-              localStorage.setItem(
-                'movies',
-                JSON.stringify(moviesSearchResult)
-              );
-            }
+            moviesSearchResult[indexOfAdd]._id = res.data._id;
+            localStorage.setItem('movies', JSON.stringify(moviesSearchResult));
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           } else {
             console.log('Произошла ошибка');
@@ -351,41 +329,37 @@ function App() {
 
   useEffect(() => {
     const delFromFavorite = (movieToDel) => {
-      console.log('onFavorite in App 2 DEL', token, movieToDel);
+      const handleDelMovie = (movieArray, res) => {
+        console.log({ movieArray });
+
+        let indexOfDelMovie;
+        movieArray.find((movie, index) => {
+          indexOfDelMovie = index;
+          return movie.movieId === res.movieId;
+        });
+        delete movieArray[indexOfDelMovie]['_id'];
+      };
+
+      const handleDelMyMovie = (movieArray, res) => {
+        console.log({ movieArray });
+
+        let indexOfDelMovie;
+        movieArray.find((movie, index) => {
+          indexOfDelMovie = index;
+          return movie._id === res._id;
+        });
+        movieArray.splice(indexOfDelMovie, 1);
+      };
+
       mainApi
         .delFromFavorite(movieToDel, token)
         .then((res) => {
           if (res) {
-            console.log('onDEl', res, res._id);
-            let indexOfDelFavoriteInMyMovies;
-            myMoviesToRender.find((movie, index) => {
-              indexOfDelFavoriteInMyMovies = index;
-              return movie._id === res._id;
-            });
-            myMoviesToRender.splice(indexOfDelFavoriteInMyMovies, 1);
-
-            let indexOfDelFavoriteInRenderedMovies;
-            moviesToRender.find((movie, index) => {
-              indexOfDelFavoriteInRenderedMovies = index;
-              return movie.movieId === res.movieId;
-            });
-            moviesToRender[
-              indexOfDelFavoriteInRenderedMovies
-            ].isFavorite = false;
-
-            let indexOfDelFavoriteInSearchResult;
-            allMovies.find((movie, index) => {
-              indexOfDelFavoriteInSearchResult = index;
-              return movie.movieId === res.movieId;
-            });
-            allMovies[indexOfDelFavoriteInSearchResult].isFavorite = false;
-
-            console.log(
-              moviesToRender,
-              moviesToRender[indexOfDelFavoriteInRenderedMovies],
-              indexOfDelFavoriteInRenderedMovies
-            );
-
+            handleDelMyMovie(myMovies, res);
+            handleDelMyMovie(myMoviesToRender, res);
+            handleDelMovie(allMovies, res);
+            handleDelMovie(moviesSearchResult, res);
+            handleDelMovie(moviesToRender, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           }
         })
@@ -394,31 +368,11 @@ function App() {
     isLoggedIn && delFromFavorite(movieToDelFromFavorite);
   }, [movieToDelFromFavorite]);
 
-  // useEffect(() => {
-  //   const delFavoriteIcon = () => {
-  //     let indexOfDelFavoriteInMovies;
-  //     moviesSearchResult.find((movie, index) => {
-  //       indexOfDelFavoriteInMovies = index;
-  //       return movie._id === res._id;
-  //     });
-  //     const currentMovie = moviesSearchResult[indexOfDelFavoriteInMovies];
-  //     console.log(currentMovie);
-  //   }
-  //   delFavoriteIcon(movieToDelFromFavorite)
-  // }, [movieToDelFromFavorite])
-
-  const onFavorite = (movie, toDelete) => {
-    delete movie['isFavorite'];
-    // console.log('onFavorite in App', movie, toDelete);
-    if (!toDelete) {
+  const onFavorite = (movie) => {
+    if (!movie._id) {
       setMovieToFavorite(movie);
     } else {
-      if (movie._id) {
-        setMovieToDelFromFavorite(movie);
-      } else {
-        // setMovieToDelFromFavorite(movie);
-        console.log('onFavorite in App TO DELETE', movie);
-      }
+      setMovieToDelFromFavorite(movie);
     }
   };
 

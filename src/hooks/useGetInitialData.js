@@ -52,11 +52,15 @@ function useGetInitialData(token, isMyMoviesUpdated) {
       };
 
       const isFavorite = initialMyMovies.filter((myMovie) => {
-        console.log(myMovie);
         return myMovie.movieId === movie.id;
       });
+      // console.log(isFavorite[0]);
+      // readyToStoreMovie.isFavorite = isFavorite.length > 0;
 
-      readyToStoreMovie.isFavorite = isFavorite.length > 0;
+      if (isFavorite.length > 0) {
+        readyToStoreMovie._id = isFavorite[0]._id;
+      }
+
       tempArr.push(readyToStoreMovie);
     });
     setReadyYoUseAllMovies(tempArr);
