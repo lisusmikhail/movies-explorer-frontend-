@@ -93,3 +93,14 @@ export const addToFavorite = (movie, token) => {
     body: JSON.stringify(movie),
   }).then((res) => handleResponse(res));
 };
+
+export const delFromFavorite = (movie, token) => {
+  return fetch(`${BASE_URL}/movies/${movie._id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(movie),
+  }).then((res) => handleResponse(res));
+};

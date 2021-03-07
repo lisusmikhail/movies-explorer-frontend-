@@ -15,15 +15,18 @@ function MoviesCard(props) {
   } = props;
   const { nameRU, image, duration, trailer, isFavorite } = movie;
 
-  // console.log(movie);
   const handleFavorite = () => {
-    console.log('handleFavorite');
-    delete movie['isFavorite'];
-    onFavorite(movie);
+    const toDelete = () => {
+      if (movie.isFavorite) {
+        console.log(movie);
+        return true;
+      } else return !!movie._id;
+    };
+    onFavorite(movie, toDelete());
   };
 
   useEffect(() => {
-    console.log('current value= ', movie.isFavorite);
+    // console.log('current value= ', movie.isFavorite);
   }, [isMyMoviesUpdated]);
 
   let isVisible = true;

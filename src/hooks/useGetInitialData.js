@@ -52,6 +52,7 @@ function useGetInitialData(token, isMyMoviesUpdated) {
       };
 
       const isFavorite = initialMyMovies.filter((myMovie) => {
+        console.log(myMovie);
         return myMovie.movieId === movie.id;
       });
 

@@ -17,6 +17,7 @@ function SavedMovies(props) {
     onSearch,
     onClearSearch,
     keyWord,
+    onFavorite,
   } = props;
 
   return (
@@ -38,6 +39,7 @@ function SavedMovies(props) {
           onShowMore={onShowMore}
           resultToRender={myMoviesToRender}
           moviesToRender={myMoviesToRender}
+          onFavorite={onFavorite}
           pageName={'myMovies'}
           myMovies={myMovies}
         />
