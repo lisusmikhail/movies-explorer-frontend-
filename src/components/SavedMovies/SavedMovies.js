@@ -3,6 +3,7 @@ import './SavedMovies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import Preloader from '../Preloader/Preloader';
 import SearchForm from '../SearchForm/SearchForm';
 
 function SavedMovies(props) {
@@ -18,6 +19,8 @@ function SavedMovies(props) {
     onClearSearch,
     keyWord,
     onFavorite,
+    isLoader,
+    searchResultInfo,
   } = props;
 
   return (
@@ -27,12 +30,14 @@ function SavedMovies(props) {
         handleMovieMenuClick={handleMovieMenuClick}
       />
       <div className='movies'>
+        {isLoader && <Preloader />}
         <SearchForm
           handleIsShortLength={handleIsShortLength}
           isShortLength={isShortLength}
           onSearch={onSearch}
           onClearSearch={onClearSearch}
           keyWord={keyWord}
+          searchResultInfo={searchResultInfo}
         />
         <MoviesCardList
           favoriteOnly={false}

@@ -10,13 +10,11 @@ function SearchForm({
   handleIsShortLength,
   onClearSearch,
   keyWord,
+  searchResultInfo,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchError, setSearchError] = useState('');
   const [isClearBtn, setIsClearBtn] = useState(false);
   const [inputValue, setInputValue] = useState('');
-
-  // console.log(keyWord);
 
   function handleChange(e) {
     const { value } = e.target;
@@ -26,27 +24,16 @@ function SearchForm({
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (searchQuery.length === 0) {
-      setSearchError('Нужно ввести ключевое слово');
-    } else if (searchQuery.length > keyWordMaxLength) {
-      setSearchError(
-        'Самое длинное словарное слово в русском языке состоит из 35 букв'
-      );
-    } else {
-      setIsClearBtn(true);
-      onSearch(searchQuery);
-    }
+    onSearch(searchQuery);
   }
 
   useEffect(() => {
     keyWord && setInputValue(keyWord);
     keyWord && setIsClearBtn(true);
-    // console.log('readInputValue', keyWord);
   }, [keyWord]);
 
   useEffect(() => {
     keyWord === undefined && setIsClearBtn(false);
-    // console.log('!!!!!!!!!!!!!!!!!!', keyWord);
   }, []);
 
   function handleClearSearch() {
@@ -70,12 +57,13 @@ function SearchForm({
             id='search-form'
             name='search'
             minLength='2'
-            maxLength='36'
+            maxLength='37'
             required
             autoComplete='off'
             value={inputValue}
             onChange={handleChange}
           />
+          <span className='search-form__input-error'>{searchResultInfo}</span>
         </label>
         <img
           className={

@@ -7,11 +7,8 @@ import delFavorite from '../../images/icon__del_favorite.svg';
 
 function MoviesCard(props) {
   const { movie, onFavorite, isMyMoviesUpdated } = props;
-
   const { nameRU, image, duration, trailer, _id } = movie;
-
   const [myHeart, setMyHeart] = useState('');
-
   const history = useHistory();
   const location = history.location.pathname;
 
@@ -23,22 +20,13 @@ function MoviesCard(props) {
     }
   }, [location]);
 
-  const handleFavorite = () => {
+  function handleFavorite() {
+    console.log('click');
     onFavorite(movie);
-  };
-
-  useEffect(() => {}, [isMyMoviesUpdated]);
-
-  let isVisible = true;
+  }
 
   return (
-    <div
-      className={
-        isVisible
-          ? 'movies-card movies-card_position'
-          : 'movies-card movies-card_visibility'
-      }
-    >
+    <div className={'movies-card movies-card_position'}>
       <div className='movies-card__info'>
         <div className='movies-card__description'>
           <h2 className='movies-card__title'>{nameRU}</h2>

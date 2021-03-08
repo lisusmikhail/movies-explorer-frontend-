@@ -3,6 +3,7 @@ import './Movies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import Preloader from '../Preloader/Preloader';
 import SearchForm from '../SearchForm/SearchForm';
 
 function Movies(props) {
@@ -20,6 +21,8 @@ function Movies(props) {
     onClearSearch,
     keyWord,
     isMyMoviesUpdated,
+    isLoader,
+    searchResultInfo,
   } = props;
 
   // console.log(moviesToRender);
@@ -31,12 +34,14 @@ function Movies(props) {
         handleMovieMenuClick={handleMovieMenuClick}
       />
       <div className='movies'>
+        {isLoader && <Preloader />}
         <SearchForm
           onSearch={onSearch}
           isShortLength={isShortLength}
           handleIsShortLength={handleIsShortLength}
           onClearSearch={onClearSearch}
           keyWord={keyWord}
+          searchResultInfo={searchResultInfo}
         />
         <MoviesCardList
           favoriteOnly={false}

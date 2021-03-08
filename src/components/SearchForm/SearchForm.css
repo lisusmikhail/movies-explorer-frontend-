@@ -149,3 +149,19 @@
 .search-form__input_keyword-position {
   padding: 0 0 0 48px;
 }
+
+.search-form__label {
+  position: relative;
+}
+
+.search-form__input-error {
+  position: absolute;
+  top: 45px;
+  left: 22px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 15px;
+  color: #ee3465;
+  color: #ffffff;
+}

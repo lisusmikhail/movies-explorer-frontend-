@@ -5,7 +5,10 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useGetMovies from '../../hooks/useGetMovies';
 import useAuth from '../../hooks/useAuth';
 import useGetInitialData from '../../hooks/useGetInitialData';
-import { shortMovieThresholdDuration } from '../../utils/constants';
+import {
+  keyWordMaxLength,
+  shortMovieThresholdDuration,
+} from '../../utils/constants';
 import useEditProfile from '../../hooks/useEditProfile';
 import useShowMore from '../../hooks/useShowMore';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
@@ -22,7 +25,9 @@ import Register from '../Register/Register';
 import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
+  const [location, setLocation] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [searchResultInfo, setSearchResultInfo] = useState('');
   //user
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
@@ -56,6 +61,8 @@ function App() {
   // favorite
   const [movieToFavorite, setMovieToFavorite] = useState({});
   const [movieToDelFromFavorite, setMovieToDelFromFavorite] = useState({});
+  //loader
+  const [isLoader, setIsLoader] = useState(false);
 
   // console.log('++++++++++++++++++++++++++++++++++', myKeyWord);
   // console.log({ isFirstRender });
@@ -83,11 +90,20 @@ function App() {
   // console.log('render', myMoviesToRender && myMoviesToRender.length);
   // console.log('render', myMoviesToRender);
   // console.log(myMovies, myMoviesSearchResult, isAllDataReady);
-  // console.log('isFirstRender', isFirstRender);
+  console.log('isFirstRender', isFirstRender, location, isLoader);
   // console.log(allMovies);
   // console.log(myMovies);
-  // Authentication and Authorization
 
+  const history = useHistory();
+
+  useEffect(() => {
+    setLocation(history.location.pathname);
+    if (isFirstRender && location === '/saved-movies') {
+      setIsLoader(true);
+    }
+  }, [location]);
+
+  // Authentication and Authorization
   const { isLoggedIn } = useAuth(
     credentials,
     setErrorMsg,
@@ -97,10 +113,15 @@ function App() {
     setIsLogOut
   );
 
+  const handleLoader = (state) => {
+    setIsLoader(state);
+  };
+
   const { newUsersProfile } = useEditProfile(
     newProfile,
     isLoggedIn,
-    setErrorMsg
+    setErrorMsg,
+    handleLoader
   );
 
   const onAuth = (email, password, name) => {
@@ -167,6 +188,16 @@ function App() {
 
   // movies rendering and show more button state
   const handleResultMovies = (result) => {
+    console.log(result, result.length);
+
+    if (result.length === 0 && !keyWord) {
+      setSearchResultInfo('');
+    } else if (result.length === 0 && !isFirstRender) {
+      setSearchResultInfo('По вашему запросу ничего не найдено');
+    } else {
+      setSearchResultInfo('');
+    }
+
     setMoviesToRender(result);
   };
 
@@ -205,6 +236,7 @@ function App() {
       localStorage.setItem('keyWord', keyWord);
       setIsMoviesReadyToRender(true);
       setNewRender(!newRender);
+      setIsLoader(false);
     };
 
     moviesToRender.length === 0 &&
@@ -239,6 +271,18 @@ function App() {
   };
 
   const onSearchMovies = (searchQuery) => {
+    // if (searchQuery.length === 0) {
+    //   setSearchError('Введите ключевое слово, пожалуйста');
+    // } else if (searchQuery.length >= keyWordMaxLength) {
+    //   setSearchError(
+    //     'Самое длинное словарное слово в русском языке состоит из 35 букв'
+    //   );
+    // } else if (searchResultInfo.length > 0) {
+    //   setSearchError(searchResultInfo);
+    // } else {
+    //   setIsClearBtn(true);
+    setSearchResultInfo('');
+    setIsLoader(true);
     setIsFirstRender(false);
     if (searchQuery !== keyWord) {
       resetMoviesResults();
@@ -265,6 +309,10 @@ function App() {
     if (myMoviesSearchResult) {
       const moviesToShow = getMoviesToShow(myMoviesSearchResult);
       setMyMoviesToRender(moviesToShow);
+      moviesToShow.length === 0 &&
+        !isFirstRender &&
+        setSearchResultInfo('По вашему запросу ничего не найдено');
+      setIsLoader(false);
     }
   }, [myMoviesSearchResult, isShortLength]);
 
@@ -272,6 +320,7 @@ function App() {
     const searchMyMovies = (myKeyWord) => {
       const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
       setMyMoviesSearchResult(moviesToShow);
+      setIsLoader(false);
     };
     myMovies && myKeyWord && searchMyMovies(myKeyWord);
   }, [myKeyWord, isMovieMenuClicked, isAllDataReady, myMovies]);
@@ -282,6 +331,18 @@ function App() {
   };
 
   const onSearchMyMovies = (searchQuery) => {
+    // if (searchQuery.length === 0) {
+    //   setSearchError('Введите ключевое слово, пожалуйста');
+    // } else if (searchQuery.length >= keyWordMaxLength) {
+    //   setSearchError(
+    //     'Самое длинное словарное слово в русском языке состоит из 35 букв'
+    //   );
+    // } else if (searchResultInfo.length > 0) {
+    //   setSearchError(searchResultInfo);
+    // } else {
+    //   setIsClearBtn(true);
+    setSearchResultInfo('');
+    setIsLoader(true);
     setIsFirstRender(false);
     resetMyMoviesResults();
     localStorage.setItem('myKeyWord', searchQuery);
@@ -289,6 +350,8 @@ function App() {
   };
 
   const onClearSearchMovies = () => {
+    console.log('clearSearchMovies');
+    setSearchResultInfo('');
     setKeyWord('');
     resetMoviesResults();
     localStorage.removeItem('keyWord');
@@ -304,7 +367,7 @@ function App() {
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
-      console.log('onFavorite in App 2', token, movieToAdd);
+      // console.log('onFavorite in App 2', token, movieToAdd);
       mainApi
         .addToFavorite(movieToAdd, token)
         .then((res) => {
@@ -321,17 +384,16 @@ function App() {
           } else {
             console.log('Произошла ошибка');
           }
+          setMovieToFavorite({});
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
-    isLoggedIn && addToFavorite(movieToFavorite);
+    isLoggedIn && movieToFavorite.movieId && addToFavorite(movieToFavorite);
   }, [movieToFavorite]);
 
   useEffect(() => {
     const delFromFavorite = (movieToDel) => {
       const handleDelMovie = (movieArray, res) => {
-        console.log({ movieArray });
-
         let indexOfDelMovie;
         movieArray.find((movie, index) => {
           indexOfDelMovie = index;
@@ -341,8 +403,6 @@ function App() {
       };
 
       const handleDelMyMovie = (movieArray, res) => {
-        console.log({ movieArray });
-
         let indexOfDelMovie;
         movieArray.find((movie, index) => {
           indexOfDelMovie = index;
@@ -362,10 +422,13 @@ function App() {
             handleDelMovie(moviesToRender, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           }
+          setMovieToDelFromFavorite({});
         })
         .catch((errStatus) => handleError(errStatus, setErrorMsg));
     };
-    isLoggedIn && delFromFavorite(movieToDelFromFavorite);
+    isLoggedIn &&
+      movieToDelFromFavorite._id &&
+      delFromFavorite(movieToDelFromFavorite);
   }, [movieToDelFromFavorite]);
 
   const onFavorite = (movie) => {
@@ -407,6 +470,8 @@ function App() {
             onClearSearch={onClearSearchMovies}
             keyWord={keyWord}
             isMyMoviesUpdated={isMyMoviesUpdated}
+            isLoader={isLoader}
+            searchResultInfo={searchResultInfo}
             component={Movies}
           />
           <ProtectedRoute
@@ -422,6 +487,8 @@ function App() {
             onClearSearch={onClearSearchMyMovies}
             onFavorite={onFavorite}
             keyWord={myKeyWord}
+            isLoader={isLoader}
+            searchResultInfo={searchResultInfo}
             component={SavedMovies}
           />
           <Route path='/signup'>
