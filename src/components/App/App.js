@@ -203,8 +203,8 @@ function App() {
       shortLengthItem === 'false' || !shortLengthItem
         ? setIsShortLength(false)
         : setIsShortLength(true);
-      const myKeyWordItem = localStorage.getItem('myKeyWord');
-      myKeyWordItem === null ? setMyKeyWord('') : setMyKeyWord(myKeyWordItem);
+      // const myKeyWordItem = localStorage.getItem('myKeyWord');
+      // myKeyWordItem === null ? setMyKeyWord('') : setMyKeyWord(myKeyWordItem);
     }
   }, [isFirstRender]);
 
@@ -261,6 +261,7 @@ function App() {
   };
 
   const handleNoContentMsg = (currentMovieSet, currentKeyWord) => {
+    console.log('handleNoContentMsg', currentMovieSet, currentKeyWord);
     const currentMessage = isShortLength
       ? 'По вашему запросу ничего не найдено. Попробуйте поискать без фильтра "короткометражки".'
       : 'По вашему запросу ничего не найдено.';
@@ -271,8 +272,8 @@ function App() {
     currentMovieSet.length !== 0 && setSearchResultInfo('');
   };
 
-  const handleQueryException = (currentKeyWord, currentQuery) => {
-    if (!currentKeyWord && !currentQuery) {
+  const handleQueryException = (currentQuery) => {
+    if (currentQuery.length === 0) {
       setSearchResultInfo('Введите ключевое слово, пожалуйста.');
     } else if (currentQuery.length > 35) {
       setSearchResultInfo(
@@ -299,7 +300,6 @@ function App() {
   useEffect(() => {
     const searchMyMovies = (myKeyWord) => {
       const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
-      localStorage.setItem('myKeyWord', myKeyWord);
       setMyMoviesSearchResult(moviesToShow);
       setIsLoader(false);
     };
@@ -308,14 +308,24 @@ function App() {
 
   const onSearchMovies = (searchQuery) => {
     setSearchResultInfo('');
-    if (keyWord !== searchQuery && !!searchQuery) {
+    console.log('onSearchMovies', keyWord, searchQuery);
+    console.log('onSearchMovies', keyWord !== searchQuery && !!searchQuery);
+    if (searchQuery.length === 0 || searchQuery.length > 35) {
+      handleQueryException(searchQuery);
+    } else if (keyWord !== searchQuery && !!searchQuery) {
       setIsFirstRender(false);
       resetMoviesIndex();
       resetMoviesResults();
       setNewSearch(!newSearch);
       setKeyWord(searchQuery);
     } else {
-      handleQueryException(keyWord, searchQuery);
+      console.log(
+        'onSearchMovies !!!!!!!!!!!!!',
+        'keyWord=',
+        keyWord,
+        'searchQuery=',
+        searchQuery
+      );
     }
   };
 
@@ -355,15 +365,28 @@ function App() {
     }
   }, [myMoviesSearchResult, isShortLength]);
 
-  useEffect(() => {
-    handleNoContentMsg(moviesFilteredResult, myKeyWord);
-  }, [moviesFilteredResult]);
+  console.log(moviesFilteredResult);
 
   useEffect(() => {
-    handleNoContentMsg(myMoviesFilteredResult, keyWord);
+    console.log('handleNoContentMsg 1');
+    handleNoContentMsg(moviesFilteredResult, keyWord);
+  }, [moviesFilteredResult, newSearch, isShortLength]);
+
+  useEffect(() => {
+    handleNoContentMsg(myMoviesFilteredResult, myKeyWord);
   }, [myMoviesFilteredResult]);
 
   //clear search button
+
+  // console.log({
+  //   location,
+  //   keyWord,
+  //   myKeyWord,
+  //   isClearBtn,
+  //   searchResultInfo,
+  //   isFirstRender,
+  // });
+  // звука
   const onClearSearchMovies = () => {
     setKeyWord('');
     setSearchResultInfo('');
@@ -379,15 +402,15 @@ function App() {
     setSearchResultInfo('');
     setIsClearBtn(false);
     resetMyMoviesResults();
-    localStorage.setItem('myKeyWord', '');
+    // localStorage.setItem('myKeyWord', '');
     setMyMoviesSearchResult(myMovies);
   };
 
   useEffect(() => {
     if (location === '/saved-movies') {
-      myKeyWord ? setIsClearBtn(true) : setIsClearBtn(false);
+      myKeyWord !== '' ? setIsClearBtn(true) : setIsClearBtn(false);
     } else if (location === '/movies') {
-      keyWord ? setIsClearBtn(true) : setIsClearBtn(false);
+      keyWord !== '' ? setIsClearBtn(true) : setIsClearBtn(false);
     }
   }, [keyWord, myKeyWord, location]);
 
