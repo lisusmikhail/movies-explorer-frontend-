@@ -23,6 +23,7 @@ function SavedMovies(props) {
     moviesFilteredResult,
     lastIndex,
     isClearBtn,
+    searchResultError,
   } = props;
   return (
     <>
@@ -39,6 +40,7 @@ function SavedMovies(props) {
           onClearSearch={onClearSearch}
           keyWord={keyWord}
           searchResultInfo={searchResultInfo}
+          searchResultError={searchResultError}
           isClearBtn={isClearBtn}
         />
         <MoviesCardList

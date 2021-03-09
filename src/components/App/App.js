@@ -101,7 +101,7 @@ function App() {
   // console.log(myMovies, myMoviesSearchResult, isAllDataReady);
   // console.log('isFirstRender', isFirstRender, location, isLoader);
   // console.log(allMovies);
-  console.log(myMovies);
+  // console.log(myMovies);
 
   const history = useHistory();
 
@@ -170,7 +170,7 @@ function App() {
     setErrorMsg('');
   };
 
-  // Get initial set of movies , my movies, and  current user
+  // Get initial data of all movies , my movies, and  current user
   const {
     initialUser,
     initialMyMovies,
@@ -207,12 +207,7 @@ function App() {
     }
   }, [isFirstRender]);
 
-  const handleMovieMenuClick = () => {
-    setIsMovieMenuClicked(!isMovieMenuClicked);
-  };
-
   // movies rendering and show more button state
-
   const onMoviesShowMore = () => {
     setLastIndex(lastIndex + showMoreIncrement);
   };
@@ -230,7 +225,18 @@ function App() {
       handleBtnMovies(lastIndex < moviesFilteredResult.length);
   }, [lastIndex, moviesFilteredResult, newRender]);
 
-  //movies search
+  //general states and functions
+
+  const handleMovieMenuClick = () => {
+    setIsMovieMenuClicked(!isMovieMenuClicked);
+  };
+
+  const resetMyMoviesResults = () => {
+    setMyMoviesSearchResult([]);
+    setMyMoviesFilteredResult([]);
+  };
+
+  //movies and my movies search
   const getNewSearchResult = (moviesSet, newKeyWord) => {
     const checkMovie = (movie) => {
       const nameRu = movie['nameRU'].toLowerCase().trim();
@@ -238,6 +244,28 @@ function App() {
       return nameRu.indexOf(word) > -1;
     };
     return moviesSet.filter(checkMovie);
+  };
+
+  const handleNoContentMsg = (currentMovieSet, currentKeyWord) => {
+    const currentMessage = isShortLength
+      ? 'По вашему запросу ничего не найдено. Попробуйте поискать без фильтра "короткометражки".'
+      : 'По вашему запросу ничего не найдено.';
+    !isFirstRender &&
+      currentMovieSet.length === 0 &&
+      currentKeyWord &&
+      setSearchResultInfo(currentMessage);
+    currentMovieSet.length !== 0 && setSearchResultInfo('');
+  };
+
+  const handleQueryException = (currentKeyWord, currentQuery) => {
+    if (!currentKeyWord && !currentQuery) {
+      setSearchResultInfo('Введите ключевое слово, пожалуйста.');
+    } else if (currentQuery.length > 35) {
+      setSearchResultInfo(
+        'Самое длинное словарное слово в русском языке состоит из 35 букв.'
+      );
+      setIsClearBtn(true);
+    }
   };
 
   useEffect(() => {
@@ -251,9 +279,41 @@ function App() {
       setIsLoader(false);
     };
 
-    // moviesFilteredResult.length === 0 &&
     !isFirstRender && allMovies && keyWord && searchMovies(keyWord);
   }, [keyWord, newSearch]);
+
+  useEffect(() => {
+    const searchMyMovies = (myKeyWord) => {
+      const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
+      localStorage.setItem('myKeyWord', myKeyWord);
+      setMyMoviesSearchResult(moviesToShow);
+      setIsLoader(false);
+    };
+    myMovies && myKeyWord && searchMyMovies(myKeyWord);
+  }, [myKeyWord, isMovieMenuClicked, isAllDataReady, myMovies]);
+
+  const onSearchMovies = (searchQuery) => {
+    setSearchResultInfo('');
+    if (keyWord !== searchQuery && !!searchQuery) {
+      setIsFirstRender(false);
+      resetMoviesIndex();
+      resetMoviesResults();
+      setNewSearch(!newSearch);
+      setKeyWord(searchQuery);
+    } else {
+      handleQueryException(keyWord, searchQuery);
+    }
+  };
+
+  const onSearchMyMovies = (searchQuery) => {
+    setSearchResultInfo('');
+    if (myKeyWord !== searchQuery && !!searchQuery) {
+      setIsFirstRender(false);
+      setMyKeyWord(searchQuery);
+    } else {
+      handleQueryException(myKeyWord, searchQuery);
+    }
+  };
 
   //movies filter
   const getMoviesToShow = (moviesResult) => {
@@ -273,41 +333,17 @@ function App() {
   }, [moviesSearchResult, isShortLength]);
 
   useEffect(() => {
-    const currentMessage = isShortLength
-      ? 'По вашему запросу ничего не найдено. Попробуйте поискать без фильтра "короткометражки".'
-      : 'По вашему запросу ничего не найдено';
-    !isFirstRender &&
-      moviesFilteredResult.length === 0 &&
-      keyWord &&
-      setSearchResultInfo(currentMessage);
-    moviesFilteredResult.length !== 0 && setSearchResultInfo('');
+    handleNoContentMsg(moviesFilteredResult, myKeyWord);
   }, [moviesFilteredResult]);
+
+  useEffect(() => {
+    handleNoContentMsg(myMoviesFilteredResult, keyWord);
+  }, [myMoviesFilteredResult]);
 
   //search and filter triggers
   const resetMoviesResults = () => {
     setMoviesSearchResult([]);
     setMoviesFilteredResult([]);
-  };
-
-  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  const onSearchMovies = (searchQuery) => {
-    setSearchResultInfo('');
-    if (!keyWord && !searchQuery) {
-      setSearchResultInfo('Введите ключевое слово, пожалуйста.');
-    } else if (searchQuery.length > 35) {
-      setSearchResultInfo(
-        'Самое длинное словарное слово в русском языке состоит из 35 букв.'
-      );
-      setIsClearBtn(true);
-    } else if (keyWord !== searchQuery && !!searchQuery) {
-      setIsFirstRender(false);
-      setIsLoader(true);
-      resetMoviesIndex();
-      resetMoviesResults();
-      setNewSearch(!newSearch);
-      setKeyWord(searchQuery);
-    }
   };
 
   const handleIsShortLength = (state) => {
@@ -325,38 +361,6 @@ function App() {
       setIsLoader(false);
     }
   }, [myMoviesSearchResult, isShortLength]);
-
-  useEffect(() => {
-    console.log('myMoviesSearchResult 2');
-
-    const searchMyMovies = (myKeyWord) => {
-      const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
-      setMyMoviesSearchResult(moviesToShow);
-      setIsLoader(false);
-    };
-    myMovies && myKeyWord && searchMyMovies(myKeyWord);
-  }, [myKeyWord, isMovieMenuClicked, isAllDataReady, myMovies]);
-
-  const resetMyMoviesResults = () => {
-    setMyMoviesSearchResult([]);
-    setMyMoviesFilteredResult([]);
-  };
-
-  const onSearchMyMovies = (searchQuery) => {
-    setSearchResultInfo('');
-    if (!keyWord && !searchQuery) {
-      setSearchResultInfo('Введите ключевое слово, пожалуйста.');
-    } else if (searchQuery.length > 35) {
-      setSearchResultInfo(
-        'Самое длинное словарное слово в русском языке состоит из 35 букв.'
-      );
-    } else if (myKeyWord !== searchQuery && !!searchQuery) {
-      setSearchResultInfo('');
-      setIsFirstRender(false);
-      localStorage.setItem('myKeyWord', searchQuery);
-      setMyKeyWord(searchQuery);
-    }
-  };
 
   //*************************************************************************
 
@@ -536,6 +540,7 @@ function App() {
             keyWord={myKeyWord}
             isLoader={isLoader}
             searchResultInfo={searchResultInfo}
+            searchResultError={searchResultError}
             isClearBtn={isClearBtn}
             component={SavedMovies}
           />
