@@ -196,7 +196,9 @@ function App() {
       const shortLengthItem = localStorage.getItem('isShortLength');
       const keyWordItem = localStorage.getItem('keyWord');
       const moviesToShowItems = JSON.parse(localStorage.getItem('movies'));
-      setMoviesSearchResult(moviesToShowItems);
+      moviesToShowItems === null
+        ? setMoviesSearchResult([])
+        : setMoviesSearchResult(moviesToShowItems);
       keyWordItem === null ? setKeyWord('') : setKeyWord(keyWordItem);
       shortLengthItem === 'false' || !shortLengthItem
         ? setIsShortLength(false)
@@ -226,7 +228,10 @@ function App() {
 
   //general states and functions
   const handleMovieMenuClick = () => {
+    console.log('clicked menu');
     setIsMovieMenuClicked(!isMovieMenuClicked);
+    // setSearchResultInfo('');
+    // setSearchResultError('');
   };
 
   const resetMyMoviesResults = () => {
@@ -417,40 +422,53 @@ function App() {
   useEffect(() => {
     const delFromFavorite = (movieToDel) => {
       setIsLoader(true);
-      const handleDelMovie = (movieArray, res) => {
+
+      const handleDelMovie = (moviesSet, res) => {
         let indexOfDelMovie;
-        movieArray.find((movie, index) => {
+        console.log(moviesSet);
+        moviesSet.find((movie, index) => {
           indexOfDelMovie = index;
           return movie.movieId === res.movieId;
         });
-        delete movieArray[indexOfDelMovie]['_id'];
-        movieArray === moviesSearchResult &&
-          localStorage.setItem('movies', JSON.stringify(movieArray));
+        delete moviesSet[indexOfDelMovie]['_id'];
+        moviesSet === moviesSearchResult &&
+          localStorage.setItem('movies', JSON.stringify(moviesSet));
       };
 
-      const handleDelMyMovie = (movieArray, res) => {
+      const handleDelMyMovie = (moviesSet, res) => {
         let indexOfDelMovie;
-        movieArray.find((movie, index) => {
+        moviesSet.find((movie, index) => {
           indexOfDelMovie = index;
           return movie._id === res._id;
         });
-        movieArray.splice(indexOfDelMovie, 1);
+        moviesSet.splice(indexOfDelMovie, 1);
         setIsMyMoviesUpdated(!isMyMoviesUpdated);
       };
 
       mainApi
         .delFromFavorite(movieToDel, token)
         .then((res) => {
+          console.log('res=>', res);
           if (res) {
+            console.log(
+              allMovies,
+              'search=',
+              moviesSearchResult,
+              'filtr=>',
+              moviesFilteredResult
+            );
             handleDelMyMovie(myMovies, res);
             handleDelMovie(allMovies, res);
-            handleDelMovie(moviesSearchResult, res);
-            handleDelMovie(moviesFilteredResult, res);
+            // handleDelMovie(moviesSearchResult, res);
+            // handleDelMovie(moviesFilteredResult, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           }
           setMovieToDelFromFavorite({});
         })
-        .catch((err) => handleError(err.status, setSearchResultError));
+        .catch((err) => {
+          console.log(err);
+          handleError(err.status, setSearchResultError, 'del');
+        });
     };
 
     isLoggedIn &&

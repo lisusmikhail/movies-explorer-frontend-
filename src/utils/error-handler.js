@@ -1,4 +1,5 @@
-export const handleError = (errStatus, setErrorMsg) => {
+export const handleError = (errStatus, setErrorMsg, text) => {
+  console.log(errStatus, text);
   if (errStatus === 400) {
     setErrorMsg('Неправильный формат данных');
   } else if (errStatus === 403) {
