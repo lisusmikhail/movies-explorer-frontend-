@@ -4,6 +4,7 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import SearchForm from '../SearchForm/SearchForm';
 
 function Movies(props) {
@@ -12,7 +13,6 @@ function Movies(props) {
     onSearch,
     isShortLength,
     handleIsShortLength,
-    moviesToRender,
     onShowMore,
     isShowMoreBtn,
     onFavorite,
@@ -23,6 +23,10 @@ function Movies(props) {
     isMyMoviesUpdated,
     isLoader,
     searchResultInfo,
+    searchResultError,
+    moviesFilteredResult,
+    lastIndex,
+    isClearBtn,
   } = props;
 
   // console.log(moviesToRender);
@@ -42,10 +46,13 @@ function Movies(props) {
           onClearSearch={onClearSearch}
           keyWord={keyWord}
           searchResultInfo={searchResultInfo}
+          searchResultError={searchResultError}
+          isClearBtn={isClearBtn}
         />
         <MoviesCardList
           favoriteOnly={false}
-          moviesToRender={moviesToRender}
+          moviesFilteredResult={moviesFilteredResult}
+          lastIndex={lastIndex}
           onShowMore={onShowMore}
           isShowMoreBtn={isShowMoreBtn}
           onFavorite={onFavorite}

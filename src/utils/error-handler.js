@@ -11,7 +11,7 @@ export const handleError = (errStatus, setErrorMsg) => {
     setErrorMsg('Ошибка авторизации');
   } else if (errStatus === 404) {
     setErrorMsg('Данных, за которыми вы обратились, не существует');
-  } else if (errStatus === 500) {
+  } else if (errStatus === 503) {
     setErrorMsg(
       'Во время запроса произошла ошибка. ' +
         'Возможно, проблема с соединением или сервер недоступен. ' +

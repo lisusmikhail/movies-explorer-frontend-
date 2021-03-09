@@ -2,7 +2,13 @@ import { useState, useEffect } from 'react';
 import { handleError } from '../utils/error-handler';
 import * as mainApi from '../utils/MainApi';
 
-function useGetInitialData(token, isMyMoviesUpdated) {
+function useGetInitialData(
+  token,
+  isMyMoviesUpdated,
+  setErrorMsg,
+  setSearchResultError,
+  setIsLoader
+) {
   const [initialUser, setInitialUser] = useState({});
   const [initialMyMovies, setInitialMyMovies] = useState([]);
   const [initialAllMovies, setInitialAllMovies] = useState([]);
@@ -10,8 +16,6 @@ function useGetInitialData(token, isMyMoviesUpdated) {
   const [isDataReady, setIsDataReady] = useState(false);
 
   useEffect(() => {
-    // console.log('useGetInitialData+++++++++++++++++++++++++++++++>');
-
     const getInitialData = (token) => {
       mainApi
         .getInitialData(token)
@@ -21,8 +25,16 @@ function useGetInitialData(token, isMyMoviesUpdated) {
           setInitialAllMovies(allMovies);
           setIsDataReady(true);
         })
-        .catch((errStatus) => console.error(errStatus)); //????????????
-      // catch((errStatus) => handleError(errStatus, 'test')); //????????????
+        .catch((err) => {
+          if (err.message === 'Failed to fetch') {
+            handleError(503, setSearchResultError);
+          } else if (err.url.indexOf('movie')) {
+            handleError(err, setSearchResultError);
+          } else {
+            handleError(err.status, setSearchResultError);
+          }
+        })
+        .finally(() => setIsLoader(false));
     };
     token && getInitialData(token);
   }, [token, isMyMoviesUpdated]);
@@ -54,8 +66,6 @@ function useGetInitialData(token, isMyMoviesUpdated) {
       const isFavorite = initialMyMovies.filter((myMovie) => {
         return myMovie.movieId === movie.id;
       });
-      // console.log(isFavorite[0]);
-      // readyToStoreMovie.isFavorite = isFavorite.length > 0;
 
       if (isFavorite.length > 0) {
         readyToStoreMovie._id = isFavorite[0]._id;
@@ -65,8 +75,6 @@ function useGetInitialData(token, isMyMoviesUpdated) {
     });
     setReadyYoUseAllMovies(tempArr);
   }, [isDataReady]);
-
-  // console.log('Main+++++++++ ', readyToUseAllMovies);
 
   return { initialUser, readyToUseAllMovies, initialMyMovies };
 }

@@ -9,7 +9,6 @@ import SearchForm from '../SearchForm/SearchForm';
 function SavedMovies(props) {
   const {
     isLoggedIn,
-    myMoviesToRender,
     onShowMore,
     handleIsShortLength,
     isShortLength,
@@ -21,8 +20,10 @@ function SavedMovies(props) {
     onFavorite,
     isLoader,
     searchResultInfo,
+    moviesFilteredResult,
+    lastIndex,
+    isClearBtn,
   } = props;
-
   return (
     <>
       <Header
@@ -38,12 +39,13 @@ function SavedMovies(props) {
           onClearSearch={onClearSearch}
           keyWord={keyWord}
           searchResultInfo={searchResultInfo}
+          isClearBtn={isClearBtn}
         />
         <MoviesCardList
           favoriteOnly={false}
           onShowMore={onShowMore}
-          resultToRender={myMoviesToRender}
-          moviesToRender={myMoviesToRender}
+          moviesFilteredResult={moviesFilteredResult}
+          lastIndex={lastIndex}
           onFavorite={onFavorite}
           pageName={'myMovies'}
           myMovies={myMovies}

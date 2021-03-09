@@ -18,7 +18,7 @@ function useEditProfile(newProfile, isLoggedIn, setErrorMsg, handleLoader) {
           setNewUsersProfile(profile.data);
           history.push('/movies');
         })
-        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+        .catch((err) => handleError(err.status, setErrorMsg));
   }, [newProfile]);
 
   return { newUsersProfile };

@@ -31,7 +31,7 @@ function useAuth(
           setIsLogOut(false);
           history.push('/movies');
         })
-        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+        .catch((err) => handleError(err.status, setErrorMsg));
     };
 
     const onSignUp = (email, password, name) => {
@@ -45,7 +45,7 @@ function useAuth(
             console.log('Произошла ошибка');
           }
         })
-        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+        .catch((err) => handleError(err.status, setErrorMsg));
     };
 
     if (email && name && password) {
@@ -68,7 +68,7 @@ function useAuth(
               setIsTokenChecked(true);
             }
           })
-          .catch((errStatus) => handleError(errStatus, setErrorMsg));
+          .catch((err) => handleError(err.status, setErrorMsg));
       } else {
         setIsTokenChecked(true);
       }

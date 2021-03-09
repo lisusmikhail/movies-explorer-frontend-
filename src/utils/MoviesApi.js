@@ -1,11 +1,12 @@
 const URL = 'https://api.nomoreparties.co/beatfilm-movies';
 
-export const getMovies = async () => {
-  const response = await fetch(URL);
-  // console.log(response);
-  if (response.ok) {
-    return await response.json();
-  } else {
-    throw new Error(response.status);
+const handleResponse = (res) => {
+  if (res.ok) {
+    return res.json();
   }
+  return Promise.reject(res);
+};
+
+export const getMovies = () => {
+  return fetch(URL).then((res) => handleResponse(res));
 };

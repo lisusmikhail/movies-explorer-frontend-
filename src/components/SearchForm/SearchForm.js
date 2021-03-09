@@ -11,9 +11,10 @@ function SearchForm({
   onClearSearch,
   keyWord,
   searchResultInfo,
+  searchResultError,
+  isClearBtn,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isClearBtn, setIsClearBtn] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
   function handleChange(e) {
@@ -29,15 +30,13 @@ function SearchForm({
 
   useEffect(() => {
     keyWord && setInputValue(keyWord);
-    keyWord && setIsClearBtn(true);
   }, [keyWord]);
 
   useEffect(() => {
-    keyWord === undefined && setIsClearBtn(false);
-  }, []);
+    isClearBtn && setSearchQuery('');
+  }, [isClearBtn]);
 
   function handleClearSearch() {
-    setIsClearBtn(false);
     setInputValue('');
     onClearSearch();
   }
@@ -63,7 +62,8 @@ function SearchForm({
             value={inputValue}
             onChange={handleChange}
           />
-          <span className='search-form__input-error'>{searchResultInfo}</span>
+          <span className='search-form__input-info'>{searchResultInfo}</span>
+          <span className='search-form__input-error'>{searchResultError}</span>
         </label>
         <img
           className={

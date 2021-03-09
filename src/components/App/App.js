@@ -2,15 +2,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import useGetMovies from '../../hooks/useGetMovies';
 import useAuth from '../../hooks/useAuth';
 import useGetInitialData from '../../hooks/useGetInitialData';
 import {
+  initialNumberItems,
   keyWordMaxLength,
   shortMovieThresholdDuration,
+  showMoreIncrement,
 } from '../../utils/constants';
 import useEditProfile from '../../hooks/useEditProfile';
-import useShowMore from '../../hooks/useShowMore';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as mainApi from '../../utils/MainApi';
 import { handleError } from '../../utils/error-handler';
@@ -28,6 +28,8 @@ function App() {
   const [location, setLocation] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [searchResultInfo, setSearchResultInfo] = useState('');
+  const [searchResultError, setSearchResultError] = useState('');
+
   //user
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
@@ -42,7 +44,7 @@ function App() {
   //my movies
   const [myMovies, setMyMovies] = useState([]);
   const [myMoviesSearchResult, setMyMoviesSearchResult] = useState([]);
-  const [myMoviesToRender, setMyMoviesToRender] = useState([]);
+  const [myMoviesFilteredResult, setMyMoviesFilteredResult] = useState([]);
   const [isMyMoviesUpdated, setIsMyMoviesUpdated] = useState(false);
   //my search
   const [myKeyWord, setMyKeyWord] = useState('');
@@ -50,12 +52,10 @@ function App() {
   const [allMovies, setAllMovies] = useState([]);
   const [moviesSearchResult, setMoviesSearchResult] = useState([]);
   const [moviesFilteredResult, setMoviesFilteredResult] = useState([]);
-  const [moviesToRender, setMoviesToRender] = useState([]);
   // movies rendering
   const [newSearch, setNewSearch] = useState(false);
   const [newRender, setNewRender] = useState(false);
   const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
-  const [isMoviesReadyToRender, setIsMoviesReadyToRender] = useState(false);
   const [isMovieMenuClicked, setIsMovieMenuClicked] = useState(false);
   const [isAllDataReady, setIsAllDataReady] = useState(false);
   // favorite
@@ -63,8 +63,13 @@ function App() {
   const [movieToDelFromFavorite, setMovieToDelFromFavorite] = useState({});
   //loader
   const [isLoader, setIsLoader] = useState(false);
+  //on show more button
+  const [lastIndex, setLastIndex] = useState(initialNumberItems);
+  const [lastMyIndex, setLastMyIndex] = useState(0);
+  const [isClearBtn, setIsClearBtn] = useState(false);
 
   // console.log('++++++++++++++++++++++++++++++++++', myKeyWord);
+  // console.log('++++++++++++++++++++++++++++++++++', keyWord);
   // console.log({ isFirstRender });
   // console.log('=================================', myMovies);
   // console.log({ isMovieReadyToRender });
@@ -87,21 +92,38 @@ function App() {
   //   myMoviesSearchResult,
   //   myMoviesSearchResult && myMoviesSearchResult.length
   // );
-  // console.log('render', myMoviesToRender && myMoviesToRender.length);
+  // console.log(
+  //   'render',
+  //   myMoviesFilteredResult,
+  //   myMoviesFilteredResult && myMoviesFilteredResult.length
+  // );
   // console.log('render', myMoviesToRender);
   // console.log(myMovies, myMoviesSearchResult, isAllDataReady);
-  console.log('isFirstRender', isFirstRender, location, isLoader);
+  // console.log('isFirstRender', isFirstRender, location, isLoader);
   // console.log(allMovies);
-  // console.log(myMovies);
+  console.log(myMovies);
 
   const history = useHistory();
 
   useEffect(() => {
-    setLocation(history.location.pathname);
-    if (isFirstRender && location === '/saved-movies') {
+    if (
+      isFirstRender &&
+      location === '/saved-movies' &&
+      myMoviesFilteredResult.length === 0
+    ) {
       setIsLoader(true);
+      setIsMyMoviesUpdated(!isMyMoviesUpdated);
     }
   }, [location]);
+
+  useEffect(() => {
+    setSearchResultInfo('');
+    setSearchResultError('');
+  }, [location]);
+
+  useEffect(() => {
+    setLocation(history.location.pathname);
+  }, [isMovieMenuClicked]);
 
   // Authentication and Authorization
   const { isLoggedIn } = useAuth(
@@ -153,9 +175,13 @@ function App() {
     initialUser,
     initialMyMovies,
     readyToUseAllMovies,
-  } = useGetInitialData(token, isMyMoviesUpdated);
-
-  // console.log('initialUser, initialMyMovies, ', readyToUseAllMovies);
+  } = useGetInitialData(
+    token,
+    isMyMoviesUpdated,
+    setErrorMsg,
+    setSearchResultError,
+    setIsLoader
+  );
 
   useMemo(() => {
     setCurrentUser(initialUser);
@@ -172,13 +198,12 @@ function App() {
       const keyWordItem = localStorage.getItem('keyWord');
       const moviesToShowItems = JSON.parse(localStorage.getItem('movies'));
       setMoviesSearchResult(moviesToShowItems);
-      setKeyWord(keyWordItem);
+      keyWordItem === null ? setKeyWord('') : setKeyWord(keyWordItem);
       shortLengthItem === 'false' || !shortLengthItem
         ? setIsShortLength(false)
         : setIsShortLength(true);
-      setIsMoviesReadyToRender(true);
       const myKeyWordItem = localStorage.getItem('myKeyWord');
-      setMyKeyWord(myKeyWordItem);
+      myKeyWordItem === null ? setMyKeyWord('') : setMyKeyWord(myKeyWordItem);
     }
   }, [isFirstRender]);
 
@@ -187,35 +212,23 @@ function App() {
   };
 
   // movies rendering and show more button state
-  const handleResultMovies = (result) => {
-    console.log(result, result.length);
 
-    if (result.length === 0 && !keyWord) {
-      setSearchResultInfo('');
-    } else if (result.length === 0 && !isFirstRender) {
-      setSearchResultInfo('По вашему запросу ничего не найдено');
-    } else {
-      setSearchResultInfo('');
-    }
+  const onMoviesShowMore = () => {
+    setLastIndex(lastIndex + showMoreIncrement);
+  };
 
-    setMoviesToRender(result);
+  const resetMoviesIndex = () => {
+    setLastIndex(initialNumberItems);
   };
 
   const handleBtnMovies = (state) => {
     setIsShowMoreBtn(state);
   };
 
-  const moviesShowMoreBtn = useShowMore({
-    isReadyToRender: isMoviesReadyToRender,
-    resultToShow: moviesFilteredResult,
-    resultToRender: moviesToRender,
-    handleResult: handleResultMovies,
-    handleBtn: handleBtnMovies,
-    newRender: newRender,
-  });
-
-  const onMoviesShowMore = moviesShowMoreBtn.onShowMore;
-  const resetMoviesIndex = moviesShowMoreBtn.resetIndex;
+  useEffect(() => {
+    moviesFilteredResult &&
+      handleBtnMovies(lastIndex < moviesFilteredResult.length);
+  }, [lastIndex, moviesFilteredResult, newRender]);
 
   //movies search
   const getNewSearchResult = (moviesSet, newKeyWord) => {
@@ -234,16 +247,12 @@ function App() {
       setMoviesFilteredResult([]);
       localStorage.setItem('movies', JSON.stringify(moviesToShow));
       localStorage.setItem('keyWord', keyWord);
-      setIsMoviesReadyToRender(true);
       setNewRender(!newRender);
       setIsLoader(false);
     };
 
-    moviesToRender.length === 0 &&
-      !isFirstRender &&
-      allMovies &&
-      keyWord &&
-      searchMovies(keyWord);
+    // moviesFilteredResult.length === 0 &&
+    !isFirstRender && allMovies && keyWord && searchMovies(keyWord);
   }, [keyWord, newSearch]);
 
   //movies filter
@@ -263,60 +272,63 @@ function App() {
     }
   }, [moviesSearchResult, isShortLength]);
 
+  useEffect(() => {
+    const currentMessage = isShortLength
+      ? 'По вашему запросу ничего не найдено. Попробуйте поискать без фильтра "короткометражки".'
+      : 'По вашему запросу ничего не найдено';
+    !isFirstRender &&
+      moviesFilteredResult.length === 0 &&
+      keyWord &&
+      setSearchResultInfo(currentMessage);
+    moviesFilteredResult.length !== 0 && setSearchResultInfo('');
+  }, [moviesFilteredResult]);
+
   //search and filter triggers
   const resetMoviesResults = () => {
     setMoviesSearchResult([]);
     setMoviesFilteredResult([]);
-    setMoviesToRender([]);
   };
 
+  // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
   const onSearchMovies = (searchQuery) => {
-    // if (searchQuery.length === 0) {
-    //   setSearchError('Введите ключевое слово, пожалуйста');
-    // } else if (searchQuery.length >= keyWordMaxLength) {
-    //   setSearchError(
-    //     'Самое длинное словарное слово в русском языке состоит из 35 букв'
-    //   );
-    // } else if (searchResultInfo.length > 0) {
-    //   setSearchError(searchResultInfo);
-    // } else {
-    //   setIsClearBtn(true);
     setSearchResultInfo('');
-    setIsLoader(true);
-    setIsFirstRender(false);
-    if (searchQuery !== keyWord) {
-      resetMoviesResults();
-      setIsMoviesReadyToRender(false);
-      resetMoviesIndex();
-    } else {
+    if (!keyWord && !searchQuery) {
+      setSearchResultInfo('Введите ключевое слово, пожалуйста.');
+    } else if (searchQuery.length > 35) {
+      setSearchResultInfo(
+        'Самое длинное словарное слово в русском языке состоит из 35 букв.'
+      );
+      setIsClearBtn(true);
+    } else if (keyWord !== searchQuery && !!searchQuery) {
+      setIsFirstRender(false);
+      setIsLoader(true);
       resetMoviesIndex();
       resetMoviesResults();
       setNewSearch(!newSearch);
+      setKeyWord(searchQuery);
     }
-    setKeyWord(searchQuery);
   };
 
   const handleIsShortLength = (state) => {
     localStorage.setItem('isShortLength', state);
     setIsShortLength(state);
     setMoviesFilteredResult([]);
-    setMoviesToRender([]);
-    resetMoviesIndex();
   };
 
   // my movies search and filter triggers
   useEffect(() => {
     if (myMoviesSearchResult) {
       const moviesToShow = getMoviesToShow(myMoviesSearchResult);
-      setMyMoviesToRender(moviesToShow);
-      moviesToShow.length === 0 &&
-        !isFirstRender &&
-        setSearchResultInfo('По вашему запросу ничего не найдено');
+      setLastMyIndex(moviesToShow.length - 1);
+      setMyMoviesFilteredResult(moviesToShow);
       setIsLoader(false);
     }
   }, [myMoviesSearchResult, isShortLength]);
 
   useEffect(() => {
+    console.log('myMoviesSearchResult 2');
+
     const searchMyMovies = (myKeyWord) => {
       const moviesToShow = getNewSearchResult(myMovies, myKeyWord);
       setMyMoviesSearchResult(moviesToShow);
@@ -327,43 +339,71 @@ function App() {
 
   const resetMyMoviesResults = () => {
     setMyMoviesSearchResult([]);
-    setMyMoviesToRender([]);
+    setMyMoviesFilteredResult([]);
   };
 
   const onSearchMyMovies = (searchQuery) => {
-    // if (searchQuery.length === 0) {
-    //   setSearchError('Введите ключевое слово, пожалуйста');
-    // } else if (searchQuery.length >= keyWordMaxLength) {
-    //   setSearchError(
-    //     'Самое длинное словарное слово в русском языке состоит из 35 букв'
-    //   );
-    // } else if (searchResultInfo.length > 0) {
-    //   setSearchError(searchResultInfo);
-    // } else {
-    //   setIsClearBtn(true);
     setSearchResultInfo('');
-    setIsLoader(true);
-    setIsFirstRender(false);
-    resetMyMoviesResults();
-    localStorage.setItem('myKeyWord', searchQuery);
-    setMyKeyWord(searchQuery);
+    if (!keyWord && !searchQuery) {
+      setSearchResultInfo('Введите ключевое слово, пожалуйста.');
+    } else if (searchQuery.length > 35) {
+      setSearchResultInfo(
+        'Самое длинное словарное слово в русском языке состоит из 35 букв.'
+      );
+    } else if (myKeyWord !== searchQuery && !!searchQuery) {
+      setSearchResultInfo('');
+      setIsFirstRender(false);
+      localStorage.setItem('myKeyWord', searchQuery);
+      setMyKeyWord(searchQuery);
+    }
   };
+
+  //*************************************************************************
+
+  // const [inputValue, setInputValue] = useState('');
 
   const onClearSearchMovies = () => {
     console.log('clearSearchMovies');
+    setIsClearBtn(false);
     setSearchResultInfo('');
     setKeyWord('');
     resetMoviesResults();
-    localStorage.removeItem('keyWord');
+    localStorage.setItem('keyWord', '');
     localStorage.removeItem('movies');
     localStorage.removeItem('isShortLength');
   };
 
+  console.log(location, keyWord, myKeyWord);
+
+  useEffect(() => {
+    if (location === '/saved-movies') {
+      myKeyWord && setIsClearBtn(true);
+      !myKeyWord && setIsClearBtn(false);
+    } else if (location === '/movies') {
+      keyWord && setIsClearBtn(true);
+      !keyWord && setIsClearBtn(false);
+    }
+  }, [keyWord, myKeyWord, location]);
+
+  // useEffect(() => {
+  //   !keyWord && setIsClearBtn(false);
+  // }, []);
+  //
+  //
+  // useEffect(() => {
+  //   !myKeyWord && setIsClearBtn(false);
+  // }, []);
+
   const onClearSearchMyMovies = () => {
     setMyKeyWord('');
-    localStorage.removeItem('myKeyWord');
+    setSearchResultInfo('');
+    setIsClearBtn(false);
+    resetMyMoviesResults();
+    localStorage.setItem('myKeyWord', '');
     setMyMoviesSearchResult(myMovies);
   };
+
+  //*************************************************************************
 
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
@@ -386,13 +426,14 @@ function App() {
           }
           setMovieToFavorite({});
         })
-        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+        .catch((err) => handleError(err.status, setSearchResultError));
     };
     isLoggedIn && movieToFavorite.movieId && addToFavorite(movieToFavorite);
   }, [movieToFavorite]);
 
   useEffect(() => {
     const delFromFavorite = (movieToDel) => {
+      setIsLoader(true);
       const handleDelMovie = (movieArray, res) => {
         let indexOfDelMovie;
         movieArray.find((movie, index) => {
@@ -400,6 +441,8 @@ function App() {
           return movie.movieId === res.movieId;
         });
         delete movieArray[indexOfDelMovie]['_id'];
+        movieArray === moviesSearchResult &&
+          localStorage.setItem('movies', JSON.stringify(movieArray));
       };
 
       const handleDelMyMovie = (movieArray, res) => {
@@ -409,6 +452,7 @@ function App() {
           return movie._id === res._id;
         });
         movieArray.splice(indexOfDelMovie, 1);
+        setIsMyMoviesUpdated(!isMyMoviesUpdated);
       };
 
       mainApi
@@ -416,15 +460,14 @@ function App() {
         .then((res) => {
           if (res) {
             handleDelMyMovie(myMovies, res);
-            handleDelMyMovie(myMoviesToRender, res);
             handleDelMovie(allMovies, res);
             handleDelMovie(moviesSearchResult, res);
-            handleDelMovie(moviesToRender, res);
+            handleDelMovie(moviesFilteredResult, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           }
           setMovieToDelFromFavorite({});
         })
-        .catch((errStatus) => handleError(errStatus, setErrorMsg));
+        .catch((err) => handleError(err.status, setSearchResultError));
     };
     isLoggedIn &&
       movieToDelFromFavorite._id &&
@@ -461,7 +504,8 @@ function App() {
             onSearch={onSearchMovies}
             isShortLength={isShortLength}
             handleIsShortLength={handleIsShortLength}
-            moviesToRender={moviesToRender}
+            moviesFilteredResult={moviesFilteredResult}
+            lastIndex={lastIndex}
             onShowMore={onMoviesShowMore}
             isShowMoreBtn={isShowMoreBtn}
             onFavorite={onFavorite}
@@ -472,6 +516,8 @@ function App() {
             isMyMoviesUpdated={isMyMoviesUpdated}
             isLoader={isLoader}
             searchResultInfo={searchResultInfo}
+            searchResultError={searchResultError}
+            isClearBtn={isClearBtn}
             component={Movies}
           />
           <ProtectedRoute
@@ -479,7 +525,8 @@ function App() {
             isLoggedIn={isLoggedIn}
             onSearch={onSearchMyMovies}
             isTokenChecked={isTokenChecked}
-            myMoviesToRender={myMoviesToRender}
+            moviesFilteredResult={myMoviesFilteredResult}
+            lastIndex={lastMyIndex}
             handleIsShortLength={handleIsShortLength}
             isShortLength={isShortLength}
             handleMovieMenuClick={handleMovieMenuClick}
@@ -489,6 +536,7 @@ function App() {
             keyWord={myKeyWord}
             isLoader={isLoader}
             searchResultInfo={searchResultInfo}
+            isClearBtn={isClearBtn}
             component={SavedMovies}
           />
           <Route path='/signup'>
@@ -525,30 +573,3 @@ function App() {
 }
 
 export default App;
-
-// let indexOfUpdatedMovieInAllMovies;
-// const updatedMovie = allMovies.find((movie) => {
-//   indexOfUpdatedMovieInAllMovies = allMovies.indexOf(movie);
-//   return movie.movieId === res.data.movieId;
-// });
-//
-// allMovies[indexOfUpdatedMovieInAllMovies].isFavorite = true;
-// allMovies.splice(indexOfUpdatedMovieInAllMovies, 1, updatedMovie);
-//
-
-// main api get my movies  ----------------------------------
-
-// useEffect(() => {
-//   const getUserAndMyMovies = (token) => {
-//     mainApi
-//       .getUserAndMyMovies(token)
-//       .then(([user, myMovies]) => {
-//         // setCurrentUser(user);//??????
-//         // setMyMovies(myMovies);
-//         // setMyMoviesSearchResult(myMovies);
-//         // setMyMoviesToRender([]); //???????????????????
-//       })
-//       .catch((errStatus) => handleError(errStatus, setErrorMsg));
-//   };
-//   token && getUserAndMyMovies(token);
-// }, [token, isMyMoviesUpdated]);
