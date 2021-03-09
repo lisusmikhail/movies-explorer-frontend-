@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './AuthForm.css';
+import useValidation from '../../hooks/useValidation';
 
 function AuthForm(props) {
   const {
@@ -12,14 +13,32 @@ function AuthForm(props) {
     resetStates,
   } = props;
 
-  const user = useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
+
   const [values, setValues] = useState({ email: '', password: '', name: '' });
+  const [isDisplayError, setIsDisplayError] = useState({
+    email: false,
+    name: false,
+    password: false,
+  });
+
+  const {
+    isSubmitBtnActive,
+    errorElements,
+    handleDisplayErrorMsg,
+  } = useValidation({
+    values,
+    isDisplayError,
+    setIsDisplayError,
+  });
+
+  console.log(errorElements, isSubmitBtnActive);
 
   useMemo(() => {
-    if (user._id) {
-      setValues({ email: user.email, name: user.name });
+    if (currentUser._id) {
+      setValues({ email: currentUser.email, name: currentUser.name });
     }
-  }, [user]);
+  }, [currentUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,21 +74,25 @@ function AuthForm(props) {
               maxLength='60'
               required
               autoComplete='chrome-off'
+              pattern='[A-Za-z]+'
               value={values.name}
               onChange={handleChange}
+              onFocus={handleDisplayErrorMsg}
             />
             <span
               className={`auth-form__legend auth-form__legend_${formPurpose}`}
             >
               Имя
             </span>
-            <span className='auth-form__tips'>{}</span>
+            <span className='auth-form__tips'>
+              {isDisplayError.name && errorElements.name && errorElements.name}
+            </span>
           </label>
         )}
         <label className='auth-form__field-input'>
           <input
             className={`auth-form__input auth-form__input_${formPurpose} auth-form__input_${formPurpose}_mail`}
-            type='text'
+            type='email'
             id='second-auth-field'
             name='email'
             minLength='5'
@@ -78,13 +101,16 @@ function AuthForm(props) {
             autoComplete='off'
             value={values.email}
             onChange={handleChange}
+            onFocus={handleDisplayErrorMsg}
           />
           <span
             className={`auth-form__legend auth-form__legend_${formPurpose}`}
           >
             {formPurpose === 'profile' ? 'Почта' : 'E-mail'}
           </span>
-          <span className='auth-form__tips'>{}</span>
+          <span className='auth-form__tips'>
+            {isDisplayError.email && errorElements.email && errorElements.email}
+          </span>
         </label>
         {formPurpose !== 'profile' && (
           <label className={`auth-form__field-input`}>
@@ -99,16 +125,26 @@ function AuthForm(props) {
               autoComplete='off'
               value={values.password}
               onChange={handleChange}
+              onFocus={handleDisplayErrorMsg}
             />
             <span className='auth-form__legend'>Пароль</span>
-            <span className='auth-form__tips'>{}</span>
+            <span className='auth-form__tips'>
+              {isDisplayError.password &&
+                errorElements.password &&
+                errorElements.password}
+            </span>
           </label>
         )}
       </fieldset>
       <p className='auth-form__error-message'>{errorMsg}</p>
       <button
         type='submit'
-        className={`auth-form__submit-button auth-form__submit-button_${formPurpose}`}
+        className={
+          isSubmitBtnActive
+            ? `auth-form__submit-button auth-form__submit-button_${formPurpose}`
+            : `auth-form__submit-button auth-form__submit-button_${formPurpose} auth-form__submit-button_active`
+        }
+        disabled={!isSubmitBtnActive}
         onSubmit={handleSubmit}
       >
         {submitButtonTitle}

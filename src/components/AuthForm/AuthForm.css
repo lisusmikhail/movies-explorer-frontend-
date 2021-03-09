@@ -171,6 +171,10 @@
   cursor: pointer;
 }
 
+.auth-form__submit-button_active {
+  opacity: 0.8;
+}
+
 .auth-form__error-message {
   font-style: normal;
   font-weight: normal;
