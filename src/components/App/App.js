@@ -86,16 +86,16 @@ function App() {
   // console.log('filter', moviesFilteredResult && moviesFilteredResult.length);
   // console.log('filter', moviesFilteredResult);
   // console.log(currentUser);
-  // console.log(
-  //   'myMoviesSearchResult',
-  //   myMoviesSearchResult,
-  //   myMoviesSearchResult && myMoviesSearchResult.length
-  // );
-  // console.log(
-  //   'render',
-  //   myMoviesFilteredResult,
-  //   myMoviesFilteredResult && myMoviesFilteredResult.length
-  // );
+  console.log(
+    'myMoviesSearchResult',
+    myMoviesSearchResult,
+    myMoviesSearchResult && myMoviesSearchResult.length
+  );
+  console.log(
+    'render',
+    myMoviesFilteredResult,
+    myMoviesFilteredResult && myMoviesFilteredResult.length
+  );
   // console.log('render', myMoviesToRender);
   // console.log(myMovies, myMoviesSearchResult, isAllDataReady);
   // console.log('isFirstRender', isFirstRender, location, isLoader);
@@ -196,15 +196,14 @@ function App() {
       const shortLengthItem = localStorage.getItem('isShortLength');
       const keyWordItem = localStorage.getItem('keyWord');
       const moviesToShowItems = JSON.parse(localStorage.getItem('movies'));
-      moviesToShowItems === null
-        ? setMoviesSearchResult([])
-        : setMoviesSearchResult(moviesToShowItems);
+      setMoviesSearchResult(moviesToShowItems);
       keyWordItem === null ? setKeyWord('') : setKeyWord(keyWordItem);
+      keyWordItem.length > 0 &&
+        moviesToShowItems.length === 0 &&
+        setKeyWord('');
       shortLengthItem === 'false' || !shortLengthItem
         ? setIsShortLength(false)
         : setIsShortLength(true);
-      // const myKeyWordItem = localStorage.getItem('myKeyWord');
-      // myKeyWordItem === null ? setMyKeyWord('') : setMyKeyWord(myKeyWordItem);
     }
   }, [isFirstRender]);
 
@@ -320,7 +319,7 @@ function App() {
       setKeyWord(searchQuery);
     } else {
       console.log(
-        'onSearchMovies !!!!!!!!!!!!!',
+        'onSearchMovies  alert !!!!!!!!!!!!!',
         'keyWord=',
         keyWord,
         'searchQuery=',
@@ -331,11 +330,19 @@ function App() {
 
   const onSearchMyMovies = (searchQuery) => {
     setSearchResultInfo('');
-    if (myKeyWord !== searchQuery && !!searchQuery) {
+    if (searchQuery.length === 0 || searchQuery.length > 35) {
+      handleQueryException(searchQuery);
+    } else if (myKeyWord !== searchQuery && !!searchQuery) {
       setIsFirstRender(false);
       setMyKeyWord(searchQuery);
     } else {
-      handleQueryException(myKeyWord, searchQuery);
+      console.log(
+        'onSearchMyMovies  alert !!!!!!!!!!!!!',
+        'keyWord=',
+        keyWord,
+        'searchQuery=',
+        searchQuery
+      );
     }
   };
 
@@ -365,28 +372,22 @@ function App() {
     }
   }, [myMoviesSearchResult, isShortLength]);
 
-  console.log(moviesFilteredResult);
+  useEffect(() => {
+    !isClearBtn &&
+      myMoviesSearchResult &&
+      setMyMoviesFilteredResult(myMoviesSearchResult);
+  }, [isClearBtn]);
 
   useEffect(() => {
-    console.log('handleNoContentMsg 1');
-    handleNoContentMsg(moviesFilteredResult, keyWord);
+    location === '/movies' && handleNoContentMsg(moviesFilteredResult, keyWord);
   }, [moviesFilteredResult, newSearch, isShortLength]);
 
   useEffect(() => {
-    handleNoContentMsg(myMoviesFilteredResult, myKeyWord);
+    location === '/saved-movies' &&
+      handleNoContentMsg(myMoviesFilteredResult, myKeyWord);
   }, [myMoviesFilteredResult]);
 
   //clear search button
-
-  // console.log({
-  //   location,
-  //   keyWord,
-  //   myKeyWord,
-  //   isClearBtn,
-  //   searchResultInfo,
-  //   isFirstRender,
-  // });
-  // звука
   const onClearSearchMovies = () => {
     setKeyWord('');
     setSearchResultInfo('');
@@ -448,7 +449,6 @@ function App() {
 
       const handleDelMovie = (moviesSet, res) => {
         let indexOfDelMovie;
-        console.log(moviesSet);
         moviesSet.find((movie, index) => {
           indexOfDelMovie = index;
           return movie.movieId === res.movieId;
@@ -482,8 +482,6 @@ function App() {
             );
             handleDelMyMovie(myMovies, res);
             handleDelMovie(allMovies, res);
-            // handleDelMovie(moviesSearchResult, res);
-            // handleDelMovie(moviesFilteredResult, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           }
           setMovieToDelFromFavorite({});
