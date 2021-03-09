@@ -68,41 +68,20 @@ function App() {
   const [lastMyIndex, setLastMyIndex] = useState(0);
   const [isClearBtn, setIsClearBtn] = useState(false);
 
-  // console.log('++++++++++++++++++++++++++++++++++', myKeyWord);
-  // console.log('++++++++++++++++++++++++++++++++++', keyWord);
-  // console.log({ isFirstRender });
-  // console.log('=================================', myMovies);
-  // console.log({ isMovieReadyToRender });
-  // console.log(
-  //   'moviesSearchResult',
-  //   moviesSearchResult,
-  //   moviesSearchResult && moviesSearchResult.length
-  // );
-  // console.log(
-  //   'moviesToRender',
-  //   moviesToRender,
-  //   moviesToRender && moviesToRender.length
-  // );
-  // console.log('filter', moviesFilteredResult && moviesFilteredResult.length);
-  // console.log('filter', moviesFilteredResult);
-  // console.log(currentUser);
-  console.log(
-    'myMoviesSearchResult',
-    myMoviesSearchResult,
-    myMoviesSearchResult && myMoviesSearchResult.length
-  );
-  console.log(
-    'render',
-    myMoviesFilteredResult,
-    myMoviesFilteredResult && myMoviesFilteredResult.length
-  );
-  // console.log('render', myMoviesToRender);
-  // console.log(myMovies, myMoviesSearchResult, isAllDataReady);
-  // console.log('isFirstRender', isFirstRender, location, isLoader);
-  // console.log(allMovies);
-  // console.log(myMovies);
+  console.log(isFirstRender);
+  console.log(allMovies, moviesSearchResult, moviesFilteredResult);
+  console.log(myMovies, myMoviesSearchResult, myMoviesFilteredResult);
 
+  // useEffect(() => {
+  //   localStorage.setItem('movies', JSON.stringify(moviesSearchResult));
+  // }, [moviesSearchResult]);
+
+  //handle location
   const history = useHistory();
+
+  const handleMovieMenuClick = () => {
+    setIsMovieMenuClicked(!isMovieMenuClicked);
+  };
 
   useEffect(() => {
     if (
@@ -182,7 +161,8 @@ function App() {
     setIsLoader
   );
 
-  useMemo(() => {
+  useEffect(() => {
+    console.log('srabotalo', readyToUseAllMovies);
     setCurrentUser(initialUser);
     setMyMovies(initialMyMovies);
     setMyMoviesSearchResult(initialMyMovies);
@@ -196,9 +176,12 @@ function App() {
       const shortLengthItem = localStorage.getItem('isShortLength');
       const keyWordItem = localStorage.getItem('keyWord');
       const moviesToShowItems = JSON.parse(localStorage.getItem('movies'));
-      setMoviesSearchResult(moviesToShowItems);
+      moviesToShowItems === null
+        ? setMoviesSearchResult([])
+        : setMoviesSearchResult(moviesToShowItems);
       keyWordItem === null ? setKeyWord('') : setKeyWord(keyWordItem);
-      keyWordItem.length > 0 &&
+      keyWordItem !== null &&
+        keyWordItem.length > 0 &&
         moviesToShowItems.length === 0 &&
         setKeyWord('');
       shortLengthItem === 'false' || !shortLengthItem
@@ -225,14 +208,7 @@ function App() {
       handleBtnMovies(lastIndex < moviesFilteredResult.length);
   }, [lastIndex, moviesFilteredResult, newRender]);
 
-  //general states and functions
-  const handleMovieMenuClick = () => {
-    console.log('clicked menu');
-    setIsMovieMenuClicked(!isMovieMenuClicked);
-    // setSearchResultInfo('');
-    // setSearchResultError('');
-  };
-
+  //reset functions
   const resetMyMoviesResults = () => {
     setMyMoviesSearchResult([]);
     setMyMoviesFilteredResult([]);
@@ -243,6 +219,7 @@ function App() {
     setMoviesFilteredResult([]);
   };
 
+  // handle checkbox state
   const handleIsShortLength = (state) => {
     localStorage.setItem('isShortLength', state);
     setIsShortLength(state);
@@ -260,7 +237,6 @@ function App() {
   };
 
   const handleNoContentMsg = (currentMovieSet, currentKeyWord) => {
-    console.log('handleNoContentMsg', currentMovieSet, currentKeyWord);
     const currentMessage = isShortLength
       ? 'По вашему запросу ничего не найдено. Попробуйте поискать без фильтра "короткометражки".'
       : 'По вашему запросу ничего не найдено.';
@@ -285,6 +261,7 @@ function App() {
   useEffect(() => {
     const searchMovies = (keyWord) => {
       const moviesToShow = getNewSearchResult(allMovies, keyWord);
+      console.log('moviesToShow', moviesToShow);
       setMoviesSearchResult(moviesToShow);
       setMoviesFilteredResult([]);
       localStorage.setItem('movies', JSON.stringify(moviesToShow));
@@ -294,7 +271,7 @@ function App() {
     };
 
     !isFirstRender && allMovies && keyWord && searchMovies(keyWord);
-  }, [keyWord, newSearch]);
+  }, [keyWord, newSearch, isAllDataReady]);
 
   useEffect(() => {
     const searchMyMovies = (myKeyWord) => {
@@ -307,8 +284,6 @@ function App() {
 
   const onSearchMovies = (searchQuery) => {
     setSearchResultInfo('');
-    console.log('onSearchMovies', keyWord, searchQuery);
-    console.log('onSearchMovies', keyWord !== searchQuery && !!searchQuery);
     if (searchQuery.length === 0 || searchQuery.length > 35) {
       handleQueryException(searchQuery);
     } else if (keyWord !== searchQuery && !!searchQuery) {
@@ -403,7 +378,6 @@ function App() {
     setSearchResultInfo('');
     setIsClearBtn(false);
     resetMyMoviesResults();
-    // localStorage.setItem('myKeyWord', '');
     setMyMoviesSearchResult(myMovies);
   };
 
@@ -446,7 +420,7 @@ function App() {
   useEffect(() => {
     const delFromFavorite = (movieToDel) => {
       setIsLoader(true);
-
+      setIsFirstRender(false);
       const handleDelMovie = (moviesSet, res) => {
         let indexOfDelMovie;
         moviesSet.find((movie, index) => {
@@ -488,7 +462,7 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
-          handleError(err.status, setSearchResultError, 'del');
+          handleError(err.status, setSearchResultError);
         });
     };
 
