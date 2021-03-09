@@ -78,7 +78,6 @@ function App() {
   //   moviesSearchResult,
   //   moviesSearchResult && moviesSearchResult.length
   // );
-
   // console.log(
   //   'moviesToRender',
   //   moviesToRender,
@@ -226,7 +225,6 @@ function App() {
   }, [lastIndex, moviesFilteredResult, newRender]);
 
   //general states and functions
-
   const handleMovieMenuClick = () => {
     setIsMovieMenuClicked(!isMovieMenuClicked);
   };
@@ -234,6 +232,17 @@ function App() {
   const resetMyMoviesResults = () => {
     setMyMoviesSearchResult([]);
     setMyMoviesFilteredResult([]);
+  };
+
+  const resetMoviesResults = () => {
+    setMoviesSearchResult([]);
+    setMoviesFilteredResult([]);
+  };
+
+  const handleIsShortLength = (state) => {
+    localStorage.setItem('isShortLength', state);
+    setIsShortLength(state);
+    setMoviesFilteredResult([]);
   };
 
   //movies and my movies search
@@ -333,27 +342,6 @@ function App() {
   }, [moviesSearchResult, isShortLength]);
 
   useEffect(() => {
-    handleNoContentMsg(moviesFilteredResult, myKeyWord);
-  }, [moviesFilteredResult]);
-
-  useEffect(() => {
-    handleNoContentMsg(myMoviesFilteredResult, keyWord);
-  }, [myMoviesFilteredResult]);
-
-  //search and filter triggers
-  const resetMoviesResults = () => {
-    setMoviesSearchResult([]);
-    setMoviesFilteredResult([]);
-  };
-
-  const handleIsShortLength = (state) => {
-    localStorage.setItem('isShortLength', state);
-    setIsShortLength(state);
-    setMoviesFilteredResult([]);
-  };
-
-  // my movies search and filter triggers
-  useEffect(() => {
     if (myMoviesSearchResult) {
       const moviesToShow = getMoviesToShow(myMoviesSearchResult);
       setLastMyIndex(moviesToShow.length - 1);
@@ -362,41 +350,24 @@ function App() {
     }
   }, [myMoviesSearchResult, isShortLength]);
 
-  //*************************************************************************
+  useEffect(() => {
+    handleNoContentMsg(moviesFilteredResult, myKeyWord);
+  }, [moviesFilteredResult]);
 
-  // const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    handleNoContentMsg(myMoviesFilteredResult, keyWord);
+  }, [myMoviesFilteredResult]);
 
+  //clear search button
   const onClearSearchMovies = () => {
-    console.log('clearSearchMovies');
-    setIsClearBtn(false);
-    setSearchResultInfo('');
     setKeyWord('');
+    setSearchResultInfo('');
+    setIsClearBtn(false);
     resetMoviesResults();
     localStorage.setItem('keyWord', '');
     localStorage.removeItem('movies');
     localStorage.removeItem('isShortLength');
   };
-
-  console.log(location, keyWord, myKeyWord);
-
-  useEffect(() => {
-    if (location === '/saved-movies') {
-      myKeyWord && setIsClearBtn(true);
-      !myKeyWord && setIsClearBtn(false);
-    } else if (location === '/movies') {
-      keyWord && setIsClearBtn(true);
-      !keyWord && setIsClearBtn(false);
-    }
-  }, [keyWord, myKeyWord, location]);
-
-  // useEffect(() => {
-  //   !keyWord && setIsClearBtn(false);
-  // }, []);
-  //
-  //
-  // useEffect(() => {
-  //   !myKeyWord && setIsClearBtn(false);
-  // }, []);
 
   const onClearSearchMyMovies = () => {
     setMyKeyWord('');
@@ -407,11 +378,17 @@ function App() {
     setMyMoviesSearchResult(myMovies);
   };
 
-  //*************************************************************************
+  useEffect(() => {
+    if (location === '/saved-movies') {
+      myKeyWord ? setIsClearBtn(true) : setIsClearBtn(false);
+    } else if (location === '/movies') {
+      keyWord ? setIsClearBtn(true) : setIsClearBtn(false);
+    }
+  }, [keyWord, myKeyWord, location]);
 
+  // add favorite
   useEffect(() => {
     const addToFavorite = (movieToAdd) => {
-      // console.log('onFavorite in App 2', token, movieToAdd);
       mainApi
         .addToFavorite(movieToAdd, token)
         .then((res) => {
@@ -432,9 +409,11 @@ function App() {
         })
         .catch((err) => handleError(err.status, setSearchResultError));
     };
+
     isLoggedIn && movieToFavorite.movieId && addToFavorite(movieToFavorite);
   }, [movieToFavorite]);
 
+  // del favorite
   useEffect(() => {
     const delFromFavorite = (movieToDel) => {
       setIsLoader(true);
@@ -473,6 +452,7 @@ function App() {
         })
         .catch((err) => handleError(err.status, setSearchResultError));
     };
+
     isLoggedIn &&
       movieToDelFromFavorite._id &&
       delFromFavorite(movieToDelFromFavorite);
