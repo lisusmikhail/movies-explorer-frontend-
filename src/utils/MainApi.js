@@ -75,10 +75,6 @@ const getMyMovies = (token) => {
   }).then((res) => handleResponse(res));
 };
 
-export const getUserAndMyMovies = (token) => {
-  return Promise.all([getUser(token), getMyMovies(token)]);
-};
-
 export const getInitialData = (token) => {
   return Promise.all([getUser(token), getMyMovies(token), getMovies()]);
 };

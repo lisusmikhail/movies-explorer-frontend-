@@ -272,7 +272,10 @@ function App() {
   const onSearchMovies = (searchQuery) => {
     setSearchResultInfo('');
     setSearchResultError('');
-    if (searchQuery.length === 0 || searchQuery.length > 35) {
+    if (
+      (searchQuery.length === 0 && keyWord.length === 0) ||
+      searchQuery.length > 35
+    ) {
       handleQueryException(searchQuery);
     } else if (keyWord !== searchQuery && !!searchQuery) {
       setIsFirstRender(false);
@@ -287,7 +290,10 @@ function App() {
   const onSearchMyMovies = (searchQuery) => {
     setSearchResultInfo('');
     setSearchResultError('');
-    if (searchQuery.length === 0 || searchQuery.length > 35) {
+    if (
+      (searchQuery.length === 0 && myKeyWord.length === 0) ||
+      searchQuery.length > 35
+    ) {
       handleQueryException(searchQuery);
     } else if (myKeyWord !== searchQuery && !!searchQuery) {
       setIsFirstRender(false);
