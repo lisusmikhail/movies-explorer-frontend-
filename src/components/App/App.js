@@ -31,7 +31,6 @@ function App() {
   const [searchResultError, setSearchResultError] = useState('');
   //auth
   const [isLogOut, setIsLogOut] = useState(false);
-  const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [token, setToken] = useState('');
   const [credentials, setCredentials] = useState({});
@@ -99,7 +98,6 @@ function App() {
     credentials,
     setErrorMsg,
     setToken,
-    setIsTokenChecked,
     isLogOut,
     setIsLogOut
   );
@@ -251,7 +249,6 @@ function App() {
   useEffect(() => {
     const searchMovies = (keyWord) => {
       const moviesToShow = getNewSearchResult(allMovies, keyWord);
-      console.log('moviesToShow', moviesToShow);
       setMoviesSearchResult(moviesToShow);
       setMoviesFilteredResult([]);
       localStorage.setItem('movies', JSON.stringify(moviesToShow));
@@ -386,8 +383,6 @@ function App() {
             moviesSearchResult[indexOfAdd]._id = res.data._id;
             localStorage.setItem('movies', JSON.stringify(moviesSearchResult));
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
-          } else {
-            console.log('Произошла ошибка');
           }
           setMovieToFavorite({});
         })
@@ -459,7 +454,6 @@ function App() {
           <ProtectedRoute
             path='/profile'
             isLoggedIn={isLoggedIn}
-            isTokenChecked={isTokenChecked}
             onAuth={onEditProfile}
             resetStates={resetStates}
             errorMsg={errorMsg}

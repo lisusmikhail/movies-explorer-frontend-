@@ -3,14 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { handleError } from '../utils/ErrorHandler';
 import * as mainApi from '../utils/MainApi';
 
-function useAuth(
-  credentials,
-  setErrorMsg,
-  setToken,
-  setIsTokenChecked,
-  isLogOut,
-  setIsLogOut
-) {
+function useAuth(credentials, setErrorMsg, setToken, isLogOut, setIsLogOut) {
   const history = useHistory();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { email, password, name } = credentials;
@@ -62,12 +55,9 @@ function useAuth(
           .then((res) => {
             if (res) {
               !isLogOut && setIsLoggedIn(true);
-              setIsTokenChecked(true);
             }
           })
           .catch((err) => handleError(err.status, setErrorMsg));
-      } else {
-        setIsTokenChecked(true);
       }
     };
     handleTokenCheck();
