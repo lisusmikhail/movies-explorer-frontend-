@@ -470,23 +470,20 @@ function App() {
           <ProtectedRoute
             path='/movies'
             isLoggedIn={isLoggedIn}
-            isTokenChecked={isTokenChecked}
             onSearch={onSearchMovies}
             isShortLength={isShortLength}
             handleIsShortLength={handleIsShortLength}
-            moviesFilteredResult={moviesFilteredResult}
-            lastIndex={lastIndex}
             onShowMore={onMoviesShowMore}
             isShowMoreBtn={isShowMoreBtn}
             onFavorite={onFavorite}
             handleMovieMenuClick={handleMovieMenuClick}
-            myMovies={myMovies}
             onClearSearch={onClearSearchMovies}
             keyWord={keyWord}
-            isMyMoviesUpdated={isMyMoviesUpdated}
             isLoader={isLoader}
             searchResultInfo={searchResultInfo}
             searchResultError={searchResultError}
+            moviesFilteredResult={moviesFilteredResult}
+            lastIndex={lastIndex}
             isClearBtn={isClearBtn}
             component={Movies}
           />
@@ -494,13 +491,11 @@ function App() {
             path='/saved-movies'
             isLoggedIn={isLoggedIn}
             onSearch={onSearchMyMovies}
-            isTokenChecked={isTokenChecked}
             moviesFilteredResult={myMoviesFilteredResult}
             lastIndex={lastMyIndex}
             handleIsShortLength={handleIsShortLength}
             isShortLength={isShortLength}
             handleMovieMenuClick={handleMovieMenuClick}
-            myMovies={myMovies}
             onClearSearch={onClearSearchMyMovies}
             onFavorite={onFavorite}
             keyWord={myKeyWord}

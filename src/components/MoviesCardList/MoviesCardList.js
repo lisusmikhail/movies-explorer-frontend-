@@ -3,14 +3,9 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 
 function MoviesCardList({
-  favoriteOnly,
-  moviesToRender,
   onShowMore,
   isShowMoreBtn,
   onFavorite,
-  pageName,
-  myMovies,
-  isMyMoviesUpdated,
   moviesFilteredResult,
   lastIndex,
 }) {
@@ -24,11 +19,7 @@ function MoviesCardList({
                 <MoviesCard
                   movie={movie}
                   key={movie._id || movie.movieId}
-                  favoriteOnly={favoriteOnly}
                   onFavorite={onFavorite}
-                  pageName={pageName}
-                  myMovies={myMovies}
-                  isMyMoviesUpdated={isMyMoviesUpdated}
                 />
               );
             } else {

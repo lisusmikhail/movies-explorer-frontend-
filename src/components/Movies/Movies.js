@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Movies.css';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import SearchForm from '../SearchForm/SearchForm';
 
 function Movies(props) {
@@ -17,10 +16,8 @@ function Movies(props) {
     isShowMoreBtn,
     onFavorite,
     handleMovieMenuClick,
-    myMovies,
     onClearSearch,
     keyWord,
-    isMyMoviesUpdated,
     isLoader,
     searchResultInfo,
     searchResultError,
@@ -28,8 +25,6 @@ function Movies(props) {
     lastIndex,
     isClearBtn,
   } = props;
-
-  // console.log(moviesToRender);
 
   return (
     <>
@@ -50,15 +45,11 @@ function Movies(props) {
           isClearBtn={isClearBtn}
         />
         <MoviesCardList
-          favoriteOnly={false}
           moviesFilteredResult={moviesFilteredResult}
           lastIndex={lastIndex}
           onShowMore={onShowMore}
           isShowMoreBtn={isShowMoreBtn}
           onFavorite={onFavorite}
-          pageName={'allMovies'}
-          myMovies={myMovies}
-          isMyMoviesUpdated={isMyMoviesUpdated}
         />
       </div>
       <Footer />

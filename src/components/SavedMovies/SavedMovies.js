@@ -13,17 +13,16 @@ function SavedMovies(props) {
     handleIsShortLength,
     isShortLength,
     handleMovieMenuClick,
-    myMovies,
     onSearch,
     onClearSearch,
     keyWord,
     onFavorite,
     isLoader,
     searchResultInfo,
+    searchResultError,
     moviesFilteredResult,
     lastIndex,
     isClearBtn,
-    searchResultError,
   } = props;
   return (
     <>
@@ -44,13 +43,10 @@ function SavedMovies(props) {
           isClearBtn={isClearBtn}
         />
         <MoviesCardList
-          favoriteOnly={false}
           onShowMore={onShowMore}
           moviesFilteredResult={moviesFilteredResult}
           lastIndex={lastIndex}
           onFavorite={onFavorite}
-          pageName={'myMovies'}
-          myMovies={myMovies}
         />
       </div>
       <Footer />

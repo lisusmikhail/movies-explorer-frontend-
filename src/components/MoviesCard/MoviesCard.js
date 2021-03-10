@@ -7,7 +7,7 @@ import delFavorite from '../../images/icon__del_favorite.svg';
 import { timeConversion } from '../../utils/helpers';
 
 function MoviesCard(props) {
-  const { movie, onFavorite, isMyMoviesUpdated } = props;
+  const { movie, onFavorite } = props;
   const { nameRU, image, duration, trailer, _id } = movie;
   const [myHeart, setMyHeart] = useState('');
   const history = useHistory();
@@ -24,7 +24,6 @@ function MoviesCard(props) {
   }, [location]);
 
   function handleFavorite() {
-    console.log('click');
     onFavorite(movie);
   }
 
