@@ -1,7 +1,6 @@
-// export const BASE_URL = '//api.myvideobookmark.com';
 import { getMovies } from './MoviesApi';
-
-export const BASE_URL = '//localhost:3000';
+export const BASE_URL = '//api.myvideobookmark.com';
+// export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
   if (res.ok) {
