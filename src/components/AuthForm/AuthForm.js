@@ -32,8 +32,6 @@ function AuthForm(props) {
     setIsDisplayError,
   });
 
-  console.log(errorElements, isSubmitBtnActive);
-
   useMemo(() => {
     if (currentUser._id) {
       setValues({ email: currentUser.email, name: currentUser.name });

@@ -10,8 +10,6 @@ function useValidation({ values, isDisplayError, setIsDisplayError }) {
     setIsDisplayError({ ...isDisplayError, [name]: true });
   }
 
-  console.log(inputElements);
-
   useEffect(() => {
     const openFormElement = document.querySelector('.auth-form');
     openFormElement &&
@@ -51,8 +49,6 @@ function useValidation({ values, isDisplayError, setIsDisplayError }) {
 
   useEffect(() => {
     inputElements.forEach((inputElement) => {
-      console.log(inputElement.name);
-
       setErrorElements((prevState) => {
         return {
           ...prevState,
