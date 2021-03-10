@@ -14,7 +14,7 @@ function Header(props) {
   const [isMenuClicked, setIsMenuClicked] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleMenuClick = () => {
+  function handleMenuClick() {
     if (!isMenuClicked) {
       setIsMenuClicked(true);
       setIsMenuOpen(true);
@@ -22,7 +22,7 @@ function Header(props) {
       setIsMenuClicked(false);
       setIsMenuOpen(false);
     }
-  };
+  }
 
   function handleNavClick() {
     setIsMenuClicked(true);

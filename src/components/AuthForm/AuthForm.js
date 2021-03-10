@@ -38,17 +38,17 @@ function AuthForm(props) {
     }
   }, [currentUser]);
 
-  const handleChange = (e) => {
+  function handleChange(e) {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
-  };
+  }
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
     resetStates();
     const { email, password, name } = values;
     onAuth(email, password, name);
-  };
+  }
 
   return (
     <form

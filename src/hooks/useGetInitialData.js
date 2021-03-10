@@ -18,6 +18,7 @@ function useGetInitialData(
 
   useEffect(() => {
     const getInitialData = (token) => {
+      setIsLoader(true);
       mainApi
         .getInitialData(token)
         .then(([user, myMovies, allMovies]) => {
