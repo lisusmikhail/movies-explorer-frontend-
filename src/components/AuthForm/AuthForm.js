@@ -119,7 +119,7 @@ function AuthForm(props) {
         {formPurpose !== 'profile' && (
           <label className={`auth-form__field-input`}>
             <input
-              className='auth-form__input'
+              className='auth-form__input auth-form__input_style_red'
               type='password'
               id='third-field-person'
               name='password'

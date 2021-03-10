@@ -70,6 +70,10 @@
   text-align: left;
 }
 
+.auth-form__input_style_red {
+  color: #ee3465;
+}
+
 .auth-form__input_profile {
   text-align: right;
   font-style: normal;
