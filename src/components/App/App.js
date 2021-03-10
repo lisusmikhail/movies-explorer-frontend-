@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import './App.css';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import useAuth from '../../hooks/useAuth';
 import useGetInitialData from '../../hooks/useGetInitialData';
 import {
-  initialNumberItems,
-  keyWordMaxLength,
-  shortMovieThresholdDuration,
-  showMoreIncrement,
+  INITIAL_NUMBER_OF_ITEMS,
+  SHORT_MOVIE_THRESHOLD_DURATION,
+  SHOW_MORE_INCREMENT,
 } from '../../utils/constants';
 import useEditProfile from '../../hooks/useEditProfile';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as mainApi from '../../utils/MainApi';
-import { handleError } from '../../utils/error-handler';
+import { handleError } from '../../utils/ErrorHandler';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
@@ -26,11 +25,11 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
   const [location, setLocation] = useState('');
+  //errors
   const [errorMsg, setErrorMsg] = useState('');
   const [searchResultInfo, setSearchResultInfo] = useState('');
   const [searchResultError, setSearchResultError] = useState('');
-
-  //user
+  //auth
   const [isLogOut, setIsLogOut] = useState(false);
   const [isTokenChecked, setIsTokenChecked] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -55,26 +54,18 @@ function App() {
   // movies rendering
   const [newSearch, setNewSearch] = useState(false);
   const [newRender, setNewRender] = useState(false);
-  const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
   const [isMovieMenuClicked, setIsMovieMenuClicked] = useState(false);
   const [isAllDataReady, setIsAllDataReady] = useState(false);
+  //on show more button
+  const [isShowMoreBtn, setIsShowMoreBtn] = useState(false);
+  const [lastIndex, setLastIndex] = useState(INITIAL_NUMBER_OF_ITEMS);
+  const [lastMyIndex, setLastMyIndex] = useState(0);
+  const [isClearBtn, setIsClearBtn] = useState(false);
   // favorite
   const [movieToFavorite, setMovieToFavorite] = useState({});
   const [movieToDelFromFavorite, setMovieToDelFromFavorite] = useState({});
   //loader
   const [isLoader, setIsLoader] = useState(false);
-  //on show more button
-  const [lastIndex, setLastIndex] = useState(initialNumberItems);
-  const [lastMyIndex, setLastMyIndex] = useState(0);
-  const [isClearBtn, setIsClearBtn] = useState(false);
-
-  console.log(isFirstRender);
-  console.log(allMovies, moviesSearchResult, moviesFilteredResult);
-  console.log(myMovies, myMoviesSearchResult, myMoviesFilteredResult);
-
-  // useEffect(() => {
-  //   localStorage.setItem('movies', JSON.stringify(moviesSearchResult));
-  // }, [moviesSearchResult]);
 
   //handle location
   const history = useHistory();
@@ -162,7 +153,6 @@ function App() {
   );
 
   useEffect(() => {
-    console.log('srabotalo', readyToUseAllMovies);
     setCurrentUser(initialUser);
     setMyMovies(initialMyMovies);
     setMyMoviesSearchResult(initialMyMovies);
@@ -192,11 +182,11 @@ function App() {
 
   // movies rendering and show more button state
   const onMoviesShowMore = () => {
-    setLastIndex(lastIndex + showMoreIncrement);
+    setLastIndex(lastIndex + SHOW_MORE_INCREMENT);
   };
 
   const resetMoviesIndex = () => {
-    setLastIndex(initialNumberItems);
+    setLastIndex(INITIAL_NUMBER_OF_ITEMS);
   };
 
   const handleBtnMovies = (state) => {
@@ -284,47 +274,35 @@ function App() {
 
   const onSearchMovies = (searchQuery) => {
     setSearchResultInfo('');
+    setSearchResultError('');
     if (searchQuery.length === 0 || searchQuery.length > 35) {
       handleQueryException(searchQuery);
     } else if (keyWord !== searchQuery && !!searchQuery) {
       setIsFirstRender(false);
+      setIsClearBtn(true);
       resetMoviesIndex();
       resetMoviesResults();
       setNewSearch(!newSearch);
       setKeyWord(searchQuery);
-    } else {
-      console.log(
-        'onSearchMovies  alert !!!!!!!!!!!!!',
-        'keyWord=',
-        keyWord,
-        'searchQuery=',
-        searchQuery
-      );
     }
   };
 
   const onSearchMyMovies = (searchQuery) => {
     setSearchResultInfo('');
+    setSearchResultError('');
     if (searchQuery.length === 0 || searchQuery.length > 35) {
       handleQueryException(searchQuery);
     } else if (myKeyWord !== searchQuery && !!searchQuery) {
       setIsFirstRender(false);
+      setIsClearBtn(true);
       setMyKeyWord(searchQuery);
-    } else {
-      console.log(
-        'onSearchMyMovies  alert !!!!!!!!!!!!!',
-        'keyWord=',
-        keyWord,
-        'searchQuery=',
-        searchQuery
-      );
     }
   };
 
   //movies filter
   const getMoviesToShow = (moviesResult) => {
     const checkMovie = (movie) => {
-      const isShort = movie['duration'] < shortMovieThresholdDuration;
+      const isShort = movie['duration'] < SHORT_MOVIE_THRESHOLD_DURATION;
       return !isShortLength || isShort;
     };
     return moviesResult.filter(checkMovie);
@@ -366,6 +344,7 @@ function App() {
   const onClearSearchMovies = () => {
     setKeyWord('');
     setSearchResultInfo('');
+    setSearchResultError('');
     setIsClearBtn(false);
     resetMoviesResults();
     localStorage.setItem('keyWord', '');
@@ -376,6 +355,7 @@ function App() {
   const onClearSearchMyMovies = () => {
     setMyKeyWord('');
     setSearchResultInfo('');
+    setSearchResultError('');
     setIsClearBtn(false);
     resetMyMoviesResults();
     setMyMoviesSearchResult(myMovies);
@@ -396,6 +376,7 @@ function App() {
         .addToFavorite(movieToAdd, token)
         .then((res) => {
           if (res) {
+            setSearchResultError('');
             let indexOfAdd;
             moviesSearchResult.find((movie) => {
               indexOfAdd = moviesSearchResult.indexOf(movie);
@@ -445,15 +426,8 @@ function App() {
       mainApi
         .delFromFavorite(movieToDel, token)
         .then((res) => {
-          console.log('res=>', res);
           if (res) {
-            console.log(
-              allMovies,
-              'search=',
-              moviesSearchResult,
-              'filtr=>',
-              moviesFilteredResult
-            );
+            setSearchResultError('');
             handleDelMyMovie(myMovies, res);
             handleDelMovie(allMovies, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
@@ -461,7 +435,6 @@ function App() {
           setMovieToDelFromFavorite({});
         })
         .catch((err) => {
-          console.log(err);
           handleError(err.status, setSearchResultError);
         });
     };

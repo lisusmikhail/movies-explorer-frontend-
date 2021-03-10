@@ -1,4 +1,4 @@
-export const shortMovieThresholdDuration = 100;
-export const keyWordMaxLength = 35;
-export const initialNumberItems = 6;
-export const showMoreIncrement = 3;
+export const SHORT_MOVIE_THRESHOLD_DURATION = 40;
+export const KEY_WORD_MAX_LENGTH = 35;
+export const INITIAL_NUMBER_OF_ITEMS = 6;
+export const SHOW_MORE_INCREMENT = 3;

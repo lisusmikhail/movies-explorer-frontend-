@@ -4,6 +4,7 @@ import './MoviesCard.css';
 import heart from '../../images/icon__heart_empty.png';
 import activeHeart from '../../images/icon__heart_active.png';
 import delFavorite from '../../images/icon__del_favorite.svg';
+import { timeConversion } from '../../utils/helpers';
 
 function MoviesCard(props) {
   const { movie, onFavorite, isMyMoviesUpdated } = props;
@@ -11,6 +12,8 @@ function MoviesCard(props) {
   const [myHeart, setMyHeart] = useState('');
   const history = useHistory();
   const location = history.location.pathname;
+
+  const durationToDisplay = timeConversion(duration);
 
   useEffect(() => {
     if (location === '/saved-movies') {
@@ -30,7 +33,7 @@ function MoviesCard(props) {
       <div className='movies-card__info'>
         <div className='movies-card__description'>
           <h2 className='movies-card__title'>{nameRU}</h2>
-          <p className='movies-card__duration'>{duration}</p>
+          <p className='movies-card__duration'>{durationToDisplay}</p>
         </div>
         <img
           className='movies-card__favorite'

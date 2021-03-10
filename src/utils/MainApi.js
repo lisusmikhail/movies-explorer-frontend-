@@ -4,9 +4,7 @@ import { getMovies } from './MoviesApi';
 export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
-  // console.log(res);
   if (res.ok) {
-    // console.log('responce ok');
     return res.json();
   }
   return Promise.reject(res);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { handleError } from '../utils/error-handler';
+import { handleError } from '../utils/ErrorHandler';
 import * as mainApi from '../utils/MainApi';
 
 function useAuth(
@@ -17,7 +17,6 @@ function useAuth(
 
   useEffect(() => {
     const onSignIn = (email, password) => {
-      console.log(email, password);
       mainApi
         .authorize(email, password)
         .then((data) => {
@@ -41,8 +40,6 @@ function useAuth(
           if (res) {
             setErrorMsg('');
             onSignIn(email, password);
-          } else {
-            console.log('Произошла ошибка');
           }
         })
         .catch((err) => handleError(err.status, setErrorMsg));

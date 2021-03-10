@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import ClearSearchIcon from '../../images/clear_search.svg';
-import { keyWordMaxLength } from '../../utils/constants';
+import { KEY_WORD_MAX_LENGTH } from '../../utils/constants';
 
 function SearchForm({
   onSearch,

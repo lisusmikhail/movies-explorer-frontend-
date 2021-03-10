@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './AuthForm.css';
 import useValidation from '../../hooks/useValidation';
@@ -85,7 +85,11 @@ function AuthForm(props) {
               Имя
             </span>
             <span className='auth-form__tips'>
-              {isDisplayError.name && errorElements.name && errorElements.name}
+              {isDisplayError.name &&
+                errorElements.name &&
+                (errorElements.name === 'Please match the requested format.'
+                  ? 'В имени допустимы только латинские буквы'
+                  : errorElements.name)}
             </span>
           </label>
         )}

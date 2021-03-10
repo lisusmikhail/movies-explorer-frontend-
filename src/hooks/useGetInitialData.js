@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { handleError } from '../utils/error-handler';
+import { handleError } from '../utils/ErrorHandler';
+import { moviePreparation } from '../utils/helpers';
 import * as mainApi from '../utils/MainApi';
 
 function useGetInitialData(
@@ -42,27 +43,7 @@ function useGetInitialData(
   useEffect(() => {
     const tempArr = [];
     initialAllMovies.forEach((movie) => {
-      const readyToStoreMovie = {
-        movieId: movie.id,
-        country: movie.country ? movie.country : 'Unknown Country',
-        director: movie.director ? movie.director : 'Unknown Director',
-        duration: movie.duration ? movie.duration : 0,
-        year: movie.year ? movie.year : 'Unknown Year',
-        description: movie.description
-          ? movie.description
-          : 'Unknown Description',
-        image: movie.image
-          ? 'https://api.nomoreparties.co' + movie.image.url
-          : 'https://images.unsplash.com/photo-1537237858032-3ad1b513cbcc',
-        trailer: movie.trailerLink ? movie.trailerLink : 'Unknown Trailer Link',
-        thumbnail:
-          movie.image && movie.image.formats.thumbnail
-            ? 'https://api.nomoreparties.co' + movie.image.formats.thumbnail.url
-            : 'https://images.unsplash.com/photo-1537237858032-3ad1b513cbcc',
-        nameRU: movie.nameRU ? movie.nameRU : 'Unknown RU Name',
-        nameEN: movie.nameEN ? movie.nameEN : 'unknown EN Name',
-      };
-
+      const readyToStoreMovie = moviePreparation(movie);
       const isFavorite = initialMyMovies.filter((myMovie) => {
         return myMovie.movieId === movie.id;
       });
