@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './AuthForm.css';
 import useValidation from '../../hooks/useValidation';
@@ -13,19 +13,21 @@ function AuthForm(props) {
     onAuth,
     resetStates,
     eraseMessages,
+    location,
   } = props;
 
   const currentUser = useContext(CurrentUserContext);
-
   const [values, setValues] = useState({ email: '', password: '', name: '' });
   const [isDisplayError, setIsDisplayError] = useState({
     email: false,
     name: false,
     password: false,
   });
+  const [isProfileEdited, setIsProfileEdited] = useState(false);
 
   const {
     isSubmitBtnActive,
+    setIsSubmitBtnActive,
     errorElements,
     handleDisplayErrorMsg,
   } = useValidation({
@@ -34,6 +36,7 @@ function AuthForm(props) {
     setIsDisplayError,
     eraseMessages,
   });
+  // console.log(location, isSubmitBtnActive);
 
   useMemo(() => {
     if (currentUser._id) {
@@ -41,7 +44,16 @@ function AuthForm(props) {
     }
   }, [currentUser]);
 
+  // useEffect(() => {
+  //   console.log('useEffect', location);
+  //   if (location === '/profile') {
+  //     console.log(location);
+  //       setIsSubmitBtnActive(false);
+  //   }
+  // }, []);
+
   function handleChange(e) {
+    setIsProfileEdited(true);
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   }
@@ -52,6 +64,8 @@ function AuthForm(props) {
     const { email, password, name } = values;
     onAuth(email, password, name);
   }
+
+  console.log(!isSubmitBtnActive);
 
   return (
     <form
@@ -157,7 +171,17 @@ function AuthForm(props) {
             ? `auth-form__submit-button auth-form__submit-button_${formPurpose}`
             : `auth-form__submit-button auth-form__submit-button_${formPurpose} auth-form__submit-button_active`
         }
-        disabled={!isSubmitBtnActive}
+        // disabled={
+        //   !isProfileEdited && location === '/profile'
+        //     ? false
+        //     : !isSubmitBtnActive
+        // }
+        // disabled={true}
+        disabled={
+          !isProfileEdited && location === '/profile'
+            ? true
+            : !isSubmitBtnActive
+        }
         onSubmit={handleSubmit}
       >
         {submitButtonTitle}

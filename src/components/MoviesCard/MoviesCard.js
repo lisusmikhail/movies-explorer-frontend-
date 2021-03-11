@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import './MoviesCard.css';
 import heart from '../../images/icon__heart_empty.png';
 import activeHeart from '../../images/icon__heart_active.png';
@@ -7,12 +6,9 @@ import delFavorite from '../../images/icon__del_favorite.svg';
 import { timeConversion } from '../../utils/helpers';
 
 function MoviesCard(props) {
-  const { movie, onFavorite } = props;
+  const { movie, onFavorite, location } = props;
   const { nameRU, image, duration, trailer, _id } = movie;
   const [myHeart, setMyHeart] = useState('');
-  const history = useHistory();
-  const location = history.location.pathname;
-
   const durationToDisplay = timeConversion(duration);
 
   useEffect(() => {

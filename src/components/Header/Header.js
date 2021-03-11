@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import './Header.css';
 import Logo from '../../components/Logo/Logo';
 import AuthMenu from '../AuthMenu/AuthMenu';
@@ -8,9 +7,7 @@ import Navigation from '../Navigation/Navigation';
 import ProfileMenu from '../ProfileMenu/ProfileMenu';
 
 function Header(props) {
-  const { isLoggedIn, handleMovieMenuClick } = props;
-  const history = useHistory();
-  const location = history.location.pathname;
+  const { isLoggedIn, handleMovieMenuClick, location } = props;
   const [isMenuClicked, setIsMenuClicked] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

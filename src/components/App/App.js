@@ -24,7 +24,7 @@ import Register from '../Register/Register';
 import SavedMovies from '../SavedMovies/SavedMovies';
 
 function App() {
-  const [location, setLocation] = useState('');
+  // const [location, setLocation] = useState('');
   //errors
   const [errorMsg, setErrorMsg] = useState('');
   const [infoMsg, setInfoMsg] = useState('');
@@ -69,6 +69,7 @@ function App() {
 
   //handle location
   const history = useHistory();
+  const location = history.location.pathname;
 
   const handleMovieMenuClick = () => {
     setIsMovieMenuClicked(!isMovieMenuClicked);
@@ -99,9 +100,9 @@ function App() {
     setSearchResultError('');
   }, [location]);
 
-  useEffect(() => {
-    setLocation(history.location.pathname);
-  }, [isMovieMenuClicked]);
+  // useEffect(() => {
+  //   setLocation(history.location.pathname);
+  // }, [isMovieMenuClicked]);
 
   // Authentication and Authorization
   const { isLoggedIn } = useAuth(
@@ -528,6 +529,7 @@ function App() {
               isLoggedIn={isLoggedIn}
               eraseMessages={eraseMessages}
               handleMovieMenuClick={handleMovieMenuClick}
+              location={location}
             />
           </Route>
           <Route path='/signin'>
@@ -538,15 +540,17 @@ function App() {
               isLoggedIn={isLoggedIn}
               eraseMessages={eraseMessages}
               handleMovieMenuClick={handleMovieMenuClick}
+              location={location}
             />
           </Route>
           <Route exact path='/'>
             <Header
               isLoggedIn={isLoggedIn}
               handleMovieMenuClick={handleMovieMenuClick}
+              location={location}
             />
             <Main />
-            <Footer />
+            <Footer location={location} />
           </Route>
           <Route path='*'>
             <NotFoundPage />

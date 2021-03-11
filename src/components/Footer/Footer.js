@@ -1,11 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import './Footer.css';
 
-function Footer() {
-  const history = useHistory();
-  const location = history.location.pathname;
-
+function Footer({ location }) {
   return (
     <div
       className={

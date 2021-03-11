@@ -20,6 +20,7 @@ function Auth(props) {
     onSignOut,
     isLoggedIn,
     handleMovieMenuClick,
+    location,
     eraseMessages,
   } = props;
 
@@ -29,6 +30,7 @@ function Auth(props) {
         <Header
           isLoggedIn={isLoggedIn}
           handleMovieMenuClick={handleMovieMenuClick}
+          location={location}
         />
       )}
       <div className={`auth__container auth__container_${formPurpose}`}>
@@ -43,6 +45,7 @@ function Auth(props) {
           infoMsg={infoMsg}
           onAuth={onAuth}
           resetStates={resetStates}
+          location={location}
           eraseMessages={eraseMessages}
         />
         {formPurpose !== 'profile' && (

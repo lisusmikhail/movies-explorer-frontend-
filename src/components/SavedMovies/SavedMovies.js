@@ -24,11 +24,13 @@ function SavedMovies(props) {
     lastIndex,
     isClearBtn,
   } = props;
+
   return (
     <>
       <Header
         isLoggedIn={isLoggedIn}
         handleMovieMenuClick={handleMovieMenuClick}
+        location={props.location.pathname}
       />
       <div className='movies'>
         {isLoader && <Preloader />}
@@ -47,9 +49,10 @@ function SavedMovies(props) {
           moviesFilteredResult={moviesFilteredResult}
           lastIndex={lastIndex}
           onFavorite={onFavorite}
+          location={props.location.pathname}
         />
       </div>
-      <Footer />
+      <Footer location={props.location.pathname} />
     </>
   );
 }

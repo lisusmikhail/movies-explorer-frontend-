@@ -8,6 +8,7 @@ function MoviesCardList({
   onFavorite,
   moviesFilteredResult,
   lastIndex,
+  location,
 }) {
   return (
     <section className='movies-card-list movies-card-list_position'>
@@ -20,6 +21,7 @@ function MoviesCardList({
                   movie={movie}
                   key={movie._id || movie.movieId}
                   onFavorite={onFavorite}
+                  location={location}
                 />
               );
             } else {

@@ -31,6 +31,7 @@ function Movies(props) {
       <Header
         isLoggedIn={isLoggedIn}
         handleMovieMenuClick={handleMovieMenuClick}
+        location={props.location.pathname}
       />
       <div className='movies'>
         {isLoader && <Preloader />}
@@ -50,9 +51,10 @@ function Movies(props) {
           onShowMore={onShowMore}
           isShowMoreBtn={isShowMoreBtn}
           onFavorite={onFavorite}
+          location={props.location.pathname}
         />
       </div>
-      <Footer />
+      <Footer location={props.location.pathname} />
     </>
   );
 }

@@ -4,16 +4,18 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Auth from '../Auth/Auth';
 import Header from '../Header/Header';
 
-function Profile({
-  resetStates,
-  errorMsg,
-  onAuth,
-  onSignOut,
-  infoMsg,
-  isLoggedIn,
-  handleMovieMenuClick,
-  eraseMessages,
-}) {
+function Profile(props) {
+  const {
+    resetStates,
+    errorMsg,
+    onAuth,
+    onSignOut,
+    infoMsg,
+    isLoggedIn,
+    handleMovieMenuClick,
+    eraseMessages,
+  } = props;
+
   const user = useContext(CurrentUserContext);
 
   return (
@@ -21,6 +23,7 @@ function Profile({
       <Header
         isLoggedIn={isLoggedIn}
         handleMovieMenuClick={handleMovieMenuClick}
+        location={props.location.pathname}
       />
       <Auth
         title={`Привет, ${user.name}!`}
@@ -35,6 +38,7 @@ function Profile({
         onSignOut={onSignOut}
         isLoggedIn={isLoggedIn}
         handleMovieMenuClick={handleMovieMenuClick}
+        location={props.location.pathname}
         eraseMessages={eraseMessages}
       />
     </>
