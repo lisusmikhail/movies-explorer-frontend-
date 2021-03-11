@@ -41,7 +41,13 @@ function MoviesCard(props) {
           onClick={handleFavorite}
         />
       </div>
-      <a className='movies-card__poster-link' href={trailer} target='_blank'>
+      <a
+        className='movies-card__poster-link'
+        href={trailer}
+        target='_blank'
+        rel='noreferrer'
+      >
+        >
         <img className='movies-card__poster' src={image} alt={nameRU} />
       </a>
     </div>

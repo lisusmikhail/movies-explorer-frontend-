@@ -38,7 +38,7 @@ function Footer() {
             <a
               className='footer__link'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://praktikum.yandex.ru/'
             >
               Яндекс.Практикум
@@ -48,7 +48,7 @@ function Footer() {
             <a
               className='footer__link'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://github.com/lisusmikhail'
             >
               Github
@@ -58,7 +58,7 @@ function Footer() {
             <a
               className='footer__link'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://ru-ru.facebook.com/yandex.praktikum'
             >
               Facebook

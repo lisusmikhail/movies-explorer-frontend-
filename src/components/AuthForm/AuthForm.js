@@ -15,8 +15,6 @@ function AuthForm(props) {
     eraseMessages,
   } = props;
 
-  // console.log(!!errorMsg);
-
   const currentUser = useContext(CurrentUserContext);
 
   const [values, setValues] = useState({ email: '', password: '', name: '' });
