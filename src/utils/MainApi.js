@@ -56,7 +56,7 @@ export const editProfile = (email, name, token) => {
   }).then((res) => handleResponse(res));
 };
 
-export const getUser = (token) => {
+const getUser = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
