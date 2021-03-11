@@ -66,7 +66,6 @@ function useValidation({
 
   return {
     isSubmitBtnActive,
-    setIsSubmitBtnActive,
     errorElements,
     setErrorElements,
     handleDisplayErrorMsg,

@@ -12,7 +12,7 @@ function Register(props) {
     handleMovieMenuClick,
     location,
   } = props;
-  console.log(props);
+
   return (
     <Auth
       title={'Добро пожаловать!'}

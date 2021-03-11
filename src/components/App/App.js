@@ -100,10 +100,6 @@ function App() {
     setSearchResultError('');
   }, [location]);
 
-  // useEffect(() => {
-  //   setLocation(history.location.pathname);
-  // }, [isMovieMenuClicked]);
-
   // Authentication and Authorization
   const { isLoggedIn } = useAuth(
     credentials,
@@ -416,15 +412,18 @@ function App() {
     const delFromFavorite = (movieToDel) => {
       setIsLoader(true);
       setIsFirstRender(false);
+
       const handleDelMovie = (moviesSet, res) => {
-        let indexOfDelMovie;
-        moviesSet.find((movie, index) => {
-          indexOfDelMovie = index;
-          return movie.movieId === res.movieId;
-        });
-        delete moviesSet[indexOfDelMovie]['_id'];
-        moviesSet === moviesSearchResult &&
-          localStorage.setItem('movies', JSON.stringify(moviesSet));
+        if (moviesSet.length > 0) {
+          let indexOfDelMovie;
+          moviesSet.find((movie, index) => {
+            indexOfDelMovie = index;
+            return movie.movieId === res.movieId;
+          });
+          delete moviesSet[indexOfDelMovie]['_id'];
+          moviesSet === moviesSearchResult &&
+            localStorage.setItem('movies', JSON.stringify(moviesSet));
+        }
       };
 
       const handleDelMyMovie = (moviesSet, res) => {
@@ -449,9 +448,7 @@ function App() {
           }
           setMovieToDelFromFavorite({});
         })
-        .catch((err) => {
-          handleError(err.status, setSearchResultError);
-        });
+        .catch((err) => handleError(err.status, setSearchResultError));
     };
 
     isLoggedIn &&

@@ -27,7 +27,6 @@ function AuthForm(props) {
 
   const {
     isSubmitBtnActive,
-    setIsSubmitBtnActive,
     errorElements,
     handleDisplayErrorMsg,
   } = useValidation({
@@ -36,21 +35,12 @@ function AuthForm(props) {
     setIsDisplayError,
     eraseMessages,
   });
-  // console.log(location, isSubmitBtnActive);
 
   useMemo(() => {
     if (currentUser._id) {
       setValues({ email: currentUser.email, name: currentUser.name });
     }
   }, [currentUser]);
-
-  // useEffect(() => {
-  //   console.log('useEffect', location);
-  //   if (location === '/profile') {
-  //     console.log(location);
-  //       setIsSubmitBtnActive(false);
-  //   }
-  // }, []);
 
   function handleChange(e) {
     setIsProfileEdited(true);
@@ -64,8 +54,6 @@ function AuthForm(props) {
     const { email, password, name } = values;
     onAuth(email, password, name);
   }
-
-  console.log(!isSubmitBtnActive);
 
   return (
     <form
@@ -171,12 +159,6 @@ function AuthForm(props) {
             ? `auth-form__submit-button auth-form__submit-button_${formPurpose}`
             : `auth-form__submit-button auth-form__submit-button_${formPurpose} auth-form__submit-button_active`
         }
-        // disabled={
-        //   !isProfileEdited && location === '/profile'
-        //     ? false
-        //     : !isSubmitBtnActive
-        // }
-        // disabled={true}
         disabled={
           !isProfileEdited && location === '/profile'
             ? true
