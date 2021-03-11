@@ -66,6 +66,14 @@ function App() {
   //loader
   const [isLoader, setIsLoader] = useState(false);
 
+  // console.log('allMovies', allMovies[0]);
+  // console.log('moviesSearchResult', moviesSearchResult[0]);
+  // console.log('moviesFilteredResult', moviesFilteredResult[0]);
+  //
+  // console.log('myMovies', myMovies);
+  // console.log('myMoviesSearchResult', myMoviesSearchResult);
+  // console.log('myMoviesFilteredResult', myMoviesFilteredResult);
+
   //handle location
   const history = useHistory();
 
@@ -82,6 +90,10 @@ function App() {
       setIsLoader(true);
       setIsMyMoviesUpdated(!isMyMoviesUpdated);
     }
+
+    // if (location === '/movies') {
+    //   setNewSearch(!newSearch);
+    // }
   }, [location]);
 
   useEffect(() => {
@@ -147,7 +159,8 @@ function App() {
     isMyMoviesUpdated,
     setErrorMsg,
     setSearchResultError,
-    setIsLoader
+    setIsLoader,
+    allMovies
   );
 
   useEffect(() => {
@@ -258,7 +271,7 @@ function App() {
     };
 
     !isFirstRender && allMovies && keyWord && searchMovies(keyWord);
-  }, [keyWord, newSearch, isAllDataReady]);
+  }, [keyWord, newSearch]);
 
   useEffect(() => {
     const searchMyMovies = (myKeyWord) => {
@@ -431,6 +444,7 @@ function App() {
             setSearchResultError('');
             handleDelMyMovie(myMovies, res);
             handleDelMovie(allMovies, res);
+            handleDelMovie(moviesSearchResult, res);
             setIsMyMoviesUpdated(!isMyMoviesUpdated);
           }
           setMovieToDelFromFavorite({});

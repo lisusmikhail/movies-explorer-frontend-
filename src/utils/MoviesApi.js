@@ -8,5 +8,8 @@ const handleResponse = (res) => {
 };
 
 export const getMovies = () => {
+  console.log(
+    ' fetch!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+  );
   return fetch(URL).then((res) => handleResponse(res));
 };

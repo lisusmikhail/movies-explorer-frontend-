@@ -1,6 +1,6 @@
 import { getMovies } from './MoviesApi';
-export const BASE_URL = '//api.myvideobookmark.com';
-// export const BASE_URL = '//localhost:3000';
+// export const BASE_URL = '//api.myvideobookmark.com';
+export const BASE_URL = '//localhost:3000';
 
 const handleResponse = (res) => {
   if (res.ok) {
@@ -56,7 +56,7 @@ export const editProfile = (email, name, token) => {
   }).then((res) => handleResponse(res));
 };
 
-const getUser = (token) => {
+export const getUser = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const getUser = (token) => {
   }).then((res) => handleResponse(res));
 };
 
-const getMyMovies = (token) => {
+export const getMyMovies = (token) => {
   return fetch(`${BASE_URL}/movies`, {
     headers: {
       Authorization: `Bearer ${token}`,

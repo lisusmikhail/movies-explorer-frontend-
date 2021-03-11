@@ -8,7 +8,8 @@ function useGetInitialData(
   isMyMoviesUpdated,
   setErrorMsg,
   setSearchResultError,
-  setIsLoader
+  setIsLoader,
+  allMovies
 ) {
   const [initialUser, setInitialUser] = useState({});
   const [initialMyMovies, setInitialMyMovies] = useState([]);
@@ -16,29 +17,42 @@ function useGetInitialData(
   const [readyToUseAllMovies, setReadyYoUseAllMovies] = useState([]);
   const [isDataReady, setIsDataReady] = useState(false);
 
+  const getInitialData = (token) => {
+    setIsLoader(true);
+    mainApi
+      .getInitialData(token)
+      .then(([user, myMovies, allMovies]) => {
+        setInitialUser(user);
+        setInitialMyMovies(myMovies);
+        setInitialAllMovies(allMovies);
+        setIsDataReady(true);
+      })
+      .catch((err) => {
+        if (err.message === 'Failed to fetch') {
+          handleError(503, setSearchResultError);
+        } else if (err.url.indexOf('movie')) {
+          handleError(err, setSearchResultError);
+        } else {
+          handleError(err.status, setSearchResultError);
+        }
+      })
+      .finally(() => setIsLoader(false));
+  };
+
+  const getMyMovies = (token) => {
+    setIsLoader(true);
+    mainApi
+      .getMyMovies(token)
+      .then((myMovies) => {
+        setInitialMyMovies(myMovies);
+      })
+      .catch((err) => handleError(err.status, setSearchResultError))
+      .finally(() => setIsLoader(false));
+  };
+
   useEffect(() => {
-    const getInitialData = (token) => {
-      setIsLoader(true);
-      mainApi
-        .getInitialData(token)
-        .then(([user, myMovies, allMovies]) => {
-          setInitialUser(user);
-          setInitialMyMovies(myMovies);
-          setInitialAllMovies(allMovies);
-          setIsDataReady(true);
-        })
-        .catch((err) => {
-          if (err.message === 'Failed to fetch') {
-            handleError(503, setSearchResultError);
-          } else if (err.url.indexOf('movie')) {
-            handleError(err, setSearchResultError);
-          } else {
-            handleError(err.status, setSearchResultError);
-          }
-        })
-        .finally(() => setIsLoader(false));
-    };
-    token && getInitialData(token);
+    token && allMovies.length > 0 && getMyMovies(token);
+    token && allMovies.length === 0 && getInitialData(token);
   }, [token, isMyMoviesUpdated]);
 
   useEffect(() => {
