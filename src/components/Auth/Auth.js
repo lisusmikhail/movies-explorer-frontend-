@@ -13,28 +13,59 @@ function Auth(props) {
     footerTitle,
     footerAction,
     footerLink,
+    errorMsg,
+    infoMsg,
+    onAuth,
+    resetStates,
+    onSignOut,
+    isLoggedIn,
+    handleMovieMenuClick,
+    location,
+    eraseMessages,
   } = props;
 
   return (
     <section className='auth'>
-      {formPurpose === 'profile' && <Header />}
+      {formPurpose === 'profile' && (
+        <Header
+          isLoggedIn={isLoggedIn}
+          handleMovieMenuClick={handleMovieMenuClick}
+          location={location}
+        />
+      )}
       <div className={`auth__container auth__container_${formPurpose}`}>
-        {formPurpose !== 'profile' && <Logo isHeader={false} />}
+        {formPurpose !== 'profile' && (
+          <Logo isHeader={false} handleMovieMenuClick={handleMovieMenuClick} />
+        )}
         <AuthForm
           title={title}
           submitButtonTitle={submitButtonTitle}
           formPurpose={formPurpose}
+          errorMsg={errorMsg}
+          infoMsg={infoMsg}
+          onAuth={onAuth}
+          resetStates={resetStates}
+          location={location}
+          eraseMessages={eraseMessages}
         />
         {formPurpose !== 'profile' && (
           <p className='auth__footer'>
             {footerTitle}
-            <Link to={footerLink} className='auth__footer-link'>
+            <Link
+              to={footerLink}
+              className='auth__footer-link'
+              onClick={handleMovieMenuClick}
+            >
               {footerAction}
             </Link>
           </p>
         )}
         {formPurpose === 'profile' && (
-          <button type='button' className='auth__footer-button'>
+          <button
+            type='button'
+            className='auth__footer-button'
+            onClick={onSignOut}
+          >
             {footerAction}
           </button>
         )}

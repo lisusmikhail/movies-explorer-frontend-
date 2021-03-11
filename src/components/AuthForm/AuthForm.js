@@ -1,22 +1,65 @@
-import React from 'react';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './AuthForm.css';
+import useValidation from '../../hooks/useValidation';
 
-function AuthForm({ title, submitButtonTitle, formPurpose }) {
-  // Данный JS код используется для демонстрации верстки
-  // и не будет присутствовать в окончательном варианте проекта
-  const errorMsg1 = '';
-  const errorMsg2 = '';
-  const errorMsg3 = 'Что-то пошло не так...';
-  let nameValue = '';
-  let emailValue = '';
+function AuthForm(props) {
+  const {
+    title,
+    submitButtonTitle,
+    formPurpose,
+    errorMsg,
+    infoMsg,
+    onAuth,
+    resetStates,
+    eraseMessages,
+    location,
+  } = props;
 
-  if (formPurpose === 'profile') {
-    nameValue = 'Виталий';
-    emailValue = 'pochta@yandex.ru';
+  const currentUser = useContext(CurrentUserContext);
+  const [values, setValues] = useState({ email: '', password: '', name: '' });
+  const [isDisplayError, setIsDisplayError] = useState({
+    email: false,
+    name: false,
+    password: false,
+  });
+  const [isProfileEdited, setIsProfileEdited] = useState(false);
+
+  const {
+    isSubmitBtnActive,
+    errorElements,
+    handleDisplayErrorMsg,
+  } = useValidation({
+    values,
+    isDisplayError,
+    setIsDisplayError,
+    eraseMessages,
+  });
+
+  useMemo(() => {
+    if (currentUser._id) {
+      setValues({ email: currentUser.email, name: currentUser.name });
+    }
+  }, [currentUser]);
+
+  function handleChange(e) {
+    setIsProfileEdited(true);
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    resetStates();
+    const { email, password, name } = values;
+    onAuth(email, password, name);
   }
 
   return (
-    <form className={`auth-form auth-form_position auth-form_${formPurpose}`}>
+    <form
+      className={`auth-form auth-form_position auth-form_${formPurpose}`}
+      onSubmit={handleSubmit}
+    >
       <h2 className={`auth-form__title auth-form__title_${formPurpose}`}>
         {title}
       </h2>
@@ -34,14 +77,23 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
               maxLength='60'
               required
               autoComplete='chrome-off'
-              defaultValue={nameValue}
+              pattern='[A-Za-z]+'
+              value={values.name}
+              onChange={handleChange}
+              onFocus={handleDisplayErrorMsg}
             />
             <span
               className={`auth-form__legend auth-form__legend_${formPurpose}`}
             >
               Имя
             </span>
-            <span className='auth-form__tips'>{errorMsg1}</span>
+            <span className='auth-form__tips'>
+              {isDisplayError.name &&
+                errorElements.name &&
+                (errorElements.name === 'Please match the requested format.'
+                  ? 'В имени допустимы только латинские буквы'
+                  : errorElements.name)}
+            </span>
           </label>
         )}
         <label className='auth-form__field-input'>
@@ -54,19 +106,23 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
             maxLength='60'
             required
             autoComplete='off'
-            defaultValue={emailValue}
+            value={values.email}
+            onChange={handleChange}
+            onFocus={handleDisplayErrorMsg}
           />
           <span
             className={`auth-form__legend auth-form__legend_${formPurpose}`}
           >
             {formPurpose === 'profile' ? 'Почта' : 'E-mail'}
           </span>
-          <span className='auth-form__tips'>{errorMsg2}</span>
+          <span className='auth-form__tips'>
+            {isDisplayError.email && errorElements.email && errorElements.email}
+          </span>
         </label>
         {formPurpose !== 'profile' && (
           <label className={`auth-form__field-input`}>
             <input
-              className='auth-form__input'
+              className='auth-form__input auth-form__input_style_red'
               type='password'
               id='third-field-person'
               name='password'
@@ -74,15 +130,41 @@ function AuthForm({ title, submitButtonTitle, formPurpose }) {
               maxLength='20'
               required
               autoComplete='off'
+              value={values.password}
+              onChange={handleChange}
+              onFocus={handleDisplayErrorMsg}
             />
             <span className='auth-form__legend'>Пароль</span>
-            <span className='auth-form__tips'>{errorMsg3}</span>
+            <span className='auth-form__tips'>
+              {isDisplayError.password &&
+                errorElements.password &&
+                errorElements.password}
+            </span>
           </label>
         )}
       </fieldset>
+      <p
+        className={
+          !!errorMsg
+            ? 'auth-form__message auth-form__message_error'
+            : 'auth-form__message auth-form__message_info'
+        }
+      >
+        {errorMsg || infoMsg}
+      </p>
       <button
         type='submit'
-        className={`auth-form__submit-button auth-form__submit-button_${formPurpose}`}
+        className={
+          isSubmitBtnActive
+            ? `auth-form__submit-button auth-form__submit-button_${formPurpose}`
+            : `auth-form__submit-button auth-form__submit-button_${formPurpose} auth-form__submit-button_active`
+        }
+        disabled={
+          !isProfileEdited && location === '/profile'
+            ? true
+            : !isSubmitBtnActive
+        }
+        onSubmit={handleSubmit}
       >
         {submitButtonTitle}
       </button>

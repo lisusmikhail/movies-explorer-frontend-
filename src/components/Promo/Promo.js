@@ -1,6 +1,4 @@
 import React from 'react';
-// import { useHistory, NavLink, Link } from 'react-router-dom';
-import { Link } from 'react-scroll';
 import './Promo.css';
 import mainBanner from '../../images/banner_1280.svg';
 import NavTab from '../NavTab/NavTab';

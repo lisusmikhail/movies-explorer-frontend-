@@ -1,42 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './MoviesCard.css';
 import heart from '../../images/icon__heart_empty.png';
 import activeHeart from '../../images/icon__heart_active.png';
 import delFavorite from '../../images/icon__del_favorite.svg';
+import { timeConversion } from '../../utils/helpers';
 
 function MoviesCard(props) {
-  const { title, img, duration, isFavorite, favoriteOnly } = props;
+  const { movie, onFavorite, location } = props;
+  const { nameRU, image, duration, trailer, _id } = movie;
+  const [myHeart, setMyHeart] = useState('');
+  const durationToDisplay = timeConversion(duration);
 
-  // Данный JS код используется для демонстрации верстки
-  // и не будет присутствовать в окончательном варианте проекта
-  let favoriteIcon;
-  let isVisible = true;
-  if (!favoriteOnly && isFavorite) {
-    favoriteIcon = activeHeart;
-  } else if (favoriteOnly && isFavorite) {
-    favoriteIcon = delFavorite;
-  } else if (favoriteOnly && !isFavorite) {
-    isVisible = false;
-  } else {
-    favoriteIcon = heart;
+  useEffect(() => {
+    if (location === '/saved-movies') {
+      setMyHeart(delFavorite);
+    } else {
+      setMyHeart(activeHeart);
+    }
+  }, [location]);
+
+  function handleFavorite() {
+    onFavorite(movie);
   }
 
   return (
-    <div
-      className={
-        isVisible
-          ? 'movies-card movies-card_position'
-          : 'movies-card movies-card_visibility'
-      }
-    >
+    <div className={'movies-card movies-card_position'}>
       <div className='movies-card__info'>
         <div className='movies-card__description'>
-          <h2 className='movies-card__title'>{title}</h2>
-          <p className='movies-card__duration'>{duration}</p>
+          <h2 className='movies-card__title'>{nameRU}</h2>
+          <p className='movies-card__duration'>{durationToDisplay}</p>
         </div>
-        <img className='movies-card__favorite' src={favoriteIcon} alt={title} />
+        <img
+          className='movies-card__favorite'
+          src={!_id ? heart : myHeart}
+          alt={nameRU}
+          onClick={handleFavorite}
+        />
       </div>
-      <img className='movies-card__poster' src={img} alt={title} />
+      <a
+        className='movies-card__poster-link'
+        href={trailer}
+        target='_blank'
+        rel='noreferrer'
+      >
+        >
+        <img className='movies-card__poster' src={image} alt={nameRU} />
+      </a>
     </div>
   );
 }

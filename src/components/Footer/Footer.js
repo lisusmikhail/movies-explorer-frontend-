@@ -1,11 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import './Footer.css';
 
-function Footer() {
-  const history = useHistory();
-  const location = history.location.pathname;
-
+function Footer({ location }) {
   return (
     <div
       className={
@@ -38,7 +34,7 @@ function Footer() {
             <a
               className='footer__link'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://praktikum.yandex.ru/'
             >
               Яндекс.Практикум
@@ -48,7 +44,7 @@ function Footer() {
             <a
               className='footer__link'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://github.com/lisusmikhail'
             >
               Github
@@ -58,7 +54,7 @@ function Footer() {
             <a
               className='footer__link'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://ru-ru.facebook.com/yandex.praktikum'
             >
               Facebook

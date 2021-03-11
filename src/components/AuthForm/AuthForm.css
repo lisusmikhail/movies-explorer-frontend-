@@ -70,6 +70,10 @@
   text-align: left;
 }
 
+.auth-form__input_style_red {
+  color: #ee3465;
+}
+
 .auth-form__input_profile {
   text-align: right;
   font-style: normal;
@@ -169,6 +173,31 @@
   opacity: 0.6;
   transition: opacity 0.3s ease;
   cursor: pointer;
+}
+
+.auth-form__submit-button_active {
+  opacity: 0.8;
+}
+
+.auth-form__message {
+  font-style: normal;
+  font-weight: normal;
+  position: absolute;
+  left: 50%;
+  top: 510px;
+  transform: translate(-50%, 0);
+}
+
+.auth-form__message_error {
+  font-size: 12px;
+  line-height: 15px;
+  color: #ee3465;
+}
+
+.auth-form__message_info {
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
 }
 
 @media screen and (max-width: 768px) {

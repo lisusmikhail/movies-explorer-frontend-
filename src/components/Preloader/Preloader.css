@@ -40,6 +40,13 @@
 }
 
 .preloader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.preloader {
   display: flex;
   align-items: center;
   justify-content: center;

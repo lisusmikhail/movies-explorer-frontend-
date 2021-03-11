@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './ProfileMenu.css';
 
-function ProfileMenu({ isRoot, handleNavClick }) {
+function ProfileMenu({ isLoggedIn, handleNavClick }) {
   return (
     <Link
       className={
-        isRoot
-          ? 'profile-menu profile-menu_visibility'
-          : 'profile-menu profile-menu_position'
+        isLoggedIn
+          ? 'profile-menu profile-menu_position'
+          : 'profile-menu profile-menu_visibility'
       }
       to='/profile'
       onClick={handleNavClick}

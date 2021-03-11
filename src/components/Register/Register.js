@@ -2,7 +2,17 @@ import React from 'react';
 import './Register.css';
 import Auth from '../Auth/Auth';
 
-function Register() {
+function Register(props) {
+  const {
+    resetStates,
+    errorMsg,
+    onAuth,
+    isLoggedIn,
+    eraseMessages,
+    handleMovieMenuClick,
+    location,
+  } = props;
+
   return (
     <Auth
       title={'Добро пожаловать!'}
@@ -11,6 +21,13 @@ function Register() {
       footerTitle='Уже зарегистрированы?'
       footerAction='Войти'
       footerLink='/signin'
+      errorMsg={errorMsg}
+      onAuth={onAuth}
+      resetStates={resetStates}
+      eraseMessages={eraseMessages}
+      handleMovieMenuClick={handleMovieMenuClick}
+      isLoggedIn={isLoggedIn}
+      location={location}
     />
   );
 }

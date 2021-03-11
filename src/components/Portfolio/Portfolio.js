@@ -12,7 +12,7 @@ function Portfolio() {
             <a
               className='portfolio__arrow'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://lisusmikhail.github.io/how-to-learn/index.html'
             >
               ↗
@@ -23,7 +23,7 @@ function Portfolio() {
             <a
               className='portfolio__arrow'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://lisusmikhail.github.io/russian-travel/index.html'
             >
               ↗
@@ -34,7 +34,7 @@ function Portfolio() {
             <a
               className='portfolio__arrow'
               target='_blank'
-              rel='noopener'
+              rel='noreferrer'
               href='https://izoommer.com'
             >
               ↗

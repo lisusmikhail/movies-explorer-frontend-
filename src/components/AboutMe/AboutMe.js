@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './AboutMe.css';
 import picture from '../../images/ML_pic.png';
 
@@ -26,7 +25,7 @@ function AboutMe() {
                 className='about-me__social'
                 href='https://www.facebook.com/yandex.praktikum/'
                 target='_blank'
-                rel='noopener'
+                rel='noreferrer'
               >
                 Facebook
               </a>
@@ -34,7 +33,7 @@ function AboutMe() {
                 className='about-me__social'
                 href='https://github.com/lisusmikhail'
                 target='_blank'
-                rel='noopener'
+                rel='noreferrer'
               >
                 GitHub
               </a>
