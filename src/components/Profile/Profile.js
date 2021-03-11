@@ -9,8 +9,10 @@ function Profile({
   errorMsg,
   onAuth,
   onSignOut,
+  infoMsg,
   isLoggedIn,
   handleMovieMenuClick,
+  eraseMessages,
 }) {
   const user = useContext(CurrentUserContext);
 
@@ -28,10 +30,12 @@ function Profile({
         footerAction='Выйти из аккаунта'
         resetStates={resetStates}
         errorMsg={errorMsg}
+        infoMsg={infoMsg}
         onAuth={onAuth}
         onSignOut={onSignOut}
         isLoggedIn={isLoggedIn}
         handleMovieMenuClick={handleMovieMenuClick}
+        eraseMessages={eraseMessages}
       />
     </>
   );

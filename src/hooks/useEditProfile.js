@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { handleError } from '../utils/ErrorHandler';
 import * as auth from '../utils/MainApi';
 
-function useEditProfile(newProfile, isLoggedIn, setErrorMsg, handleLoader) {
-  const history = useHistory();
+function useEditProfile(
+  newProfile,
+  isLoggedIn,
+  setErrorMsg,
+  setInfoMsg,
+  handleLoader
+) {
   const { email, name, token } = newProfile;
   const [newUsersProfile, setNewUsersProfile] = useState({});
 
@@ -16,7 +20,7 @@ function useEditProfile(newProfile, isLoggedIn, setErrorMsg, handleLoader) {
         .then((profile) => {
           handleLoader(false);
           setNewUsersProfile(profile.data);
-          history.push('/movies');
+          setInfoMsg('Данные были успешно изменены');
         })
         .catch((err) => handleError(err.status, setErrorMsg));
   }, [newProfile]);

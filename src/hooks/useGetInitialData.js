@@ -53,7 +53,7 @@ function useGetInitialData(
   useEffect(() => {
     token && allMovies.length > 0 && getMyMovies(token);
     token && allMovies.length === 0 && getInitialData(token);
-  }, [token, isMyMoviesUpdated]);
+  }, [token, isMyMoviesUpdated, allMovies]);
 
   useEffect(() => {
     const tempArr = [];

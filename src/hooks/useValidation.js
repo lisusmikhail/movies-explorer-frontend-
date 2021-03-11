@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react';
 
-function useValidation({ values, isDisplayError, setIsDisplayError }) {
+function useValidation({
+  values,
+  isDisplayError,
+  setIsDisplayError,
+  eraseMessages,
+}) {
   const [isSubmitBtnActive, setIsSubmitBtnActive] = useState(false);
   const [inputElements, setInputElements] = useState([]);
   const [errorElements, setErrorElements] = useState({});
 
   function handleDisplayErrorMsg(e) {
+    eraseMessages();
     const name = e.target.name;
     setIsDisplayError({ ...isDisplayError, [name]: true });
   }

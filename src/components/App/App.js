@@ -27,6 +27,7 @@ function App() {
   const [location, setLocation] = useState('');
   //errors
   const [errorMsg, setErrorMsg] = useState('');
+  const [infoMsg, setInfoMsg] = useState('');
   const [searchResultInfo, setSearchResultInfo] = useState('');
   const [searchResultError, setSearchResultError] = useState('');
   //auth
@@ -66,19 +67,20 @@ function App() {
   //loader
   const [isLoader, setIsLoader] = useState(false);
 
-  // console.log('allMovies', allMovies[0]);
-  // console.log('moviesSearchResult', moviesSearchResult[0]);
-  // console.log('moviesFilteredResult', moviesFilteredResult[0]);
-  //
-  // console.log('myMovies', myMovies);
-  // console.log('myMoviesSearchResult', myMoviesSearchResult);
-  // console.log('myMoviesFilteredResult', myMoviesFilteredResult);
-
   //handle location
   const history = useHistory();
 
   const handleMovieMenuClick = () => {
     setIsMovieMenuClicked(!isMovieMenuClicked);
+    if (!!errorMsg) {
+      setAllMovies([]);
+    }
+    eraseMessages();
+  };
+
+  const eraseMessages = () => {
+    setInfoMsg('');
+    setErrorMsg('');
   };
 
   useEffect(() => {
@@ -90,10 +92,6 @@ function App() {
       setIsLoader(true);
       setIsMyMoviesUpdated(!isMyMoviesUpdated);
     }
-
-    // if (location === '/movies') {
-    //   setNewSearch(!newSearch);
-    // }
   }, [location]);
 
   useEffect(() => {
@@ -122,6 +120,7 @@ function App() {
     newProfile,
     isLoggedIn,
     setErrorMsg,
+    setInfoMsg,
     handleLoader
   );
 
@@ -477,8 +476,10 @@ function App() {
             onAuth={onEditProfile}
             resetStates={resetStates}
             errorMsg={errorMsg}
+            infoMsg={infoMsg}
             onSignOut={onSignOut}
             handleMovieMenuClick={handleMovieMenuClick}
+            eraseMessages={eraseMessages}
             component={Profile}
           />
           <ProtectedRoute
@@ -525,6 +526,8 @@ function App() {
               errorMsg={errorMsg}
               resetStates={resetStates}
               isLoggedIn={isLoggedIn}
+              eraseMessages={eraseMessages}
+              handleMovieMenuClick={handleMovieMenuClick}
             />
           </Route>
           <Route path='/signin'>
@@ -533,6 +536,8 @@ function App() {
               errorMsg={errorMsg}
               resetStates={resetStates}
               isLoggedIn={isLoggedIn}
+              eraseMessages={eraseMessages}
+              handleMovieMenuClick={handleMovieMenuClick}
             />
           </Route>
           <Route exact path='/'>

@@ -9,9 +9,13 @@ function AuthForm(props) {
     submitButtonTitle,
     formPurpose,
     errorMsg,
+    infoMsg,
     onAuth,
     resetStates,
+    eraseMessages,
   } = props;
+
+  // console.log(!!errorMsg);
 
   const currentUser = useContext(CurrentUserContext);
 
@@ -30,6 +34,7 @@ function AuthForm(props) {
     values,
     isDisplayError,
     setIsDisplayError,
+    eraseMessages,
   });
 
   useMemo(() => {
@@ -138,7 +143,15 @@ function AuthForm(props) {
           </label>
         )}
       </fieldset>
-      <p className='auth-form__error-message'>{errorMsg}</p>
+      <p
+        className={
+          !!errorMsg
+            ? 'auth-form__message auth-form__message_error'
+            : 'auth-form__message auth-form__message_info'
+        }
+      >
+        {errorMsg || infoMsg}
+      </p>
       <button
         type='submit'
         className={

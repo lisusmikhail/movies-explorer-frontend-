@@ -179,16 +179,25 @@
   opacity: 0.8;
 }
 
-.auth-form__error-message {
+.auth-form__message {
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  line-height: 15px;
-  color: #ee3465;
   position: absolute;
   left: 50%;
   top: 510px;
   transform: translate(-50%, 0);
+}
+
+.auth-form__message_error {
+  font-size: 12px;
+  line-height: 15px;
+  color: #ee3465;
+}
+
+.auth-form__message_info {
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
 }
 
 @media screen and (max-width: 768px) {

@@ -2,7 +2,14 @@ import React from 'react';
 import './Register.css';
 import Auth from '../Auth/Auth';
 
-function Register({ resetStates, errorMsg, onAuth, isLoggedIn }) {
+function Register({
+  resetStates,
+  errorMsg,
+  onAuth,
+  isLoggedIn,
+  eraseMessages,
+  handleMovieMenuClick,
+}) {
   return (
     <Auth
       title={'Добро пожаловать!'}
@@ -14,6 +21,8 @@ function Register({ resetStates, errorMsg, onAuth, isLoggedIn }) {
       errorMsg={errorMsg}
       onAuth={onAuth}
       resetStates={resetStates}
+      eraseMessages={eraseMessages}
+      handleMovieMenuClick={handleMovieMenuClick}
       isLoggedIn={isLoggedIn}
     />
   );
